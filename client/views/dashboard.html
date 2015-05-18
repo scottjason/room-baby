@@ -1,0 +1,40 @@
+<div ng-init='dashCtrl.isAuthenticated();'></div>
+<div class="container">
+  <div class="row-block">
+  <div id='white-block' class='white-block'></div>
+    <div class="center-block btn-opts-container">
+      <div id="create-room-btn" ng-click='dashCtrl.createRoom("create");' class="btn-custom create-a-room">create a room</div>
+      <div id="create-broadcast-btn" ng-click='dashCtrl.createRoom("create");' class="btn-custom create-a-broadcast">create a broadcast</div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <table st-table="allSessions" class="table table-striped">
+      <thead>
+        <tr>
+          <th>room name</th>
+          <th>room details</th>
+          <th>room members</th>
+          <th>status</th>
+          <th>options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="obj in allSessions">
+          <td class='table-copy-title'>{{obj.name}}</td>
+          <td class='table-copy-created-by'>{{obj.createdBy}}</td>
+          <td>
+            <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
+              <i class="fa fa-child">&nbsp;members</i>
+            </button>
+          </td>
+          <td class='table-copy-status'>{{obj.status}}</td>
+          <td><i class="fa fa-refresh fa-spin"></i>
+            <a ng-click="dashCtrl.options(obj);" class="table-copy-connect">&nbsp;connect</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

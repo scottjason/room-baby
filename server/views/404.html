@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>404</title>
+    <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+    <link rel='stylesheet' type="text/css" href="/build/styles/build.css" />
+</head>
+
+<body onload="startTimer()">
+    <script type="text/javascript">
+    var startTimer = function() {
+        setTimeout(redirect, 2400);
+    }
+    var redirect = function() {
+        window.location.href = 'http://localhost:3000'
+    }
+    </script>
+    <div class="row text-center">
+        <div class="home-container">
+            <h1 class="home-logo">room baby</h1>
+            <hr>
+            <p class="home-slogan">looks like you're lost .. redirecting you now</p>
+        </div>
+    </div>
+</body>
+</html>

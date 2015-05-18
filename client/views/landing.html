@@ -1,0 +1,55 @@
+<div class="container" ng-init="landingCtrl.isAuthenticated();">
+  <div class="col-md-12 text-center">
+    <div class="row vertical-align-landing">
+      <div class="cover">
+        <p ng-click='landingCtrl.reloadState();' id='room-baby' class="text-inverse logo-text cursor-pointer">room baby</p>
+        <hr class="landing-line">
+        <!-- *** Begin Landing Options Container *** -->
+        <div ng-hide="showLogin || showRegister || showLearnMore" class="landing-sub-text-container">
+          <p class="text-inverse slogan-text">a room for every occassion</p>
+          <br>
+          <br>
+          <div class="landing-btn-container">
+            <a ng-click="landingCtrl.selectedOpt('login');" class="btn btn-md btn-custom-landing">Login</a>
+            <a ng-click="landingCtrl.selectedOpt('register');" class="btn btn-md btn-custom-landing">Register</a>
+            <a ng-click="landingCtrl.selectedOpt('learn-more');" class="btn btn-md btn-custom-landing">Learn More</a>
+          </div>
+        </div>
+        <!-- *** End Landing Options Container *** -->
+        <!-- *** Begin Login Container *** -->
+        <div ng-show="showLogin" class='auth-container'>
+          <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.submitForm('login');">
+            <input id="landing-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+            <input id="landing-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
+            <button type="submit" class="btn btn-custom-landing">Login</button>
+            <br>
+            <div class="check-box-container">
+              <p ng-click="landingCtrl.selectedOpt('register');" class="auth-sub-menu add-cursor">need an account?
+                <span class="add-line-opacity add-cursor">|</span> forgot password?
+                <span class="add-line-opacity">|</span>
+                <span id="remember-me"> remember me <input type="checkbox"></span>
+            </div>
+          </form>
+          </div>
+        <!-- *** End Login Container *** -->
+        <!-- *** Begin Register Container *** -->
+        <div ng-show="showRegister" class='auth-container'>
+          <form id="registForm" name="authForm" class="form-inline" ng-submit="landingCtrl.submitForm('register');">
+            <input id="landing-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+            <input id="landing-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
+            <button type="submit" class="btn btn-custom-landing">Register</button>
+            <br>
+            <div class="check-box-container">
+              <p ng-click="landingCtrl.selectedOpt('login');" class="auth-sub-menu add-cursor">have an account?
+                <span class="add-line-opacity add-cursor">|</span> forgot password?
+            </div>
+          </form>
+          <div class='go-back-container'>
+            <i class="fa fa-backward"><span ng-click="landingCtrl.goBack('register');" class="go-back-copy add-cursor">back</span> </i>
+          </div>
+        </div>
+        <!-- *** End Register Container *** -->
+      </div>
+    </div>
+  </div>
+</div>

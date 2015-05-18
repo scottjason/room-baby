@@ -1,0 +1,183 @@
+@font-face {
+  font-family: 'brandon_grotesquethin';
+  src: url('../assets/fonts/brandon_thin-webfont.eot');
+  src: url('../assets/fonts/brandon_thin-webfont.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/brandon_thin-webfont.woff2') format('woff2'), url('../assets/fonts/brandon_thin-webfont.woff') format('woff'), url('../assets/fonts/brandon_thin-webfont.ttf') format('truetype'), url('../assets/fonts/brandon_thin-webfont.svg#brandon_grotesquethin') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  background: -webkit-linear-gradient(90deg, #517fa4 10%, #243949 90%);
+  background: -moz-linear-gradient(90deg, #517fa4 10%, #243949 90%);
+  background: -ms-linear-gradient(90deg, #517fa4 10%, #243949 90%);
+  background: -o-linear-gradient(90deg, #517fa4 10%, #243949 90%);
+  background: linear-gradient(90deg, #517fa4 10%, #243949 90%);
+  font-family: 'Open Sans', sans-serif;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-custom-landing,
+.btn-custom-landing:hover,
+.btn-custom-landing:active,
+.btn-custom-landing:focus {
+  width: 120px;
+  font-weight: 300;
+  text-decoration: none;
+  top: 11px;
+  height: 30px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #337ab7;
+  background: #efefef;
+  margin: auto;
+}
+
+.btn.btn-md.members {
+  background: transparent;
+  color: rgba(0, 0, 0, .6);
+}
+
+.btn-custom.create-a-broadcast,
+.btn-custom.create-a-broadcast:hover,
+.btn-custom.create-a-broadcast:active,
+.btn-custom.create-a-broadcast:focus {
+  border: 1px solid #337ab7;
+  width: 200px;
+  position: absolute;
+  font-weight: 400;
+  text-decoration: none;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: #517fa4;
+top: 122px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 10;
+  opacity: 0;
+}
+
+.btn-custom.create-a-room,
+.btn-custom.create-a-room:hover,
+.btn-custom.create-a-room:active,
+.btn-custom.create-a-room:focus {
+  border: 1px solid #337ab7;
+  width: 120px;
+  position: absolute;
+  font-weight: 400;
+  text-decoration: none;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: #517fa4;
+  top: 84px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  background: white;
+  opacity: 0;
+}
+
+.btn-custom,
+.btn-custom:hover,
+.btn-custom:active,
+.btn-custom:focus {
+  border: 1px solid #337ab7;
+  width: 120px;
+  position: absolute;
+  font-weight: 400;
+  text-decoration: none;
+  right: 150px;
+  top: 12px;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #517fa4;
+}
+
+div.panel-body > div {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: white;
+  font-weight: 300;
+}
+
+.btn-custom-nav.faq,
+.btn-custom-nav.faq:hover,
+.btn-custom-nav.faq:active,
+.btn-custom-nav.faq:focus {
+  border: 1px solid #337ab7;
+  width: 120px;
+  position: absolute;
+  color: #fff;
+  font-weight: 400;
+  text-decoration: none;
+  height: 26px;
+  right: 130px;
+  color: black;
+  top: 11px;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #517fa4;
+}
+
+.btn-custom-nav.my-account,
+.btn-custom-nav.my-account:hover,
+.btn-custom-nav.my-account:active,
+.btn-custom-nav.my-account:focus {
+  border: 1px solid #337ab7;
+  width: 120px;
+  position: absolute;
+  color: #fff;
+  font-weight: 400;
+  text-decoration: none;
+  height: 26px;
+  right: 30px;
+  color: black;
+  top: 11px;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #517fa4;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.side-bar {
+  position: fixed;
+  right: 0;
+  background: green;
+  height: 70%;
+  width: 260px;
+  text-align: center;
+}
+
+li {
+  cursor: pointer;
+}

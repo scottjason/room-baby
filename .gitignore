@@ -1,0 +1,9 @@
+dist/
+client/build/
+client/bower_components/
+node_modules/
+.DS_STORE
+.log
+.env
+env.js
+env.json

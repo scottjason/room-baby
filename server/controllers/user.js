@@ -1,0 +1,231 @@
+/**
+ * User Controller
+ */
+
+'use strict';
+
+var User = require('../models/user');
+var async = require('async');
+var crypto = require('crypto');
+var mailer = require('../config/utils/mailer');
+var dialog = require('../config/utils/dialog');
+var config = require('../config');
+var utils = require('../config/utils');
+
+var transporter = mailer.transporter();
+
+var connectAccts = function(req, res, next) {
+  User.findById(req.body._id, function(err, user){
+    console.log('user', user);
+    if(err) return next(err);
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.save(function(err, savedUser){
+      console.log('saved user', savedUser);
+      savedUser.password = null;
+      req.session.user = savedUser;
+      res.json({ user : savedUser });
+    })
+  })
+}
+
+exports.getOne = function(req, res, next) {
+  User.findById(req.params.user_id, function(err, user){
+    if(err) return next(err);
+    res.json({user: user});
+  });
+}
+
+exports.logout = function(req, res, next) {
+  req.session.destroy();
+  res.status(401).end();
+};
+
+exports.update = function(req, res, next) {
+  async.waterfall([
+    function(callback) {
+
+      if(req.body.connectFacebook) return connectAccts(req, res, next);
+
+      /* If the user is updating their password or their username */
+      if(req.body.updated.password || req.body.updated.username) return callback(null);
+
+      /* See if the email they want to update to is already registered */
+      User.findOne({ email: req.body.updated.email}, function(err, user) {
+        if (err) return callback(err);
+        if(user) return res.status(401).send(dialog.emailAlreadyExists);
+        callback(null);
+      })
+    },
+    function(callback) {
+
+      /* Pull down the user by id */
+      User.findById(req.body._id, function(err, user) {
+        if (err) return callback(err);
+
+      /* If no user is found */
+        if(!user) return res.status(401).send(dialog.noAccountFound);
+
+      /* If they are updating their username */
+        if (req.body.updated.username) {
+          user.username = req.body.updated.username;
+        }
+
+      /* If they are updating their email */
+        if (req.body.updated.email) {
+          user.oldEmail = user.email;
+          user.email = req.body.updated.email;
+        }
+
+      /* If they are updating their password */
+        if (req.body.updated.password) {
+          user.password = req.body.updated.password;
+        }
+
+      /* Save the user and handle the error */
+        user.save(function(err, savedUser) {
+          if (err) return callback(err);
+          if (!savedUser) return res.status(401).send(dialog.noAccountFound);
+          callback(null, savedUser);
+        });
+      });
+    },
+    function(user, callback) {
+    /* Generate the email template based on the attribute that was updated */
+      if(req.body.updated.email) {
+        mailer.generateTemplate("email", user, function(subject, html){
+          return callback(null, user, subject, html);
+        });
+      }
+      if(req.body.updated.password) {
+         mailer.generateTemplate("password", user, function(subject, html){
+           return callback(null, user, subject, html);
+        });
+      }
+      if(req.body.updated.username) {
+         mailer.generateTemplate("username", user, function(subject, html){
+         callback(null, user, subject, html);
+        });
+      }
+    },
+    function(user, subject, html, callback) {
+      /* Email the user the 'updated profile' template */
+      var mailOpts = {
+        to: user.email,
+        from: config.transport.email,
+        subject: subject,
+        html: html
+    };
+    transporter.sendMail(mailOpts, function(err, result) {
+      if(err) return callback(err);
+      callback(null, user, result);
+    });
+    },
+    function(user, result, callback) {
+      /* If the user updated their email, undefine their old email that was temporarily saved for the 'updated profile' email template  */
+      if (user.oldEmail) {
+        user.oldEmail = null;
+        user.save(function(err) {
+        if (err) return callback(err);
+        /* Don't pass down the users hashed password to the client or store in session */
+        user.password = null;
+        /* Replace the old session obj with the user's new credentials  */
+        req.session.user = user;
+        callback(null);
+      });
+      }
+    },
+  ],
+  function(err) {
+    if(err) return next(err);
+    res.json({ user: req.session.user });
+  })
+};
+
+exports.resetPass = function(req, res, next) {
+ async.waterfall([
+      function(callback) {
+        crypto.randomBytes(20, function(err, buf) {
+          if(err) return callback(err);
+          var token = buf.toString('hex');
+          callback(null, token);
+        });
+      },
+      function(token, callback) {
+        User.findOne({ email: req.body.email }, function(err, user) {
+          if (err) return callback(err);
+
+          /* If the user's account is not found */
+          if (!user) return res.status(401).send(dialog.noEmailFound);
+
+          user.utils.resetPassToken = token;
+          user.utils.resetPassExpires = Date.now() + 3600000; /* 1 hour */
+          user.save(function(err, savedUser) {
+            if (err) return callback(err);
+            callback(null, token, savedUser);
+          });
+        });
+      },
+      function(token, user, callback) {
+        var mailOpts = {
+          to: user.email,
+          from: config.transport.email,
+          subject: mailer.emails.subject.resetPassword,
+          html: mailer.emails.content.resetPassword(req.headers.host, token)
+        };
+        transporter.sendMail(mailOpts, function(err) {
+          if (err) return callback(err);
+          callback(null);
+        });
+      },
+    ],
+    function(err) {
+      if(err) return next(err);
+      res.send(dialog.resetSubmit);
+    }
+  )
+}
+
+exports.resetPassCallback = function(req, res, next) {
+  User.findOne({ 'utils.resetPassToken': req.params.token, 'utils.resetPassExpires': { $gt: Date.now() } }, function(err, user) {
+    if (err) return next(err);
+    res.render('reset-password');
+  });
+}
+
+exports.resetPassSubmit = function(req, res, next) {
+  async.waterfall([
+    function(callback) {
+      utils.parseUrl({type:"resetPassSubmit", url: req.headers.referer}, function(token){
+
+        User.findOne({ 'utils.resetPassToken': token }, function(err, user) {
+          if (err) return callback(err);
+
+          user.password = req.body.password;
+          user.utils.resetPassToken = null;
+          user.utils.resetPassExpires = null;
+          user.save(function(err, user) {
+            if (err) return callback(err);
+            callback(null, user)
+        });
+      });
+     })
+    },
+    function(user, callback) {
+      var mailOpts = {
+        to: user.email,
+        from: config.transport.email,
+        subject: mailer.emails.subject.resetPasswordSuccess,
+        html: mailer.emails.content.resetPasswordSuccess(user.email)
+      };
+      transporter.sendMail(mailOpts, function(err, result) {
+        if(err) return callback(err);
+        callback(null)
+      });
+    },
+  ],
+  function(err) {
+    if(err) return next(err);
+    res.redirect('/');
+  });
+};

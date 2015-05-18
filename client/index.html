@@ -1,0 +1,68 @@
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+  <base href="/"></base>
+  <meta charset="utf-8">
+  <meta author="Scott Jason">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Room Baby</title>
+  <!-- Start Lib CSS Build -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/build/vendor.min.css">
+  <link rel="stylesheet" href="/build/dev.min.css">
+  <!--[if lt IE 9]>
+        <script src="/bower_components/html5shiv/dist/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body ng-app="RoomBaby">
+  <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBar as navCtrl' class="navbar navbar-custom navbar-static-top">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">room baby</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right ">
+        <div ng-click='navCtrl.faq();' class="btn-custom faq">faq</div>
+        <li class="dropdown-toggle menu col-sm-pull-2">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            <div class="btn-custom-nav my-account">my account</div>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="">Settings</a></li>
+            <li><a href="">Change Password</a></li>
+            <li ng-click='navCtrl.dropdown("logout")'><a href="">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div ui-view></div>
+  <div ng-class="{'show-footer': ( showFooter )}" ng-controller='Footer as footerCtrl' class="navbar navbar-default navbar-fixed-bottom text-center">
+    <div class="container">
+      <ul class="nav navbar-nav footer-custom">
+        <li><a href="#about">Bottom</a></li>
+        <li><a href="#about">Bottom</a></li>
+        <li><a href="#contact">Menus</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- Grunt Build Vendor & Dev Scripts -->
+  <script src="/build/vendor.min.js"></script>
+  <script src="//static.opentok.com/v2/js/opentok.min.js"></script>
+  <script src="/build/dev.min.js"></script>
+</body>
+
+</html>

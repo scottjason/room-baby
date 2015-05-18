@@ -1,0 +1,93 @@
+.row-block {
+  margin-right: -15px;
+  margin-left: -15px;
+  height: 130px;
+}
+
+.btn-opts-container {
+  width: 300px;
+  height: 300px;
+}
+
+.white-block {
+  width: 400px;
+  height: 120px;
+  background-color: rgba(255, 255, 255, 1.0);
+  top: -145px;
+  left: 0;
+  right: 0;
+  bottom: 00;
+  margin: auto;
+  border-radius: 12px;
+  position: relative;
+  border: 1px solid #efefef;
+  display: none;
+}
+
+.fa-spin {
+  color: #337ab7;
+  opacity: .8;
+}
+
+.panel.panel-info {
+  min-width: 380px;
+  width: 70%;
+  margin: auto;
+  margin-bottom: 40px;
+  background: rgba(0, 0, 0, .6);
+  border: 1px solid white;
+}
+
+.panel-info>.panel-heading {
+  color: #31708f;
+  background-color: #efefef;
+  border-color: transparent;
+}
+
+.panel-body {
+  padding: 15px;
+  height: 100px;
+}
+
+.table-copy-title {
+  font-size: 15px;
+  color: rgba(0, 0, 0, .8);
+  font-weight: 300;
+  text-decoration: none !important;
+}
+
+.table-copy-created-by {
+  font-size: 15px;
+  color: rgba(0, 0, 0, .8);
+  font-weight: 300;
+  text-decoration: none !important;
+}
+
+.table-copy-status {
+  font-size: 15px;
+  color: rgba(0, 0, 0, .8);
+  font-weight: 300;
+  text-decoration: none !important;
+}
+
+.table-copy-connect,
+.table-copy-connect:hover {
+  font-size: 15px;
+  color: #337ab7;
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+tbody {
+  background: #efefef;
+}
+
+th {
+  color: white;
+  font-weight: 300;
+}
+
+p {
+  font-size: 24px;
+}
