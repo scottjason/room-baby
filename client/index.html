@@ -52,10 +52,11 @@
   <div ui-view></div>
   <div ng-class="{'show-footer': ( showFooter )}" ng-controller='Footer as footerCtrl' class="navbar navbar-default navbar-fixed-bottom text-center">
     <div class="container">
-      <ul class="nav navbar-nav footer-custom">
-        <li><a href="#about">Bottom</a></li>
-        <li><a href="#about">Bottom</a></li>
-        <li><a href="#contact">Menus</a></li>
+      <ul class="custom footer">
+      <li><div class="btn-custom share-location">share location</div></li>
+      <li><div  class="btn-custom share-file">share a file</div></li>
+      <li><div  class="btn-custom record-session">record session</div></li>
+      <li><div  class="btn-custom disconnect">disconnect</div></li>
       </ul>
     </div>
   </div>

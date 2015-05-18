@@ -3,7 +3,16 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function onReady() {
+
+    function run(type) {
+      if (type === 'onLanding') {
+        onLanding();
+      } else if (type === 'onDashboard') {
+        onDashboard();
+      }
+    };
+
+    function onLanding() {
       var roomBaby = angular.element(document.getElementById('room-baby'));
       var opts = {
         duration: 1500
@@ -18,12 +27,10 @@ angular.module('RoomBaby')
       var dashSequence = [
     { e: whiteBlock, p: { translateZ: 0, translateY: '140px' }, o: { duration: 700, display: 'block' } },
     { e: createRoomBtn, p: { opacity: 1 }, o: { duration: 300 } },
-    { e: createBroadcastBtn, p: { opacity: 1 }, o: { duration: 300 } },
-    { e: whiteBlock, p: { opacity: 0 }, o: { duration: 400 } }];
+    { e: createBroadcastBtn, p: { opacity: 1 }, o: { duration: 300 } }];
     $.Velocity.RunSequence(dashSequence);
     }
     return ({
-      onReady: onReady,
-      onDashboard: onDashboard
+      run: run
     });
   });

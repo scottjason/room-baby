@@ -14,6 +14,7 @@
   opacity: 1;
 }
 
+
 .navbar-custom {
   background-color: #efefef;
   color: #ffffff;
@@ -27,10 +28,9 @@ ul.nav.navbar-nav.footer-custom {
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 240px;
+  width: 1000%;
   text-align: center;
 }
-
 .navbar-custom .navbar-nav > li > a {
   color: rgba(0, 0, 0, .7);
   padding-left: 20px;

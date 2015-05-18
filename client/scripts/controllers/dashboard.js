@@ -10,7 +10,7 @@ function DashCtrl($scope, $state, $timeout, PubSub, UserApi, Animation, localSto
   $timeout(init, 500);
 
   function init() {
-    Animation.onDashboard();
+    Animation.run('onDashboard');
   };
 
   PubSub.on('Dashboard:CreateRoom', function() {

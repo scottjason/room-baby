@@ -8,7 +8,7 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, User
   var vm = this;
   $scope.user = {};
 
-  Animation.onReady();
+  Animation.run('onLanding');
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
