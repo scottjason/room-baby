@@ -31,7 +31,7 @@
           </td>
           <td class='table-copy-status'>{{obj.status}}</td>
           <td><i class="fa fa-refresh fa-spin"></i>
-            <a ng-click="dashCtrl.options(obj);" class="table-copy-connect">&nbsp;connect</a>
+            <a id='connect' name='connect' ng-click="dashCtrl.options($event, obj);" class="table-copy-connect">&nbsp;connect</a>
           </td>
         </tr>
       </tbody>

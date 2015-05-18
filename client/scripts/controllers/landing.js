@@ -124,7 +124,7 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, User
   };
 
   vm.accessGranted = function(opts) {
-    $state.go('dashboard', opts)
+    $state.go('dashboard', opts);
   };
 
   vm.renderError = function(errMessage) {

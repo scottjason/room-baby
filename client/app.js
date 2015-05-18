@@ -19,12 +19,12 @@ angular
       controller: 'LandingCtrl as landingCtrl'
     })
     .state('dashboard', {
-      url: '/dashboard',
+      url: '/dashboard/:user_id',
       templateUrl: 'views/dashboard.html',
       controller: 'DashCtrl as dashCtrl'
     })
     .state('session', {
-      url: '/dashboard/session',
+      url: '/dashboard/:user_id/',
       templateUrl: 'views/session.html',
       controller: 'SessionCtrl as sessionCtrl'
     })

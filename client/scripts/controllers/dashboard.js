@@ -55,8 +55,10 @@ function DashCtrl($scope, $state, $timeout, PubSub, UserApi, Animation, localSto
     }
   };
 
-  this.options = function(obj) {
-    console.log('obj', obj);
+  this.options = function($event, obj) {
+    if ($event.currentTarget.name === 'connect') {
+      vm.connect(obj);
+    }
   };
 
   vm.renderTable = function() {
@@ -83,6 +85,15 @@ function DashCtrl($scope, $state, $timeout, PubSub, UserApi, Animation, localSto
       obj.options = 'connect';
       $scope.allSessions.push(obj);
     });
+  };
+
+  vm.connect = function(otSession) {
+    console.log('connecting to ', otSession);
+    localStorageService.set('otSession', otSession);
+    var opts = {
+      user_id: $scope.user._id,
+    }
+    $state.go('session', opts);
   };
 
   DashCtrl.$inject['$scope', '$state', '$timeout', 'PubSub', 'UserApi', 'Animation', 'localStorageService'];
