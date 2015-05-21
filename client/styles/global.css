@@ -35,6 +35,7 @@ li {
 .show-footer > div > ul > li > div {
   width: 800px;
 }
+
 .nav.navbar-nav.footer-custom {
   display: inline-flex;
   width: 800px;
@@ -49,6 +50,25 @@ li {
   width: 100%;
   max-width: 100%;
   margin-bottom: 20px;
+}
+
+.btn-custom-send,
+.btn-custom-send:hover,
+.btn-custom-send:active,
+.btn-custom-send:focus {
+  border: 1px solid #337ab7;
+  width: 120px;
+  font-weight: 300;
+  text-decoration: none;
+  top: 11px;
+  height: 30px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #337ab7;
+  background: #fff;
+  margin: auto;
 }
 
 .btn-custom-landing,
@@ -176,7 +196,7 @@ li {
   text-align: center;
   cursor: pointer;
   color: #517fa4;
-  top: 122px;
+  top: 130px;
   margin: auto;
   left: 0;
   right: 0;
@@ -199,7 +219,7 @@ li {
   text-align: center;
   cursor: pointer;
   color: #517fa4;
-  top: 84px;
+  top: 91px;
   margin: auto;
   left: 0;
   right: 0;
@@ -281,7 +301,7 @@ div.panel-body > div {
   color: #517fa4;
 }
 
-.cursor-pointer {
+.add-cursor {
   cursor: pointer;
 }
 

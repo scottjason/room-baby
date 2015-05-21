@@ -12,10 +12,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Room Baby</title>
   <!-- Start Lib CSS Build -->
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/build/vendor.min.css">
+  <link rel="stylesheet" href="/styles/lib/tipped.css">
   <link rel="stylesheet" href="/build/dev.min.css">
   <!--[if lt IE 9]>
         <script src="/bower_components/html5shiv/dist/html5shiv.js"></script>
@@ -23,7 +23,34 @@
 </head>
 
 <body ng-app="RoomBaby">
-  <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBar as navCtrl' class="navbar navbar-custom navbar-static-top">
+  <script type="text/javascript">
+  if (window.location.hash && (window.location.hash == '#_=_' || window.location.hash == '#')) {
+    if (window.history && history.pushState) {
+      window.history.pushState("", document.title, window.location.pathname);
+    } else {
+      var scroll = {
+        top: document.body.scrollTop,
+        left: document.body.scrollLeft
+      };
+      window.location.hash = '';
+      document.body.scrollTop = scroll.top;
+      document.body.scrollLeft = scroll.left;
+    }
+  }
+  </script>
+  <div id="fb-root"></div>
+  <script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=921064881267563&version=v2.3";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  </script>
+  <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' 
+  ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -35,22 +62,23 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right ">
-        <div ng-click='navCtrl.faq();' class="btn-custom faq">faq</div>
+        <!-- <div ng-click='navBarCtrl.faq();' class="btn-custom faq">{{user.username}}</div> -->
         <li class="dropdown-toggle menu col-sm-pull-2">
           <a class="dropdown-toggle" data-toggle="dropdown">
-            <div class="btn-custom-nav my-account">my account</div>
+            <div class="btn-custom-nav my-account">{{user.username}}</div>
           </a>
           <ul class="dropdown-menu">
             <li><a href="">Settings</a></li>
             <li><a href="">Change Password</a></li>
-            <li ng-click='navCtrl.dropdown("logout")'><a href="">Logout</a></li>
+            <li ng-click='navBarCtrl.dropdown("logout")'><a href="">Logout</a></li>
           </ul>
         </li>
       </ul>
     </div>
   </nav>
   <div ui-view></div>
-  <div ng-class="{'show-footer': ( showFooter )}" ng-controller='Footer as footerCtrl' class="navbar navbar-default navbar-fixed-bottom text-center">
+  <div ng-class="{'show-footer': ( showFooter )}" ng-controller='FooterCtrl as footerCtrl'
+  ng-init='footerCtrl.registerEvents();' class="navbar navbar-default navbar-fixed-bottom text-center">
     <div class="container">
       <ul class="custom footer">
         <li>
@@ -63,14 +91,16 @@
           <div class="btn-custom record-session">record session</div>
         </li>
         <li>
-          <div class="btn-custom disconnect">disconnect</div>
+          <div ng-click='footerCtrl.options("disconnect")' class="btn-custom disconnect">disconnect</div>
         </li>
       </ul>
     </div>
   </div>
   <!-- Grunt Build Vendor & Dev Scripts -->
   <script src="/build/vendor.min.js"></script>
-  <script src="//static.opentok.com/v2/js/opentok.min.js"></script>
+  <script src="/scripts/lib/opentok-min.js"></script>
+  <script src="/scripts/lib/opentok-layout.min.js"></script>
+  <script src="/scripts/lib/tipped.min.js"></script>
   <script src="/build/dev.min.js"></script>
 </body>
 

@@ -1,6 +1,16 @@
-  #layoutContainer {
-    width: 320px;
-    height: 240px;
-    background-color: #DDD;
-    position: relative;
-  }
+#layout-container {
+  position: absolute;
+  top: 85px;
+  height: 80%;
+  width: 70%;
+  left: 10px;
+  right: 200px;
+  bottom: 0;
+  background-color: #DDD;
+}
+
+#layout-container > div {
+  background-color: #000;
+  display: inline-block;
+  border: 1px solid #fff;
+}

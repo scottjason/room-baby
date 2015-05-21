@@ -1,10 +1,15 @@
-<div ng-init='dashCtrl.isAuthenticated();'></div>
+<div ng-init='dashCtrl.registerEvents(); dashCtrl.isAuthenticated();'></div>
 <div class="container">
   <div class="row-block">
-  <div id='white-block' class='white-block'></div>
+    <div id='white-block' class='white-block'></div>
     <div class="center-block btn-opts-container">
-      <div id="create-room-btn" ng-click='dashCtrl.createRoom("create");' class="btn-custom create-a-room">create a room</div>
-      <div id="create-broadcast-btn" ng-click='dashCtrl.createRoom("create");' class="btn-custom create-a-broadcast">create a broadcast</div>
+      <div ng-hide='showCreateRoom || showCreateBroadcast' id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
+      <div  ng-hide='showCreateRoom || showCreateBroadcast' id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
+      <div ng-show='showCreateRoom' class='create-a-room-container'>
+        <p class='room-option-copy'>create a room now</p>
+        <hr class='room-option-line'>
+      </div>
+
     </div>
   </div>
 </div>

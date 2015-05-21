@@ -10,9 +10,10 @@
           <br>
           <br>
           <div class="landing-btn-container">
-            <a ng-click="landingCtrl.selectedOpt('login');" class="btn btn-md btn-custom-landing">Login</a>
-            <a ng-click="landingCtrl.selectedOpt('register');" class="btn btn-md btn-custom-landing">Register</a>
-            <a ng-click="landingCtrl.selectedOpt('learn-more');" class="btn btn-md btn-custom-landing">Learn More</a>
+            <a id='login' ng-click="landingCtrl.selectedOpt('login');" class="btn btn-md btn-custom-landing">Login</a>
+            <a id='register' ng-click="landingCtrl.selectedOpt('register');" class="btn btn-md btn-custom-landing">Register</a>
+            <a id='facebook' ng-click="landingCtrl.selectedOpt('facebook');" class="btn btn-md btn-custom-landing">Facebook</a>
+            <a id='learn' ng-click="landingCtrl.selectedOpt('learn-more');" class="btn btn-md btn-custom-landing">Learn More</a>
           </div>
         </div>
         <!-- *** End Landing Options Container *** -->
@@ -30,7 +31,10 @@
                 <span id="remember-me"> remember me <input type="checkbox"></span>
             </div>
           </form>
+               <div class='go-back-container add-cursor'>
+            <i class="fa fa-backward"><span ng-click="landingCtrl.goBack();" class="go-back-copy">back</span> </i>
           </div>
+        </div>
         <!-- *** End Login Container *** -->
         <!-- *** Begin Register Container *** -->
         <div ng-show="showRegister" class='auth-container'>
@@ -44,8 +48,8 @@
                 <span class="add-line-opacity add-cursor">|</span> forgot password?
             </div>
           </form>
-          <div class='go-back-container'>
-            <i class="fa fa-backward"><span ng-click="landingCtrl.goBack('register');" class="go-back-copy add-cursor">back</span> </i>
+          <div class='go-back-container add-cursor'>
+            <i class="fa fa-backward"><span ng-click="landingCtrl.goBack();" class="go-back-copy">back</span> </i>
           </div>
         </div>
         <!-- *** End Register Container *** -->

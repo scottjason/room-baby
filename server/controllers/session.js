@@ -17,7 +17,6 @@ var mailer = require('../config/utils/mailer');
 var dialog = require('../config/utils/dialog');
 var uploader = require('../config/utils/uploader');
 var config = require('../config');
-var app = require('../app');
 
 AWS.config.update(config.aws.credens);
 var s3Bucket = new AWS.S3();
@@ -25,10 +24,10 @@ var s3Bucket = new AWS.S3();
 var opentok = new OpenTok(config.openTok.key, config.openTok.secret);
 var transporter = mailer.transporter();
 
-
 exports.getAll = function(req, res, next) {
   var sessionArr = [];
   Session.find({ users: { $elemMatch: { _id: req.params.user_id } } }, function (err, sessions) {
+    console.log(sessions);
     if (err) return next(err);
     if(!sessions.length) return res.json({ session: sessionArr });
     sessions.forEach(function(session){

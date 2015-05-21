@@ -1,18 +1,30 @@
 'use strict';
 
 angular.module('RoomBaby')
-  .controller('Footer', Footer);
+  .controller('FooterCtrl', FooterCtrl);
 
-function Footer($scope, PubSub) {
+function FooterCtrl($scope, PubSub) {
   var vm = this;
+  $scope.user = {};
 
-  PubSub.on('toggleFooter', function(_bool) {
-    $scope.showFooter = _bool;
-  });
+  this.registerEvents = function() {
+    PubSub.on('toggleFooter', function(_bool) {
+      $scope.showFooter = _bool;
+    });
 
-  PubSub.on('setUser', function(user) {
-    $scope.user = user;
-  });
+    PubSub.on('setUser', function(user) {
+      $scope.user = user;
+    });
+  };
 
-  Footer.$inject['$scope', 'PubSub'];
+  this.submitUserName = function(data) {
+    PubSub.trigger('setUserName', $scope.user.username);
+  };
+
+  this.options = function(type) {
+    if (type === 'disconnect') {
+      PubSub.trigger('disconnect');
+    }
+  };
+  FooterCtrl.$inject['$scope', 'PubSub'];
 }

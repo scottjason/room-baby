@@ -1,20 +1,24 @@
 'use strict';
 
 angular.module('RoomBaby')
-  .controller('NavBar', NavBar);
+  .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBar($scope, $state, UserApi, PubSub) {
-  $scope.showNavBar = null;
-  $scope.user = {};
+function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
+
   var vm = this;
 
-  PubSub.on('toggleNavBar', function(_bool) {
-    $scope.showNavBar = _bool;
-  });
+  $scope.showNavBar = null;
+  $scope.user = {};
 
-  PubSub.on('setUser', function(user){
-    $scope.user = user;
-  });
+  this.registerEvents = function() {
+    PubSub.on('toggleNavBar', function(_bool) {
+      $scope.showNavBar = _bool;
+    });
+
+    PubSub.on('setUser', function(user) {
+      $scope.user = user;
+    });
+  };
 
   this.faq = function() {
     console.log('faq');
@@ -32,10 +36,11 @@ function NavBar($scope, $state, UserApi, PubSub) {
   };
 
   vm.logout = function(user_id) {
-    UserApi.logout(user_id).then(function(response){
+    localStorageService.clearAll();
+    UserApi.logout(user_id).then(function(response) {
       $state.go('landing');
-    })
+    });
   };
 
-  NavBar.$inject['$scope', '$state', 'UserApi', 'PubSub'];
+  NavBarCtrl.$inject['$scope', '$state', 'UserApi', 'PubSub', 'localStorageService'];
 }

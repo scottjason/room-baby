@@ -7,6 +7,7 @@ angular
     'ui.router',
     'ui.bootstrap',
     'ngSanitize',
+    'ngDialog',
     'LocalStorageModule'
   ])
 

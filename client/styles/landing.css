@@ -21,6 +21,7 @@ span.add-line-opacity {
   font-family: 'brandon_grotesquethin';
   font-size: 62px;
   color: white;
+  opacity: 0;
 }
 
 .landing-line {

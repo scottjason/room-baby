@@ -17,10 +17,12 @@ module.exports = function(app, passport) {
 
 /* Not Protected EndPoints */
   router.post('/reset', userCtrl.resetPass);
+  router.post('/save-user-name', userCtrl.saveUserName);
   router.get('/reset/:token', userCtrl.resetPassCallback)
   router.post('/reset-submit', userCtrl.resetPassSubmit);
   router.get('/logout/:user_id', userCtrl.logout);
-  router.get('/getOne/:user_id', userCtrl.getOne);
+  router.get('/get-one/:user_id', userCtrl.getOne);
+  router.get('/get-all/:user_id', userCtrl.getAll);
 
   router.post('/login', function(req, res, next) {
     console.log(req.body)

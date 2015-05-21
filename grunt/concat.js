@@ -6,7 +6,8 @@ module.exports = {
   },
   dev_scripts: {
     src: ['client/app.js',
-      'client/scripts/**/*.js'
+      'client/scripts/**/*.js',
+      '!client/scripts/lib/*.*'
     ],
     dest: 'client/build/dev.js'
   },
@@ -23,6 +24,7 @@ module.exports = {
       'client/bower_components/angular-sanitize/angular-sanitize.js',
       'client/bower_components/angular-smart-table/dist/smart-table.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
+      'client/bower_components/ngDialog/js/ngDialog.js',
       'client/bower_components/moment/moment.js',
       'client/bower_components/html5shiv/dist/html5shiv.js'
     ],
@@ -33,7 +35,7 @@ module.exports = {
     dest: 'client/build/dev.css'
   },
   vendor_styles: {
-    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css'],
+    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css', 'client/styles/lib/tooltip.css'],
     dest: 'client/build/vendor.css'
   },
 };

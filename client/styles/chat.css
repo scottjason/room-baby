@@ -1,0 +1,256 @@
+.fa-check {
+  color: #16a085;
+}
+
+p.connected-with {
+  font-size: 13px;
+  color: #16a085;
+  font-weight: 400;
+}
+
+span.session-started {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .7);
+}
+
+.sent-by {
+  font-size: 14px;
+  text-align: right;
+}
+
+p.chat-text {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .7);
+  text-align: left;
+}
+
+.portlet {
+  margin-bottom: 15px;
+  padding-right: 45px;
+  width: 370px;
+  border-color: transparent;
+}
+
+.btn-white {
+  border-color: #cccccc;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+.portlet {
+  border: 1px solid;
+}
+
+.portlet .portlet-heading {
+  padding: 0 15px;
+}
+
+.portlet .portlet-heading h4 {
+  padding: 1px 0;
+  font-size: 16px;
+}
+
+.portlet .portlet-heading a {
+  color: #fff;
+}
+
+.portlet .portlet-heading a:hover,
+.portlet .portlet-heading a:active,
+.portlet .portlet-heading a:focus {
+  outline: none;
+}
+
+.portlet .portlet-widgets .dropdown-menu a {
+  color: #333;
+}
+
+.portlet .portlet-widgets ul.dropdown-menu {
+  min-width: 0;
+}
+
+.portlet .portlet-heading .portlet-title {
+  float: left;
+}
+
+.portlet .portlet-heading .portlet-title h4 {
+  margin: 10px 0;
+}
+
+.portlet .portlet-heading .portlet-widgets {
+  float: right;
+  margin: 8px 0;
+}
+
+.portlet .portlet-heading .portlet-widgets .tabbed-portlets {
+  display: inline;
+}
+
+.portlet .portlet-heading .portlet-widgets .divider {
+  margin: 0 5px;
+}
+
+.portlet .portlet-body {
+  padding: 15px;
+  background: #fff;
+}
+
+.portlet .portlet-footer {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+.portlet .portlet-footer ul {
+  margin: 0;
+}
+
+.portlet-green,
+.portlet-green>.portlet-heading {
+  border-color: #16a085;
+}
+
+.portlet-green>.portlet-heading {
+  color: #fff;
+  background-color: #16a085;
+}
+
+.portlet-orange,
+.portlet-orange>.portlet-heading {
+  border-color: #f39c12;
+}
+
+.portlet-orange>.portlet-heading {
+  color: #fff;
+  background-color: #f39c12;
+}
+
+.portlet-blue,
+.portlet-blue>.portlet-heading {
+  border-color: #2980b9;
+}
+
+.portlet-blue>.portlet-heading {
+  color: #fff;
+  background-color: #2980b9;
+}
+
+.portlet-red,
+.portlet-red>.portlet-heading {
+  border-color: #e74c3c;
+}
+
+.portlet-red>.portlet-heading {
+  color: #fff;
+  background-color: #e74c3c;
+}
+
+.portlet-purple,
+.portlet-purple>.portlet-heading {
+  border-color: #8e44ad;
+}
+
+.portlet-purple>.portlet-heading {
+  color: #fff;
+  background-color: #8e44ad;
+}
+
+.portlet-default,
+.portlet-dark-blue,
+.portlet-default>.portlet-heading,
+.portlet-dark-blue>.portlet-heading {
+  border-color: #34495e;
+}
+
+.portlet-default>.portlet-heading,
+.portlet-dark-blue>.portlet-heading {
+  color: #fff;
+  background-color: #34495e;
+}
+
+.portlet-basic,
+.portlet-basic>.portlet-heading {
+  border-color: #333;
+}
+
+.portlet-basic>.portlet-heading {
+  border-bottom: 1px solid #333;
+  color: #333;
+  background-color: #fff;
+}
+
+@media(min-width:768px) {
+  .portlet {
+    margin-bottom: 30px;
+  }
+}
+
+.text-green {
+  color: #16a085;
+}
+
+.text-orange {
+  color: #f39c12;
+}
+
+.text-red {
+  color: #e74c3c;
+}
+
+.sidebar {
+  position: fixed;
+  right: 0;
+  background: green;
+  width: 340px;
+  right: 10px;
+  height: 509px;
+  top: 88px;
+  text-align: center;
+  background-color: transparent;
+  border-color: transparent;
+  /*background: #fff;*/
+}
+
+.chat-title {
+  font-size: 18px;
+  padding-top: 6px;
+}
+
+hr.chat-title-line {
+  margin-top: 20px;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, .5);
+  width: 80%;
+}
+
+.panel.panel-primary {
+  position: absolute;
+  width: 343px;
+  margin-left: -17px;
+  height: 510px;
+}
+
+.panel-primary>.panel-heading {
+  background-color: #517fa4;
+}
+
+p.connected {
+  font-size: 14px;
+  color: #337ab7;
+  display: inline-block;
+}
+
+p.location {
+  color: #337ab7;
+  font-size: 14px;
+  padding-left: 5px;
+  display: inline-block;
+}
+
+.status-container {
+  padding-top: 45px;
+  text-align: center;
+}
+
+div.panel-body > p > span {
+  color: rgba(0, 0, 0, .7);
+  text-align: center;
+}

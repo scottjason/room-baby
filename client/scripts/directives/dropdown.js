@@ -1,11 +1,10 @@
 angular.module('RoomBaby')
   .directive('appClick', function() {
     return {
-      restrict: 'A',
-      controller: 'NavBar',
-      controllerAs: 'navCtrl',
-      link: function($scope, elem, attr) {
-        
+      restrict: 'E',
+      link: function(scope, elem, attr) {
+        elem.bind('click', function() {
+        })
       }
     };
   });

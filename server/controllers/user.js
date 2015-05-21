@@ -5,6 +5,7 @@
 'use strict';
 
 var User = require('../models/user');
+var Session = require('../models/session');
 var async = require('async');
 var crypto = require('crypto');
 var mailer = require('../config/utils/mailer');
@@ -27,14 +28,56 @@ var connectAccts = function(req, res, next) {
       res.json({ user : savedUser });
     })
   })
+};
+
+exports.saveUserName = function(req, res, next) {
+  User.findById(req.body._id, function(err, user){
+    user.username = req.body.username;
+    user.save(function(err, savedUser){
+      if (err) return next(err);
+      res.json(savedUser);
+    })
+  })
 }
 
 exports.getOne = function(req, res, next) {
   User.findById(req.params.user_id, function(err, user){
     if(err) return next(err);
-    res.json({user: user});
+    res.json({ user: user });
   });
-}
+};
+
+exports.getAll = function(req, res, next) {
+  async.series({
+    user: function(callback){
+      User.findById(req.params.user_id, function(err, user){
+      if (err) return callback(err);
+      callback(null, user);
+    });
+  },
+    session: function(callback){
+      var sessionArr = [];
+      Session.find({ users: { $elemMatch: { _id: req.params.user_id } } }, function (err, sessions) {
+        if (err) return callback(err);
+        if(!sessions.length) return callback(null, sessionArr);
+        sessions.forEach(function(session){
+          session.key = config.openTok.key;
+          session.secret = config.openTok.secret;
+          sessionArr.push(session);
+        })
+        callback(null, sessionArr);
+      });
+    }
+  },
+  function(err, results) {
+    if (err) return next(err)
+    if (results.user && results.session.length) {
+      res.json( { user: results.user, session: results.session } );
+    } else if (results.user) {
+      res.json( { user: results.user } );
+    }
+  });
+};
 
 exports.logout = function(req, res, next) {
   req.session.destroy();

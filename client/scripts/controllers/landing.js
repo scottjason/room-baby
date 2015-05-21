@@ -3,14 +3,30 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $timeout, $window, UserApi, PubSub, Animation, localStorageService) {
 
   var vm = this;
   $scope.user = {};
 
-  Animation.run('onLanding');
+  function init() {
+    Animation.run('onLanding');
+    Tipped.create('#facebook', 'login with facebook');
+    Tipped.create('#login', 'login with your email');
+    Tipped.create('#register', 'create an account');
+    Tipped.create('#learn', 'how this works');
+    localStorageService.clearAll();
+  };
 
   this.isAuthenticated = function() {
+    if (localStorageService.get('dashboardLoaded')) {
+      var user_id = localStorageService.get('user')._id;
+      var opts = {
+        user_id: user_id
+      };
+      $state.go('dashboard', opts);
+      return;
+    }
+    $timeout(init, 100);
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.session) {
         var user = response.data.user;
@@ -48,10 +64,14 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, User
       $scope.learnMore = null;
       $scope.showLogin = null;
       $scope.showRegister = true;
+    } else if (optSelected === 'facebook') {
+      localStorageService.set('facebookLogin', true);
+      $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
     } else {
       $scope.learnMore = true;
     }
   };
+
 
   this.submitForm = function(type) {
     if (type === 'login') {
@@ -75,10 +95,10 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, User
     }
   };
 
-  this.reloadState = function() {
-    $state.go($state.current, {}, {
-      reload: true
-    });
+  this.goBack = function() {
+    $scope.learnMore = null;
+    $scope.showLogin = null;
+    $scope.showRegister = null;
   };
 
   vm.login = function() {
@@ -131,6 +151,5 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, $modal, User
     $scope.errMessage = errMessage;
   };
 
-
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', '$modal', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
 };

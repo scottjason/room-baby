@@ -21,6 +21,15 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function saveUserName(params) {
+      var request = $http({
+        method: 'POST',
+        url: '/user/save-user-name',
+        data: params
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function logout(user_id) {
       var request = $http({
         method: 'GET',
@@ -38,10 +47,18 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function getAll(user_id) {
+      var request = $http({
+        method: 'GET',
+        url: '/user/get-all/' + user_id
+      })
+      return (request.then(successHandler, errorHandler));
+    }
+
     function getOne(user_id) {
       var request = $http({
         method: 'GET',
-        url: '/user/getOne/' + user_id
+        url: '/user/get-one/' + user_id
       })
       return (request.then(successHandler, errorHandler));
     }
@@ -77,6 +94,8 @@ angular.module('RoomBaby')
       register: register,
       update: update,
       getOne: getOne,
+      getAll: getAll,
+      saveUserName: saveUserName,
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated
     });
