@@ -52,6 +52,27 @@ li {
   margin-bottom: 20px;
 }
 
+.btn-custom-next,
+.btn-custom-next:hover,
+.btn-custom-next:active,
+.btn-custom-next:focus {
+  border: 1px solid #337ab7;
+  background-color: white;
+  width: 90px;
+  font-weight: 300;
+  text-decoration: none;
+  top: 11px;
+  height: 27px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #337ab7;
+  margin: auto;
+  float: right;
+  margin-top: 6px;
+}
+
 .btn-custom-send,
 .btn-custom-send:hover,
 .btn-custom-send:active,

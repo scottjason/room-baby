@@ -3,21 +3,15 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Transport, localStorageService) {
 
   var vm = this;
+  var timeSent = moment(new Date()).calendar();
   $rootScope.connectionCount = 0;
 
-  var resizeTimeout;
-  window.onresize = function() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(function() {
-      layout();
-    }, 20);
-  };
+
 
   var layoutContainer = document.getElementById('layout-container');
-
   var layout = TB.initLayoutContainer(layoutContainer, {
     animate: {
       duration: 500,
@@ -25,6 +19,14 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
     },
     bigFixedRatio: false
   }).layout;
+
+  $window.onresize = function() {
+    var resizeCams = function() {
+      layout();
+      $timeout.cancel(promise);
+    }
+    var promise = $timeout(resizeCams, 20);
+  };
 
   /* UI Responders */
   this.sendMessage = function() {
@@ -37,10 +39,10 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
     obj.sentBy = $scope.user.username;
     obj.message = $scope.user.message;
     $scope.user.message = '';
-    var timeSent = moment(new Date()).calendar();
+    var timeSent = angular.copy(timeSent);
     timeSent = timeSent.split(' ');
     timeSent.splice(0, 2);
-    timeSent.join(' ');
+    timeSent = timeSent.join(' ');
     obj.timeSent = timeSent;
     var messageString = JSON.stringify(obj);
     vm.broadcast('message', messageString);
@@ -48,9 +50,10 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
 
 
   this.init = function() {
+    PubSub.on('disconnect', vm.disconnect);
+    PubSub.on('fileShare', vm.shareFile);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('toggleFooter', true);
-    PubSub.on('disconnect', vm.disconnect);
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
     vm.createSession($scope.otSession);
@@ -97,7 +100,10 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
     $scope.session.on('sessionDisconnected', function(event) {
       $rootScope.connectionCount--;
       console.debug('sessionDisconnected');
-
+      var opts = {
+        user_id: $scope.user._id
+      }
+      vm.routeToDashboard(opts);
     });
 
     $scope.session.on('connectionDestroyed', function(event) {
@@ -118,8 +124,15 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
       var sentBy = data.sentBy;
       var message = data.message;
       var timeSent = data.timeSent;
-      var imageLink = 'http://lorempixel.com/30/30/people/1/'
       Transport.render(sentBy, message, imageLink, timeSent);
+    });
+
+    $scope.session.on('signal:file', function(event) {
+      var data = JSON.parse(event.data);
+      var sentBy = data.sentBy;
+      var fileUrl = data.fileUrl;
+      var timeSent = data.timeSent;
+      Transport.sendFile(sentBy, fileUrl, timeSent);
     });
 
     vm.createConnection(otSession);
@@ -144,6 +157,27 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
     });
   };
 
+  vm.disconnect = function() {
+    $scope.session.disconnect();
+  };
+
+  vm.shareFile = function(fileUrl) {
+    var obj = {};
+    obj.sentBy = $scope.user.username;
+    obj.fileUrl = fileUrl;
+    var timeSent = angular.copy(timeSent);
+    timeSent = timeSent.split(' ');
+    timeSent.splice(0, 2);
+    timeSent = timeSent.join(' ');
+    obj.timeSent = timeSent;
+    var messageString = JSON.stringify(obj);
+    vm.broadcast('file', messageString);
+  };
+
+  vm.routeToDashboard = function(opts) {
+    $state.go('dashboard', opts);
+  };
+
   vm.emit = function(type, message) {
     $scope.session.signal({
       to: $scope.connectionObj,
@@ -163,9 +197,6 @@ function SessionCtrl($scope, $rootScope, $state, UserApi, PubSub, Transport, loc
     });
   };
 
-  vm.disconnect = function() {
-    $scope.session.disconnect();
-  };
 
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', 'UserApi', 'PubSub', 'Transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'UserApi', 'PubSub', 'Transport', 'localStorageService'];
 }

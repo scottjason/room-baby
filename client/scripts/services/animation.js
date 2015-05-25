@@ -3,7 +3,6 @@ angular.module('RoomBaby')
 
     'use strict'
 
-
     function run(type) {
       if (type === 'onLanding') {
         onLanding();

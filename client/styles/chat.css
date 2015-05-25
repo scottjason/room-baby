@@ -1,3 +1,8 @@
+.media-object.img-circle {
+  width: 35px;
+  height: 35px;
+}
+
 .fa-check {
   color: #16a085;
 }
@@ -14,8 +19,9 @@ span.session-started {
 }
 
 .sent-by {
-  font-size: 14px;
+  font-size: 13px;
   text-align: right;
+  color: rgba(0, 0, 0, .6);
 }
 
 p.chat-text {

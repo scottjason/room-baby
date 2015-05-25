@@ -10,7 +10,7 @@ angular.module('RoomBaby')
         data: params
       });
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function register(params) {
       var request = $http({
@@ -19,7 +19,7 @@ angular.module('RoomBaby')
         data: params
       });
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function saveUserName(params) {
       var request = $http({
@@ -28,7 +28,7 @@ angular.module('RoomBaby')
         data: params
       });
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function logout(user_id) {
       var request = $http({
@@ -36,7 +36,7 @@ angular.module('RoomBaby')
         url: '/user/logout/' + user_id
       });
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function update(params) {
       var request = $http({
@@ -45,7 +45,7 @@ angular.module('RoomBaby')
         data: params
       });
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function getAll(user_id) {
       var request = $http({
@@ -53,7 +53,7 @@ angular.module('RoomBaby')
         url: '/user/get-all/' + user_id
       })
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function getOne(user_id) {
       var request = $http({
@@ -61,7 +61,7 @@ angular.module('RoomBaby')
         url: '/user/get-one/' + user_id
       })
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function resetPassword(params) {
       var request = $http({
@@ -70,7 +70,7 @@ angular.module('RoomBaby')
         data: params
       })
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function isAuthenticated() {
       var request = $http({
@@ -78,15 +78,15 @@ angular.module('RoomBaby')
         url: '/user/authenticate'
       })
       return (request.then(successHandler, errorHandler));
-    }
+    };
 
     function successHandler(response) {
       return (response);
-    }
+    };
 
     function errorHandler(response) {
       return (response);
-    }
+    };
 
     return ({
       login: login,

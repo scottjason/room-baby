@@ -1,19 +1,32 @@
-<div ng-init='dashCtrl.registerEvents(); dashCtrl.isAuthenticated();'></div>
+<div ng-init='dashCtrl.registerEvents(); dashCtrl.initialize();'></div>
 <div class="container">
   <div class="row-block">
     <div id='white-block' class='white-block'></div>
     <div class="center-block btn-opts-container">
-      <div ng-hide='showCreateRoom || showCreateBroadcast' id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
-      <div  ng-hide='showCreateRoom || showCreateBroadcast' id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
-      <div ng-show='showCreateRoom' class='create-a-room-container'>
-        <p class='room-option-copy'>create a room now</p>
-        <hr class='room-option-line'>
+      <div ng-hide='showCreateRoom || showCreateBroadcast || showNext'>
+        <div id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
+        <div ng-hide='showCreateRoom || showCreateBroadcast' id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
       </div>
-
+      <div ng-show='showCreateRoom' class='create-a-room-container'>
+        <p class='room-option-copy'>enter the title of the room</p>
+        <hr class='room-option-line'>
+        <form name="roomForm" id="create-a-room" class="form-inline" ng-submit="dashCtrl.collectTitle();">
+          <input id="create-room-input" class="input-small" ng-model="invitedUser.title" type="text" placeholder="Monday Morning Meeting">
+          <button type="submit" class="btn btn-custom-next">next</button>
+        </form>
+      </div>
+      <div ng-show='showNext' class='create-a-room-container'>
+        <p class='room-option-copy'>enter the email address of your guest</p>
+        <hr class='room-option-line'>
+        <form name="roomForm" id="create-a-room" class="form-inline" ng-submit="dashCtrl.collectEmail();">
+          <input id="create-room-input" class="input-small" ng-model="invitedUser.email" type="text" placeholder="yourguest@gmail.com">
+          <button type="submit" class="btn btn-custom-next">create</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-<div class="container">
+<div ng-show='showTable' class="container">
   <div class="row">
     <table st-table="allSessions" class="table table-striped">
       <thead>

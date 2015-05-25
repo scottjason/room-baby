@@ -1,12 +1,28 @@
+input.input-small#create-room-input[type=text] {
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  background-color: rgba(0, 0, 0, .7);
+  width: 300px;
+  margin-top: 8px;
+}
+
+p.opts-description {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
 .create-a-room-container {
   text-align: center;
   position: relative;
   margin-top: -119px;
 }
 
-.room-option-copy {
+p.room-option-copy {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
   font-size: 16px;
-  color: rgba(0, 0, 0, .7);
+  color: #31708f;
 }
 
 hr.room-option-line {

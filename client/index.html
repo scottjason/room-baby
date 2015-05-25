@@ -17,27 +17,25 @@
   <link rel="stylesheet" href="/build/vendor.min.css">
   <link rel="stylesheet" href="/styles/lib/tipped.css">
   <link rel="stylesheet" href="/build/dev.min.css">
+  <link rel="shortcut icon" href="http://faviconist.com/icons/f72ca320738ea14315aaddb21a3aded9/favicon.ico" />
   <!--[if lt IE 9]>
         <script src="/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
+  <script type="text/javascript">
+  // IE and Chrome
+  if (String(window.location.hash).substring(0, 1) == "#") {
+    window.location.hash = "";
+    window.location.href = window.location.href.slice(0, -1);
+  }
+  // Firefox
+  if (String(location.hash).substring(0, 1) == "#") {
+    location.hash = "";
+    location.href = location.href.substring(0, location.href.length - 3);
+  }
+  </script>
 </head>
 
 <body ng-app="RoomBaby">
-  <script type="text/javascript">
-  if (window.location.hash && (window.location.hash == '#_=_' || window.location.hash == '#')) {
-    if (window.history && history.pushState) {
-      window.history.pushState("", document.title, window.location.pathname);
-    } else {
-      var scroll = {
-        top: document.body.scrollTop,
-        left: document.body.scrollLeft
-      };
-      window.location.hash = '';
-      document.body.scrollTop = scroll.top;
-      document.body.scrollLeft = scroll.left;
-    }
-  }
-  </script>
   <div id="fb-root"></div>
   <script>
   (function(d, s, id) {
@@ -49,8 +47,7 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
   </script>
-  <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' 
-  ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
+  <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -62,7 +59,6 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right ">
-        <!-- <div ng-click='navBarCtrl.faq();' class="btn-custom faq">{{user.username}}</div> -->
         <li class="dropdown-toggle menu col-sm-pull-2">
           <a class="dropdown-toggle" data-toggle="dropdown">
             <div class="btn-custom-nav my-account">{{user.username}}</div>
@@ -77,30 +73,41 @@
     </div>
   </nav>
   <div ui-view></div>
-  <div ng-class="{'show-footer': ( showFooter )}" ng-controller='FooterCtrl as footerCtrl'
-  ng-init='footerCtrl.registerEvents();' class="navbar navbar-default navbar-fixed-bottom text-center">
+  <div ng-class="{'show-footer': ( showFooter )}" ng-controller='FooterCtrl as footerCtrl' ng-init='footerCtrl.registerEvents();' class="navbar navbar-default navbar-fixed-bottom text-center">
     <div class="container">
-      <ul class="custom footer">
+      <ul ng-hide='showUpload' class="custom footer">
         <li>
-          <div class="btn-custom share-location">share location</div>
+          <div ng-click='footerCtrl.options("location")' class="btn-custom share-location">share location</div>
         </li>
         <li>
-          <div class="btn-custom share-file">share a file</div>
+          <div ng-click='footerCtrl.options("upload")' class="btn-custom share-file">share a file</div>
         </li>
         <li>
-          <div class="btn-custom record-session">record session</div>
+          <div ng-click='footerCtrl.options("record")' class="btn-custom record-session">record session</div>
         </li>
         <li>
           <div ng-click='footerCtrl.options("disconnect")' class="btn-custom disconnect">disconnect</div>
         </li>
       </ul>
+      <ul ng-show='showUpload' class="custom footer">
+      <li>
+        <form id='uploadForm'>
+          <div class='fileUpload btn btn-default btn-sm btn-upload'>
+            <input type='file' upload='fileUpload' class='upload' />
+          </div>
+          <button ng-click='footerCtrl.collectUpload();' class='btn btn-default btn-sm btn-upload' type='button'>submit</button>
+        </form>
+        </li>
+        </ul>
     </div>
+  </div>
   </div>
   <!-- Grunt Build Vendor & Dev Scripts -->
   <script src="/build/vendor.min.js"></script>
   <script src="/scripts/lib/opentok-min.js"></script>
   <script src="/scripts/lib/opentok-layout.min.js"></script>
   <script src="/scripts/lib/tipped.min.js"></script>
+  <script src="/scripts/lib/googleMaps.js"></script>
   <script src="/build/dev.min.js"></script>
 </body>
 

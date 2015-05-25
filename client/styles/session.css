@@ -1,3 +1,19 @@
+hr.chat-line {}
+
+a.download-link {
+  text-decoration: none;
+  color: #337ab7;
+  font-size: 13px;
+  float: left;
+  margin-top: -8px;
+}
+
+p.file-text {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .7);
+  text-align: left;
+}
+
 #layout-container {
   position: absolute;
   top: 85px;

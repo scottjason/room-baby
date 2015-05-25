@@ -86,6 +86,7 @@ exports.create = function(req, res, next) {
           session.token = opentok.generateToken(session.sessionId);
           session.createdBy.username = req.body.connectedUser.username;
           session.createdBy.user_id = req.body.connectedUser._id;
+          session.name = req.body.invitedUser.title;
           /* Save the session with the arr of now filtered user objects */
           session.save(function(err, savedSession){
           /* Add credens to the session object after saving and before passing to the client */

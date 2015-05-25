@@ -138,7 +138,7 @@ var createSessionTwo = function createSessionTwo (arr) {
     session.save(function(err, savedSession){
       if(err) return console.log(err);
       console.log('-------------');
-      console.log('');      
+      console.log('');
       console.log('Session Two Created');
       console.log('');
       console.log(savedSession);
