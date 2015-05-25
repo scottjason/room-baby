@@ -41,13 +41,13 @@
       <tbody>
         <tr ng-repeat="obj in allSessions">
           <td class='table-copy-title'>{{obj.name}}</td>
-          <td class='table-copy-created-by'>{{obj.createdBy}}</td>
+          <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
           <td>
             <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
               <i class="fa fa-child">&nbsp;members</i>
             </button>
           </td>
-          <td class='table-copy-status'>{{obj.status}}</td>
+          <td class='table-copy-status'>{{obj.status }}</td>
           <td><i class="fa fa-refresh fa-spin"></i>
             <a id='connect' name='connect' ng-click="dashCtrl.options($event, obj);" class="table-copy-connect">&nbsp;connect</a>
           </td>

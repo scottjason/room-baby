@@ -196,7 +196,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, Authe
       localStorageService.set('user', user);
       $scope.usernameConfirmed = true;
       Authenticator.removeLogin('facebook');
-    })
+    });
   };
 
   /*

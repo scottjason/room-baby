@@ -6,10 +6,8 @@ angular.module('RoomBaby')
 function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Transport, localStorageService) {
 
   var vm = this;
-  var timeSent = moment(new Date()).calendar();
+  var sentAt = moment(new Date()).calendar();
   $rootScope.connectionCount = 0;
-
-
 
   var layoutContainer = document.getElementById('layout-container');
   var layout = TB.initLayoutContainer(layoutContainer, {
@@ -39,7 +37,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     obj.sentBy = $scope.user.username;
     obj.message = $scope.user.message;
     $scope.user.message = '';
-    var timeSent = angular.copy(timeSent);
+    var timeSent = angular.copy(sentAt);
     timeSent = timeSent.split(' ');
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
@@ -47,7 +45,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     var messageString = JSON.stringify(obj);
     vm.broadcast('message', messageString);
   };
-
 
   this.init = function() {
     PubSub.on('disconnect', vm.disconnect);
@@ -124,6 +121,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       var sentBy = data.sentBy;
       var message = data.message;
       var timeSent = data.timeSent;
+      var imageLink = 'https://www.libstash.com/public/avatars/default.png';
       Transport.render(sentBy, message, imageLink, timeSent);
     });
 
@@ -132,7 +130,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       var sentBy = data.sentBy;
       var fileUrl = data.fileUrl;
       var timeSent = data.timeSent;
-      Transport.sendFile(sentBy, fileUrl, timeSent);
+      if (sentBy !== $scope.user.username) {
+        Transport.sendFile(sentBy, fileUrl, timeSent);
+      } else {
+        Transport.sendReceipt('file-shared');
+      }
     });
 
     vm.createConnection(otSession);
@@ -165,7 +167,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     var obj = {};
     obj.sentBy = $scope.user.username;
     obj.fileUrl = fileUrl;
-    var timeSent = angular.copy(timeSent);
+    var timeSent = angular.copy(sentAt);
     timeSent = timeSent.split(' ');
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
