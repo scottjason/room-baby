@@ -7,10 +7,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, Authe
 
   var vm = this;
   var expirationTime = moment(new Date()).add(1, 'hours');
-  var cleanForm = {
-    title: '',
-    email: ''
-  };
+  var cleanForm = { title: '', email: '' };
   $scope.room = {};
 
   this.initialize = function() {
@@ -61,17 +58,25 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, Authe
     }
   };
 
-  this.collectTitle = function() {
-    $scope.showCreateRoom = false;
-    $scope.showNext = true;
-  };
-
-  this.collectEmail = function() {
-    $scope.showNext = false;
-    var invitedUser = angular.copy($scope.invitedUser);
-    $scope.invitedUser = cleanForm;
-    $scope.roomForm.$setPristine();
-    vm.createRoom($scope.user, invitedUser);
+  this.createRoomOpt = function($event) {
+    console.log($event.currentTarget.name);
+    console.log($scope.invitedUser);
+    if ($event.currentTarget.name === 'cancel') {
+      $scope.invitedUser = angular.copy(cleanForm);
+      $scope.roomForm.$setPristine();
+      $scope.showCreateRoom = false;
+      $scope.showNext = false;
+    } else if ($event.currentTarget.name === 'next') {
+      $scope.showCreateRoom = false;
+      $scope.showNext = true;
+    } else if ($event.currentTarget.name === 'create') {
+      $scope.showNext = false;
+      $scope.showLoading = true;
+      var invitedUser = angular.copy($scope.invitedUser);
+      $scope.invitedUser = cleanForm;
+      $scope.roomForm.$setPristine();
+      vm.createRoom($scope.user, invitedUser);
+    }
   };
 
   /*
@@ -138,6 +143,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, Authe
     $scope.session = localStorageService.get('session');
     $scope.session.push(newRoom);
     localStorageService.set('session', $scope.session);
+    $scope.showLoading = false;
     vm.renderTable();
   };
 
@@ -210,6 +216,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, Authe
     }
     $state.go('session', opts);
   };
+
 
   DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'ngDialog', 'Authenticator', 'PubSub', 'UserApi', 'SessionApi', 'Animation', 'localStorageService'];
 }

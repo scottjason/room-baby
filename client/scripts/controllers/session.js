@@ -6,17 +6,12 @@ angular.module('RoomBaby')
 function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Transport, localStorageService) {
 
   var vm = this;
-  var sentAt = moment(new Date()).calendar();
+  var now = moment(new Date()).calendar();
   $rootScope.connectionCount = 0;
 
   var layoutContainer = document.getElementById('layout-container');
-  var layout = TB.initLayoutContainer(layoutContainer, {
-    animate: {
-      duration: 500,
-      easing: 'swing'
-    },
-    bigFixedRatio: false
-  }).layout;
+  var layout = TB.initLayoutContainer(layoutContainer,
+    { animate: { duration: 500, easing: 'swing' }, bigFixedRatio: false }).layout;
 
   $window.onresize = function() {
     var resizeCams = function() {
@@ -37,7 +32,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     obj.sentBy = $scope.user.username;
     obj.message = $scope.user.message;
     $scope.user.message = '';
-    var timeSent = angular.copy(sentAt);
+    var timeSent = angular.copy(now);
     timeSent = timeSent.split(' ');
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
@@ -167,7 +162,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     var obj = {};
     obj.sentBy = $scope.user.username;
     obj.fileUrl = fileUrl;
-    var timeSent = angular.copy(sentAt);
+    var timeSent = angular.copy(now);
     timeSent = timeSent.split(' ');
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');

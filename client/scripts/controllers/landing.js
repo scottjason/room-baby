@@ -10,10 +10,8 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
   var cleanForm = { email: '', password: '' };
   $scope.user = {};
 
-
   this.isAuthenticated = function() {
     if (Authenticator.isAuthenticated() && localStorageService.get('user')) {
-      console.log('landing.js : user already authenticated, redirecting to dashboard');
       var user_id = localStorageService.get('user')._id;
       var opts = {
         user_id: user_id
@@ -23,7 +21,6 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
       init();
       UserApi.isAuthenticated().then(function(response) {
         if (response.status === 200 && !response.data.session) {
-          console.log('landing.js has user .. granting access');
           var user = response.data.user;
           localStorageService.set('user', user);
           var opts = {
@@ -61,7 +58,6 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
   };
 
   this.selectedOpt = function(optSelected) {
-    console.log('selectedOpt', optSelected);
     if (optSelected === 'login') {
       $scope.learnMore = null;
       $scope.showRegister = null;
@@ -104,19 +100,15 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
       if (response.status === 200 && response.data.user && !response.data.session) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        var opts = {
-          user_id: user._id
-        }
-        vm.accessGranted(opts)
+        var opts = { user_id: user._id };
+        vm.accessGranted(opts);
       } else if (response.status === 200 && response.data.user && response.data.session) {
         var user = response.data.user;
         var session = response.data.session;
         localStorageService.set('user', user);
         localStorageService.set('session', session);
-        var opts = {
-          user_id: user._id
-        }
-        vm.accessGranted(opts)
+        var opts = { user_id: user._id };
+        vm.accessGranted(opts);
       } else if (response.status === 401) {
         vm.renderError(response.data.message)
       } else {

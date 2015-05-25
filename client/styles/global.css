@@ -73,6 +73,27 @@ li {
   margin-top: 6px;
 }
 
+.btn-custom-cancel,
+.btn-custom-cancel:hover,
+.btn-custom-cancel:active,
+.btn-custom-cancel:focus {
+  border: 1px solid #337ab7;
+  background-color: white;
+  width: 90px;
+  font-weight: 300;
+  text-decoration: none;
+  top: 11px;
+  height: 27px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #337ab7;
+  margin: auto;
+  float: left;
+  margin-top: 6px;
+}
+
 .btn-custom-send,
 .btn-custom-send:hover,
 .btn-custom-send:active,

@@ -3,25 +3,32 @@
   <div class="row-block">
     <div id='white-block' class='white-block'></div>
     <div class="center-block btn-opts-container">
-      <div ng-hide='showCreateRoom || showCreateBroadcast || showNext'>
+      <div ng-hide='showCreateRoom || showCreateBroadcast || showNext || showLoading'>
         <div id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
-        <div ng-hide='showCreateRoom || showCreateBroadcast' id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
+        <div id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
       </div>
       <div ng-show='showCreateRoom' class='create-a-room-container'>
         <p class='room-option-copy'>enter the title of the room</p>
         <hr class='room-option-line'>
-        <form name="roomForm" id="create-a-room" class="form-inline" ng-submit="dashCtrl.collectTitle();">
+        <form name="roomForm" id="create-a-room" class="form-inline">
           <input id="create-room-input" class="input-small" ng-model="invitedUser.title" type="text" placeholder="Monday Morning Meeting">
-          <button type="submit" class="btn btn-custom-next">next</button>
+          <button name="cancel" type="submit" ng-click="dashCtrl.createRoomOpt($event);" class="btn btn-custom-cancel">cancel</button>
+          <button name="next" type="submit" class="btn btn-custom-next" ng-click="dashCtrl.createRoomOpt($event);">next</button>
         </form>
       </div>
       <div ng-show='showNext' class='create-a-room-container'>
         <p class='room-option-copy'>enter the email address of your guest</p>
         <hr class='room-option-line'>
-        <form name="roomForm" id="create-a-room" class="form-inline" ng-submit="dashCtrl.collectEmail();">
+        <form name="roomForm" id="create-a-room" class="form-inline">
           <input id="create-room-input" class="input-small" ng-model="invitedUser.email" type="text" placeholder="yourguest@gmail.com">
-          <button type="submit" class="btn btn-custom-next">create</button>
+          <button name="cancel" type="submit" ng-click="dashCtrl.createRoomOpt($event);" class="btn btn-custom-cancel">cancel</button>
+          <button name="create" type="submit" class="btn btn-custom-next" ng-click="dashCtrl.createRoomOpt($event);">create</button>
         </form>
+      </div>
+      <div ng-show='showLoading' class='create-a-room-container'>
+        <p class='room-option-copy'>creating room</p>
+        <hr class='room-option-line'>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
       </div>
     </div>
   </div>
