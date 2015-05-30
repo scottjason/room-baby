@@ -39,6 +39,7 @@
 
 <body ng-app="RoomBaby">
   <nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
+    <div ng-class="{ 'body-overlay' : ( showOverlay ) }"></div>
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -66,8 +67,9 @@
   </nav>
   <div ui-view></div>
   <div ng-class="{'show-footer': ( showFooter )}" ng-controller='FooterCtrl as footerCtrl' ng-init='footerCtrl.registerEvents();' class="navbar navbar-default navbar-fixed-bottom text-center">
-    <div class="container">
-      <ul ng-hide='showUpload' class="custom footer">
+    <modal-dialog show='showOverlay' width='750px' height='60%'></modal-dialog>
+    <div ng-hide="showUpload" class="container">
+      <ul class="custom footer">
         <li>
           <div ng-click='footerCtrl.options("location")' class="btn-custom share-location">share location</div>
         </li>
@@ -79,16 +81,6 @@
         </li>
         <li>
           <div ng-click='footerCtrl.options("disconnect")' class="btn-custom disconnect">disconnect</div>
-        </li>
-      </ul>
-      <ul ng-show='showUpload' class="custom footer">
-        <li>
-          <form id='uploadForm'>
-            <div class='fileUpload btn btn-default btn-sm btn-upload'>
-              <input type='file' upload='fileUpload' class='upload' />
-            </div>
-            <button ng-click='footerCtrl.collectUpload();' class='btn btn-default btn-sm btn-upload' type='button'>submit</button>
-          </form>
         </li>
       </ul>
     </div>

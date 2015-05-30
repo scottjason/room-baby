@@ -1,0 +1,34 @@
+.choose-file {
+  position: relative;
+  display: inline-block;
+  border-radius: 8px;
+  border: #ebebeb solid 1px;
+  width: 250px;
+  padding: 4px 6px 4px 8px;
+  font-family: 'Open Sans', sans-serif;
+  color: #7f7f7f;
+  margin-top: 2px;
+  background: #efefef;
+  text-align: left;
+  color: rgba(0, 0, 0, .7);
+}
+
+.choose-file input[type="file"] {
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fa.fa-circle-o-notch.fa-spin.upload-spinner {
+  font-size: 48px;
+  margin-top: 25px;
+}
+
+.upload-spinner-container {
+  text-align: center;
+  margin-top: -40px;
+  font-size: 104px;
+}

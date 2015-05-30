@@ -3,11 +3,12 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Animation, localStorageService) {
 
-  var vm = this;
+  var ctrl = this;
   var cleanForm = { email: '', password: '' };
   $scope.user = {};
+
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
@@ -17,7 +18,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
         var opts = {
           user_id: user._id
         }
-        vm.accessGranted(opts);
+        ctrl.accessGranted(opts);
       } else if (response.status === 200) {
         var user = response.data.user;
         var sessions = response.data.sessions;
@@ -26,9 +27,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
         var opts = {
           user_id: user._id
         }
-        vm.accessGranted(opts);
+        ctrl.accessGranted(opts);
       } else if (response.status === 401) {
-        vm.init();
+        ctrl.init();
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
       } else {
@@ -61,12 +62,12 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
       $scope.payload = angular.copy($scope.user);
       $scope.user = angular.copy(cleanForm);
       $scope.authForm.$setPristine();
-      vm.login();
+      ctrl.login();
     } else if (type === 'register') {
       $scope.payload = angular.copy($scope.user);
       $scope.user = angular.copy(cleanForm);
       $scope.authForm.$setPristine();
-      vm.register();
+      ctrl.register();
     }
   };
 
@@ -76,7 +77,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
     $scope.showRegister = null;
   };
 
-  vm.init = function() {
+  ctrl.init = function() {
     $scope.showLanding = true;
     Animation.run('onLanding');
     Tipped.create('#facebook', 'login with facebook');
@@ -85,7 +86,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
     Tipped.create('#learn', 'how this works');
   };
 
-  vm.login = function() {
+  ctrl.login = function() {
     UserApi.login($scope.payload).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
@@ -93,7 +94,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
         var opts = {
           user_id: user._id
         };
-        vm.accessGranted(opts);
+        ctrl.accessGranted(opts);
       } else if (response.status === 200 && response.data.sessions) {
         var user = response.data.user;
         var sessions = response.data.sessions;
@@ -102,39 +103,39 @@ function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Anima
         var opts = {
           user_id: user._id
         };
-        vm.accessGranted(opts);
+        ctrl.accessGranted(opts);
       } else if (response.status === 401) {
-        vm.renderError(response.data.message)
+        ctrl.renderError(response.data.message)
       } else {
-        vm.renderError('unknown response on login');
+        ctrl.renderError('unknown response on login');
       }
     }, function(err) {
       console.log(err);
     });
   };
 
-  vm.register = function() {
+  ctrl.register = function() {
     UserApi.register($scope.payload).then(function(response) {
       if (response.status === 401) {
-        vm.renderError(response.data.message);
+        ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        vm.accessGranted(user)
+        ctrl.accessGranted(user)
       }
     }, function(err) {
       console.log(err);
     });
   };
 
-  vm.accessGranted = function(opts) {
+  ctrl.accessGranted = function(opts) {
     $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
 
-  vm.renderError = function(errMessage) {
+  ctrl.renderError = function(errMessage) {
     $scope.errMessage = errMessage;
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
 };

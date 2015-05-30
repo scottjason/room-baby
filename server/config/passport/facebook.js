@@ -17,6 +17,8 @@ module.exports = function(passport) {
     FB.api('/me?fields=picture.type(large)&access_token=' + token, function(response) {
       if (response.picture && response.picture.data.url) {
         profileImage = response.picture.data.url
+      } else {
+        profileImage = 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
       }
     process.nextTick(function() {
       User.findOne({ email: profile._json.email }, function(err, user) {
