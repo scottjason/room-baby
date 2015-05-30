@@ -6,8 +6,6 @@ angular.module('RoomBaby')
 function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
   var vm = this;
-
-  $scope.showNavBar = null;
   $scope.user = {};
 
   this.registerEvents = function() {
@@ -17,7 +15,8 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
     PubSub.on('setUser', function(user) {
       if (!user.profileImage) {
-        user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
+        // user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
+        user.profileImage = 'http://www.clker.com/cliparts/b/d/6/4/1197104193998287648papapishu_Baby_boy_crawling.svg.med.png';
       }
       $scope.user = user;
     });

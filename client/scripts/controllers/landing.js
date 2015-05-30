@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $timeout, $window, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, Animation, localStorageService) {
 
   var vm = this;
   var cleanForm = { email: '', password: '' };
@@ -136,5 +136,5 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, UserApi, Pub
     $scope.errMessage = errMessage;
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
 };

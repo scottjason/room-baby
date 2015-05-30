@@ -10,8 +10,8 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
   $scope.room = {};
 
   this.initialize = function() {
+    console.log('Welcome To Room Baby!');
     if (localStorageService.get('isFacebookLogin')) {
-      localStorageService.remove('isFacebookLogin')
       var user_id = $state.params.user_id
       vm.onFacebookLogin(user_id);
     } else if (!localStorageService.get('user')) {
@@ -190,7 +190,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
 
   vm.saveUserName = function(payload) {
     UserApi.saveUserName(payload).then(function(response) {
-      console.log('saved user name', response);
+      localStorageService.remove('isFacebookLogin')
       var user = response.data.user;
       PubSub.trigger('setUser', user);
       $scope.user = user;
