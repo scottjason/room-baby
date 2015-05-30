@@ -10,8 +10,13 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
   $rootScope.connectionCount = 0;
 
   var layoutContainer = document.getElementById('layout-container');
-  var layout = TB.initLayoutContainer(layoutContainer,
-    { animate: { duration: 500, easing: 'swing' }, bigFixedRatio: false }).layout;
+  var layout = TB.initLayoutContainer(layoutContainer, {
+    animate: {
+      duration: 500,
+      easing: 'swing'
+    },
+    bigFixedRatio: false
+  }).layout;
 
   $window.onresize = function() {
     var resizeCams = function() {
@@ -37,17 +42,19 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
     obj.timeSent = timeSent;
+    obj.profileImage = $scope.user.profileImage || 'https://www.libstash.com/public/avatars/default.png';
     var messageString = JSON.stringify(obj);
     vm.broadcast('message', messageString);
   };
 
   this.init = function() {
+    $scope.user = localStorageService.get('user');
+    $scope.otSession = localStorageService.get('otSession');
     PubSub.on('disconnect', vm.disconnect);
     PubSub.on('fileShare', vm.shareFile);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('toggleFooter', true);
-    $scope.user = localStorageService.get('user');
-    $scope.otSession = localStorageService.get('otSession');
+    PubSub.trigger('setUser', $scope.user);
     vm.createSession($scope.otSession);
   };
 
@@ -112,12 +119,12 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
 
     $scope.session.on('signal:message', function(event) {
-      var data = JSON.parse(event.data);
-      var sentBy = data.sentBy;
-      var message = data.message;
-      var timeSent = data.timeSent;
-      var imageLink = 'https://www.libstash.com/public/avatars/default.png';
-      Transport.render(sentBy, message, imageLink, timeSent);
+      var obj = JSON.parse(event.data);
+      var sentBy = obj.sentBy;
+      var message = obj.message;
+      var timeSent = obj.timeSent;
+      var profileImage = obj.profileImage;
+      Transport.render(sentBy, message, profileImage, timeSent);
     });
 
     $scope.session.on('signal:file', function(event) {
@@ -128,7 +135,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       if (sentBy !== $scope.user.username) {
         Transport.sendFile(sentBy, fileUrl, timeSent);
       } else {
-        Transport.sendReceipt('file-shared');
+        Transport.sendReceipt('fileShared');
       }
     });
 

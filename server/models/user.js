@@ -25,6 +25,9 @@ var userSchema = new mongoose.Schema({
     email: String,
     name: String,
   },
+  profileImage: {
+    type: String
+  },
   createdAt: {
     type: Date,
     required: false

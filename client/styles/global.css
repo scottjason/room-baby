@@ -328,13 +328,10 @@ div.panel-body > div {
   border: 1px solid #337ab7;
   width: 120px;
   position: absolute;
-  color: #fff;
   font-weight: 400;
   text-decoration: none;
-  height: 26px;
-  right: 30px;
-  color: black;
-  top: 11px;
+  right: 80px;
+  top: 12px;
   height: 30px;
   border-radius: 12px;
   text-align: center;

@@ -16,12 +16,11 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
     });
 
     PubSub.on('setUser', function(user) {
+      if (!user.profileImage) {
+        user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
+      }
       $scope.user = user;
     });
-  };
-
-  this.faq = function() {
-    console.log('faq');
   };
 
   this.dropdown = function(opt) {
@@ -29,7 +28,6 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
       vm.logout($scope.user._id);
     }
   };
-
 
   this.createRoom = function() {
     PubSub.trigger('Dashboard:CreateRoom');

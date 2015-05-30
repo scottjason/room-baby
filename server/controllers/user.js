@@ -77,6 +77,7 @@ exports.getAll = function(req, res, next) {
       req.session.otSessions = results.sessions;
       res.json( { user: results.user, sessions: results.sessions } );
     } else if (results.user) {
+      req.session.user = results.user;
       res.json( { user: results.user } );
     }
   });
@@ -139,17 +140,17 @@ exports.update = function(req, res, next) {
     function(user, callback) {
     /* Generate the email template based on the attribute that was updated */
       if(req.body.updated.email) {
-        mailer.generateTemplate("email", user, function(subject, html){
+        mailer.generateTemplate('email', user, function(subject, html){
           return callback(null, user, subject, html);
         });
       }
       if(req.body.updated.password) {
-         mailer.generateTemplate("password", user, function(subject, html){
+         mailer.generateTemplate('password', user, function(subject, html){
            return callback(null, user, subject, html);
         });
       }
       if(req.body.updated.username) {
-         mailer.generateTemplate("username", user, function(subject, html){
+         mailer.generateTemplate('username', user, function(subject, html){
          callback(null, user, subject, html);
         });
       }
@@ -230,19 +231,19 @@ exports.resetPass = function(req, res, next) {
       res.send(dialog.resetSubmit);
     }
   )
-}
+};
 
 exports.resetPassCallback = function(req, res, next) {
   User.findOne({ 'utils.resetPassToken': req.params.token, 'utils.resetPassExpires': { $gt: Date.now() } }, function(err, user) {
     if (err) return next(err);
     res.render('reset-password');
   });
-}
+};
 
 exports.resetPassSubmit = function(req, res, next) {
   async.waterfall([
     function(callback) {
-      utils.parseUrl({type:"resetPassSubmit", url: req.headers.referer}, function(token){
+      utils.parseUrl({type:'resetPassSubmit', url: req.headers.referer}, function(token){
 
         User.findOne({ 'utils.resetPassToken': token }, function(err, user) {
           if (err) return callback(err);

@@ -1,5 +1,6 @@
 var User = require('../../models/user');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var FB = require('fb');
 var config = require('../');
 
 module.exports = function(passport) {
@@ -11,11 +12,18 @@ module.exports = function(passport) {
   },
 
   function(token, refreshToken, profile, callback) {
+    var profileImage;
+
+    FB.api('/me?fields=picture.type(large)&access_token=' + token, function(response) {
+      if (response.picture && response.picture.data.url) {
+        profileImage = response.picture.data.url
+      }
     process.nextTick(function() {
       User.findOne({ email: profile._json.email }, function(err, user) {
         if (err) return callback(err);
         if (user) {
           user.facebook.id = profile.id;
+          user.profileImage = profileImage;
           user.facebook.email = user.email;
           user.facebook.firstName = profile._json.first_name;
           user.facebook.lastName = profile._json.lastame;
@@ -27,6 +35,7 @@ module.exports = function(passport) {
         } else {
           var newUser = new User();
           newUser.email = profile._json.email;
+          newUser.profileImage = profileImage;
           newUser.facebook.id = profile.id;
           newUser.facebook.email = newUser.email
           newUser.facebook.firstName = profile._json.first_name
@@ -38,6 +47,7 @@ module.exports = function(passport) {
           });
         }
       })
+     });
     });
-  }))
-}
+  }));
+};

@@ -23,12 +23,12 @@ angular.module('RoomBaby')
       chatbox.append(html);
     };
 
-    function render(userName, userMessage, userImage, timeSent) {
+    function render(userName, userMessage, profileImage, timeSent) {
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
         '<a class="pull-left" href="">' +
-        '<img class="media-object img-circle" src=' + userImage + ' alt="">' +
+        '<img class="media-object img-circle" src=' + profileImage + ' alt="">' +
         '</a>' +
         '<div class="media-body">' +
         '<h4 class="media-heading sent-by">' +
@@ -46,7 +46,7 @@ angular.module('RoomBaby')
     };
 
     function sendFile(sentBy, fileUrl, timeSent) {
-      var downloadLink = "<a class='download-link' href=" + fileUrl + " target='_blank'>click to download</a>";
+      var downloadLink = "<a class='download-link' href=" + fileUrl + " target='_blank'>Click to Download</a>";
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -61,11 +61,12 @@ angular.module('RoomBaby')
         '</div>' +
         '<hr>' +
         '</div>';
+
       chatbox.append(html);
     };
 
     function sendReceipt(type) {
-      if (type === 'file-shared') {
+      if (type === 'fileShared') {
         var html = '<div class="row">' +
           '<div class="col-lg-12">' +
           '<div class="media">' +

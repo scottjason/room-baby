@@ -18,7 +18,6 @@ module.exports = {
   ],
   dev_scripts: {
     src: ['client/app.js',
-      'client/app.config.js',
       'client/scripts/controllers/dashboard.js',
       'client/scripts/controllers/landing.js',
       'client/scripts/controllers/navbar.js',
