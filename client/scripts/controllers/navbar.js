@@ -16,7 +16,7 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
     PubSub.on('setUser', function(user) {
       if (!user.profileImage) {
         // user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
-        user.profileImage = 'http://www.clker.com/cliparts/b/d/6/4/1197104193998287648papapishu_Baby_boy_crawling.svg.med.png';
+        user.profileImage = 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
       }
       $scope.user = user;
     });
