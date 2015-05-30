@@ -4,10 +4,30 @@ module.exports = {
   options: {
     separator: '\n\n',
   },
+  src: [ 'client/app.js',
+    'client/app.config.js',
+    'client/scripts/controllers/dashboard.js',
+    'client/scripts/controllers/landing.js',
+    'client/scripts/controllers/navbar.js',
+    'client/scripts/controllers/footer.js',
+    'client/scripts/controllers/session.js',
+    'client/scripts/services/*.js',
+    'client/scripts/directives/*.js',
+    'client/scripts/filters/*.js',
+    '!client/scripts/lib/**/*.js'
+  ],
   dev_scripts: {
     src: ['client/app.js',
-      'client/scripts/**/*.js',
-      '!client/scripts/lib/*.*'
+      'client/app.config.js',
+      'client/scripts/controllers/dashboard.js',
+      'client/scripts/controllers/landing.js',
+      'client/scripts/controllers/navbar.js',
+      'client/scripts/controllers/footer.js',
+      'client/scripts/controllers/session.js',
+      'client/scripts/services/*.js',
+      'client/scripts/directives/*.js',
+      'client/scripts/filters/*.js',
+      '!client/scripts/lib/*.js'
     ],
     dest: 'client/build/dev.js'
   },

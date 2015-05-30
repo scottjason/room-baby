@@ -55,8 +55,8 @@ hr.room-option-line {
 }
 
 #userNameForm {
-  position: relative;
-  top: 250px;
+  position: absolute;
+  top: 260px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -68,9 +68,9 @@ hr.room-option-line {
 }
 
 p.enter-username {
-  outline: 0px;
-  position: fixed;
-  color: white;
+  outline: 0;
+  position: absolute;
+  color: #fff;
   font-size: 22px;
   font-weight: 300;
   left: 0;
@@ -78,18 +78,20 @@ p.enter-username {
   top: 200px;
   bottom: 0;
   text-align: center;
+  white-space: nowrap;
 }
 
 .ngdialog-overlay {
-  position: fixed;
-  background: rgba(0, 0, 0, .9);
+  position: relative;
+  background: rgba(0,0,0,.7);
   -webkit-backface-visibility: hidden;
-  -webkit-animation: ngdialog-fadein .5s;
   animation: ngdialog-fadein .5s;
-  width: 90%;
-  height: 90%;
-  border: 1px solid white;
+  width: 75%;
+  min-width: 600px;
+  height: 300px;
+  border: 1px solid #fff;
   margin: auto;
+  top: 150px;
 }
 
 .ngdialog-content {

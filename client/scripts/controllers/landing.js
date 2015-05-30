@@ -3,58 +3,40 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticator, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $timeout, $window, UserApi, PubSub, Animation, localStorageService) {
 
   var vm = this;
-  var expirationTime = moment(new Date()).add(1, 'hours');
   var cleanForm = { email: '', password: '' };
   $scope.user = {};
 
   this.isAuthenticated = function() {
-    if (Authenticator.isAuthenticated() && localStorageService.get('user')) {
-      var user_id = localStorageService.get('user')._id;
-      var opts = {
-        user_id: user_id
-      };
-      vm.accessGranted(opts);
-    } else {
-      init();
-      UserApi.isAuthenticated().then(function(response) {
-        if (response.status === 200 && !response.data.session) {
-          var user = response.data.user;
-          localStorageService.set('user', user);
-          var opts = {
-            user_id: user._id
-          }
-          vm.accessGranted(opts);
-        } else if (response.status === 200) {
-          var user = response.data.user;
-          var session = response.data.session;
-          localStorageService.set('user', user);
-          localStorageService.set('session', session);
-          var opts = {
-            user_id: user._id
-          }
-          vm.accessGranted(opts);
-        } else if (response.status === 401) {
-          PubSub.trigger('toggleNavBar', null);
-          PubSub.trigger('toggleFooter', null);
-        } else {
-          console.error('unknown authentication status');
+    UserApi.isAuthenticated().then(function(response) {
+      if (response.status === 200 && !response.data.sessions) {
+        var user = response.data.user;
+        localStorageService.set('user', user);
+        var opts = {
+          user_id: user._id
         }
-      }, function(err) {
-        console.error(err);
-      });
-    }
-  };
-
-  function init() {
-    Animation.run('onLanding');
-    Tipped.create('#facebook', 'login with facebook');
-    Tipped.create('#login', 'login with your email');
-    Tipped.create('#register', 'create an account');
-    Tipped.create('#learn', 'how this works');
-    Authenticator.clearAll();
+        vm.accessGranted(opts);
+      } else if (response.status === 200) {
+        var user = response.data.user;
+        var sessions = response.data.sessions;
+        localStorageService.set('user', user);
+        localStorageService.set('sessions', sessions);
+        var opts = {
+          user_id: user._id
+        }
+        vm.accessGranted(opts);
+      } else if (response.status === 401) {
+        vm.init();
+        PubSub.trigger('toggleNavBar', null);
+        PubSub.trigger('toggleFooter', null);
+      } else {
+        console.error('unknown authentication status');
+      }
+    }, function(err) {
+      console.error(err);
+    });
   };
 
   this.selectedOpt = function(optSelected) {
@@ -67,8 +49,7 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
       $scope.showLogin = null;
       $scope.showRegister = true;
     } else if (optSelected === 'facebook') {
-      Authenticator.authenticate(expirationTime);
-      Authenticator.setLogin('facebook');
+      localStorageService.set('isFacebookLogin', true);
       $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
     } else {
       $scope.learnMore = true;
@@ -95,19 +76,32 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
     $scope.showRegister = null;
   };
 
+  vm.init = function() {
+    $scope.showLanding = true;
+    Animation.run('onLanding');
+    Tipped.create('#facebook', 'login with facebook');
+    Tipped.create('#login', 'login with your email');
+    Tipped.create('#register', 'create an account');
+    Tipped.create('#learn', 'how this works');
+  };
+
   vm.login = function() {
     UserApi.login($scope.payload).then(function(response) {
-      if (response.status === 200 && response.data.user && !response.data.session) {
+      if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        var opts = { user_id: user._id };
+        var opts = {
+          user_id: user._id
+        };
         vm.accessGranted(opts);
-      } else if (response.status === 200 && response.data.user && response.data.session) {
+      } else if (response.status === 200 && response.data.sessions) {
         var user = response.data.user;
-        var session = response.data.session;
+        var sessions = response.data.sessions;
         localStorageService.set('user', user);
-        localStorageService.set('session', session);
-        var opts = { user_id: user._id };
+        localStorageService.set('sessions', sessions);
+        var opts = {
+          user_id: user._id
+        };
         vm.accessGranted(opts);
       } else if (response.status === 401) {
         vm.renderError(response.data.message)
@@ -134,7 +128,7 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
   };
 
   vm.accessGranted = function(opts) {
-    Authenticator.authenticate(expirationTime);
+    $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
 
@@ -142,5 +136,5 @@ function LandingCtrl($scope, $rootScope, $state, $timeout, $window, Authenticato
     $scope.errMessage = errMessage;
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'Authenticator', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
 };

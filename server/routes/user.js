@@ -6,16 +6,16 @@
 
 var express = require('express');
 var router = express.Router();
-var userCtrl = require('../controllers/user');
 var authCtrl = require('../controllers/auth');
+var userCtrl = require('../controllers/user');
 
 module.exports = function(app, passport) {
 
-/* Auth-Protected EndPoints */
+  /* Auth-Protected EndPoints */
   router.post('/authenticate', authCtrl.isAuthenticated);
   router.post('/update', authCtrl.isAuthenticated, userCtrl.update);
 
-/* Not Protected EndPoints */
+  /* Not Protected EndPoints */
   router.post('/reset', userCtrl.resetPass);
   router.post('/save-user-name', userCtrl.saveUserName);
   router.get('/reset/:token', userCtrl.resetPassCallback)
@@ -25,52 +25,54 @@ module.exports = function(app, passport) {
   router.get('/get-all/:user_id', userCtrl.getAll);
 
   router.post('/login', function(req, res, next) {
-    console.log(req.body)
-    passport.authenticate('local-login', function(err, user, msgOrSession) {
-      /* if '!user' then 'msgOrSession = message */
+    passport.authenticate('local-login', function(err, user, data) {
       if (err) return next(err);
-      if (!user) return res.status(401).send(msgOrSession);
-      /* if '!err && user' then 'msgOrSession = otSession || null' */
-      var otSession = msgOrSession;
+      if (!user) return res.status(401).send(data);
+      var otSessions = data;
+
       req.logIn(user, function(err) {
         if (err) return next(err)
 
-        if(!req.body.rememberMe) {
+        if (!req.body.rememberMe) {
           req.session.cookie.expires = false;
         }
 
         req.session.user = user;
 
-        if(otSession){
-          req.session.otSession = otSession;
+        if (otSessions) {
+          req.session.otSessions = otSessions;
         }
-        return res.json({ user: req.session.user, session: req.session.otSession || null });
+        return res.json({
+          user: req.session.user,
+          sessions: req.session.otSessions || null
+        });
       });
     })(req, res, next);
   });
 
   router.post('/register', function(req, res, next) {
-    passport.authenticate('local-register', function(err, user, msgOrSession) {
-      /* if '!user' then 'msgOrSession = message */
+    passport.authenticate('local-register', function(err, user, data) {
       if (err) return next(err);
-      if (!user) return res.status(401).send(msgOrSession);
-      /* if '!err && user' then 'msgOrSession = otSession || null' */
-      var otSession = msgOrSession;
+      if (!user) return res.status(401).send(data);
+      var otSession = data;
       req.logIn(user, function(err) {
         if (err) return next(err);
 
-        if(!req.body.rememberMe) {
+        if (!req.body.rememberMe) {
           req.session.cookie.expires = false;
         }
         req.session.user = user;
 
-        if(otSession){
+        if (otSession) {
           req.session.otSession = otSession;
         }
-        return res.json({ user: req.session.user, session: req.session.otSession || null });
+        return res.json({
+          user: req.session.user,
+          session: req.session.otSession || null
+        });
       });
     })(req, res, next);
   });
 
- app.use('/user', router);
+  app.use('/user', router);
 }

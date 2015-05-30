@@ -7,6 +7,7 @@
 var express = require('express');
 var router = express.Router();
 var indexCtrl = require('../controllers/index');
+var sessionCtrl = require('../controllers/session');
 
 module.exports = function(app, passport) {
   router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile', 'publish_actions'] }));

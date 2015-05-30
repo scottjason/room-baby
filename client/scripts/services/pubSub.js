@@ -12,7 +12,7 @@ angular.module('RoomBaby')
     } else {
       return false;
     }
-  }
+  };
 
   function off(topic, callback) {
     if (!master.hasOwnProperty(topic)) {
@@ -23,7 +23,7 @@ angular.module('RoomBaby')
         return master[topic].splice(i, 1);
       }
     }
-  }
+  };
 
   function trigger() {
     var args = Array.prototype.slice.call(arguments);
@@ -34,7 +34,7 @@ angular.module('RoomBaby')
     for (var i = 0, len = master[topic].length; i < len; i++) {
       master[topic][i].apply(undefined, args);
     }
-  }
+  };
 
   return ({
     on: on,

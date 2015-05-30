@@ -11,16 +11,16 @@ var Session = require('../../models/session');
 var LocalStrategy = require('passport-local').Strategy;
 
 var getAll = function(user, callback) {
- var sessionArr = [];
+ var allSessions = [];
   Session.find({ users: { $elemMatch: { _id: user._id } } }, function (err, sessions) {
-    if (err) return next(err);
+    if (err) return callback(err, null, null);
     if(!sessions.length) return callback(null, user, null);
     sessions.forEach(function(session){
       session.key = config.openTok.key;
       session.secret = config.openTok.secret;
-      sessionArr.push(session);
+      allSessions.push(session);
     })
-    callback(null, user, sessionArr);
+    callback(null, user, allSessions);
   });
 };
 
@@ -40,7 +40,7 @@ module.exports = function(passport) {
         user.password = password;
         user.save(function(err, user) {
           if (err) return callback(err);
-          user.password = undefined;
+          user.password = null;
           getAll(user, callback);
         });
       });

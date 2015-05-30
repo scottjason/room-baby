@@ -12,7 +12,7 @@ angular.module('RoomBaby')
           maximumAge: 75000
         });
       }
-    }
+    };
 
     function reverseGeo(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
@@ -27,7 +27,7 @@ angular.module('RoomBaby')
           }
         }
       }
-    }
+    };
 
     function onGeoSuccess(position) {
       var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -35,11 +35,11 @@ angular.module('RoomBaby')
       coder.geocode({
         'latLng': latLng
       }, reverseGeo);
-    }
+    };
 
     function onGeoError(err) {
       return master.callback(err);
-    }
+    };
 
     return ({
       get: get

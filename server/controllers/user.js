@@ -34,8 +34,9 @@ exports.saveUserName = function(req, res, next) {
   User.findById(req.body._id, function(err, user){
     user.username = req.body.username;
     user.save(function(err, savedUser){
+      req.session.user = savedUser;
       if (err) return next(err);
-      res.json(savedUser);
+      res.json({ user: savedUser });
     })
   })
 }
@@ -55,7 +56,7 @@ exports.getAll = function(req, res, next) {
       callback(null, user);
     });
   },
-    session: function(callback){
+    sessions: function(callback){
       var sessionArr = [];
       Session.find({ users: { $elemMatch: { _id: req.params.user_id } } }, function (err, sessions) {
         if (err) return callback(err);
@@ -71,8 +72,10 @@ exports.getAll = function(req, res, next) {
   },
   function(err, results) {
     if (err) return next(err)
-    if (results.user && results.session.length) {
-      res.json( { user: results.user, session: results.session } );
+    if (results.user && results.sessions.length) {
+      req.session.user = results.user;
+      req.session.otSessions = results.sessions;
+      res.json( { user: results.user, sessions: results.sessions } );
     } else if (results.user) {
       res.json( { user: results.user } );
     }
