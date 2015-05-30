@@ -42,7 +42,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
     obj.timeSent = timeSent;
-    obj.profileImage = $scope.user.profileImage || 'https://www.libstash.com/public/avatars/default.png';
+    obj.profileImage = $scope.user.profileImage || 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
     var messageString = JSON.stringify(obj);
     vm.broadcast('message', messageString);
   };
@@ -50,12 +50,17 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
   this.init = function() {
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
-    PubSub.on('disconnect', vm.disconnect);
-    PubSub.on('fileShare', vm.shareFile);
+    PubSub.on('record:start', vm.onRecordStart);
+    PubSub.on('fileShare', vm.onShareFile);
+    PubSub.on('disconnect', vm.onDisconnect);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('toggleFooter', true);
     PubSub.trigger('setUser', $scope.user);
     vm.createSession($scope.otSession);
+  };
+
+  this.isPermissionGranted = function(isGranted) {
+    console.log('isGranted', isGranted);
   };
 
   vm.createSession = function(otSession) {
@@ -127,6 +132,27 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       Transport.render(sentBy, message, profileImage, timeSent);
     });
 
+    $scope.session.on('signal:permissionRequest', function(event) {
+      var permissionRequestBy = event.data;
+      if ($scope.user.username !== permissionRequestBy) {
+        Transport.requestPermission(permissionRequestBy, function() {
+          document.getElementById('permission-granted').addEventListener('click', vm.onRequestPermission, false);
+          document.getElementById('permission-denied').addEventListener('click', vm.onRequestPermission, false);
+        })
+      } else {
+        // Transport.permissionRequestSent();
+      }
+    });
+
+    $scope.session.on('signal:permissionResponse', function(event) {
+      var isGranted = (event.data).indexOf('granted') !== -1;
+      if (isGranted) {
+        Transport.sendReceipt('recordingPermission', true);
+      } else {
+        Transport.sendReceipt('recordingPermission', null);
+      }
+    });
+
     $scope.session.on('signal:file', function(event) {
       var data = JSON.parse(event.data);
       var sentBy = data.sentBy;
@@ -140,6 +166,14 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
 
     vm.createConnection(otSession);
+  };
+
+  vm.onRequestPermission = function(event) {
+    if (event.target.id === 'permission-granted') {
+      vm.broadcast('permissionResponse', 'granted');
+    } else {
+      vm.broadcast('permissionResponse', 'denied');
+    }
   };
 
   vm.createConnection = function(otSession) {
@@ -161,11 +195,16 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
   };
 
-  vm.disconnect = function() {
+  vm.onDisconnect = function() {
     $scope.session.disconnect();
   };
 
-  vm.shareFile = function(fileUrl) {
+  vm.onRecordStart = function() {
+    var permissionRequestedBy = $scope.user.username;
+    vm.broadcast('permissionRequest', permissionRequestedBy);
+  };
+
+  vm.onShareFile = function(fileUrl) {
     var obj = {};
     obj.sentBy = $scope.user.username;
     obj.fileUrl = fileUrl;

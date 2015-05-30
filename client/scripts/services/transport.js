@@ -85,10 +85,38 @@ angular.module('RoomBaby')
       chatbox.append(html);
     };
 
+    function requestPermission(requestingUser, callback) {
+      var html = '<div class="row">' +
+        '<div class="col-lg-12">' +
+        '<div class="media">' +
+        '<div class="media-body">' +
+        '<h4 class="media-heading">' +
+        '<span class="session-started"> Room Baby Notice</span>' +
+        '</h4>' +
+        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + requestingUser.capitalize() + ' Would Like To Record This Session' + '</p>' +
+        '<p class="recording-permission">Is this ok?' +
+        '</p>' +
+        '<ul class="permision-copy-container">' +
+        '<li id="permission-granted" class="permission-yes">Yup!' +
+        '</li>' +
+        '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; Nope!' +
+        '</li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr>' +
+        '</div>';
+
+      chatbox.append(html);
+      callback();
+    };
+
     return ({
       render: render,
       connected: connected,
       sendFile: sendFile,
-      sendReceipt: sendReceipt
+      sendReceipt: sendReceipt,
+      requestPermission: requestPermission
     });
   });

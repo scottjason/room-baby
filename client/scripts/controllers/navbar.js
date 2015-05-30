@@ -15,7 +15,6 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
     PubSub.on('setUser', function(user) {
       if (!user.profileImage) {
-        // user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
         user.profileImage = 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
       }
       $scope.user = user;

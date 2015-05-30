@@ -24,10 +24,8 @@ function FooterCtrl($scope, $rootScope, PubSub, SessionApi) {
   this.options = function(type) {
     if (type === 'disconnect') {
       PubSub.trigger('disconnect');
-    } else if (type === 'upload') {
-      $scope.showUpload = true;
-    } else if (type === 'upload') {
-      console.log('need to be connected to a user');
+    } else if (type === 'record:start') {
+      PubSub.trigger('record:start');
     }
   };
 

@@ -1,4 +1,22 @@
-hr.chat-line {}
+p.permission-yes {
+  font-size: 14px;
+  margin-top: -7px;
+  cursor: pointer;
+  color: #F59A73;
+}
+
+#permission-granted {
+
+}
+#permission-denied {
+  
+}
+
+p.recording-permission {
+  font-size: 14px;
+  margin-top: -7px;
+  color: rgba(0, 0, 0, .7);
+}
 
 a.download-link {
   text-decoration: none;
