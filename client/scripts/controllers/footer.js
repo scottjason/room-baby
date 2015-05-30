@@ -3,8 +3,8 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, PubSub, SessionApi) {
-  var vm = this;
+function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
+  var ctrl = this;
   $scope.user = {};
 
   this.registerEvents = function() {
@@ -22,27 +22,36 @@ function FooterCtrl($scope, $rootScope, PubSub, SessionApi) {
   };
 
   this.options = function(type) {
+    if (!$rootScope.connectionCount || $rootScope.connectionCount < 2) {
+      return;
+    }
     if (type === 'disconnect') {
       PubSub.trigger('disconnect');
+    } else if (type === 'record') {
+      PubSub.trigger('requestPermission');
     } else if (type === 'upload') {
-      $scope.showUpload = true;
-    } else if (type === 'upload') {
-      console.log('need to be connected to a user');
+      PubSub.trigger('toggleOverlay');
+      PubSub.trigger('openUpload');
     }
   };
 
   this.collectUpload = function() {
-    $scope.showUpload = false;
     if (!$scope.fileUpload) {
       console.error('!$scope.fileUpload');
     } else if ($scope.fileUpload.size > 5e+6) { /* 5e+6 bytes === 5mb */
       console.error('maxSizeExceeded');
     } else {
+      $scope.showLoadingSpinner = true;
       /* verify again on server along with file type */
       SessionApi.upload($scope.fileUpload, $scope.user._id, $scope.user._id).then(function(response) {
         if (response.status === 200) {
           var fileUrl = response.data;
-          PubSub.trigger('fileShare', fileUrl);
+          $scope.showLoadingSpinner = false;
+          PubSub.trigger('toggleOverlay');
+          PubSub.trigger('closeUpload');
+          $timeout(function(){
+          PubSub.trigger('shareFile', fileUrl);
+          }, 700);
         } else if (response.status === 401) {
           console.log('401', response)
         }
@@ -51,5 +60,5 @@ function FooterCtrl($scope, $rootScope, PubSub, SessionApi) {
       });
     }
   };
-  FooterCtrl.$inject['$scope', '$rootScope', 'PubSub', 'SessionApi'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi'];
 }

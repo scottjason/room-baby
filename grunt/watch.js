@@ -20,10 +20,8 @@ module.exports = {
     files: [
     'client/app.js', 
     'client/app.config.js', 
-    'client/scripts/controllers/dashboard.js', 
-    'client/scripts/controllers/landing.js', 
-    'client/scripts/controllers/navbar.js', 
-    'client/scripts/controllers/session.js', 
+    'client/app.run.js', 
+    'client/scripts/controllers/*.js', 
     'client/scripts/services/*.js', 
     'client/scripts/directives/*.js', 
     '!client/scripts/lib/**/*.js'

@@ -5,15 +5,14 @@ angular.module('RoomBaby')
 
 function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSub, UserApi, SessionApi, Animation, localStorageService) {
 
-  var vm = this;
+  var ctrl = this;
   var cleanForm = { title: '', email: '' };
   $scope.room = {};
 
   this.initialize = function() {
-    console.log('Welcome To Room Baby!');
     if (localStorageService.get('isFacebookLogin')) {
       var user_id = $state.params.user_id
-      vm.onFacebookLogin(user_id);
+      ctrl.onFacebookLogin(user_id);
     } else if (!localStorageService.get('user')) {
       localStorageService.clearAll();
       $state.go('landing');
@@ -22,7 +21,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
       PubSub.trigger('setUser', $scope.user);
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('toggleFooter', true);
-      vm.renderTable();
+      ctrl.renderTable();
       Animation.run('onDashboard');
     }
   };
@@ -31,7 +30,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
    * UI Responders
    **/
   this.registerEvents = function() {
-    PubSub.on('setUserName', vm.setUserName);
+    PubSub.on('setUserName', ctrl.setUserName);
     $scope.$watch('usernameConfirmed', function() {
       if ($scope.usernameConfirmed) {
         ngDialog.closeAll();
@@ -39,7 +38,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
         PubSub.trigger('toggleFooter', true);
         $timeout(function() {
           Animation.run('onDashboard');
-          vm.renderTable();
+          ctrl.renderTable();
         }, 350)
       }
     });
@@ -47,7 +46,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
 
   this.options = function($event, otSession) {
     if ($event.currentTarget.name === 'connect') {
-      vm.connect(otSession);
+      ctrl.connect(otSession);
     } else if ($event.currentTarget.innerHTML === 'create a room') {
       $scope.showCreateRoom = true;
     } else if ($event.currentTarget.innerHTML === 'create a broadcast') {
@@ -70,21 +69,22 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
       var invitedUser = angular.copy($scope.invitedUser);
       $scope.invitedUser = cleanForm;
       $scope.roomForm.$setPristine();
-      vm.createRoom($scope.user, invitedUser);
+      ctrl.createRoom($scope.user, invitedUser);
     }
   };
 
   /*
    * Controller Methods
    **/
-  vm.onFacebookLogin = function(user_id) {
+
+  ctrl.onFacebookLogin = function(user_id) {
     UserApi.getAll(user_id).then(function(response) {
       console.log('response', response);
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
         PubSub.trigger('setUser', user);
-        vm.onFacebookSuccess(user, null);
+        ctrl.onFacebookSuccess(user, null);
       } else if (response.status === 200) {
         var user = response.data.user;
         var sessions = response.data.sessions;
@@ -93,7 +93,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
         PubSub.trigger('setUser', user);
         PubSub.trigger('toggleNavBar', true);
         PubSub.trigger('toggleFooter', true);
-        vm.onFacebookSuccess(user, sessions);
+        ctrl.onFacebookSuccess(user, sessions);
       } else {
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
@@ -105,45 +105,43 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     });
   };
 
-  vm.onFacebookSuccess = function(user, sessions) {
-    console.log('onFacebookSuccess', user);
+  ctrl.onFacebookSuccess = function(user, sessions) {
     $scope.user = user
     if (sessions) {
-      console.debug('sessions', sessions);
       localStorageService.set('sessions', sessions);
     }
     if (!$scope.user.username) {
       PubSub.trigger('toggleNavBar', null);
       PubSub.trigger('toggleFooter', null);
-      vm.getUserName();
+      ctrl.getUserName();
     } else {
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('toggleFooter', true);
       Animation.run('onDashboard');
-      vm.renderTable();
+      ctrl.renderTable();
     }
   };
 
-  vm.createRoom = function(connectedUser, invitedUser) {
+  ctrl.createRoom = function(connectedUser, invitedUser) {
     var payload = {};
     payload.connectedUser = connectedUser;
     payload.invitedUser = invitedUser;
     SessionApi.create(payload).then(function(response) {
       if (response.status === 200) {
-        vm.addRoom(response.data.session);
+        ctrl.addRoom(response.data.session);
       }
     });
   };
 
-  vm.addRoom = function(newRoom) {
+  ctrl.addRoom = function(newRoom) {
     var sessions = localStorageService.get('sessions');
     sessions.push(newRoom);
     localStorageService.set('sessions', sessions);
     $scope.showLoading = false;
-    vm.renderTable();
+    ctrl.renderTable();
   };
 
-  vm.renderTable = function() {
+  ctrl.renderTable = function() {
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
     if (sessions && sessions.length) {
@@ -171,24 +169,21 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     };
   };
 
-  /*
-   * When a new user logs in through facebook, get and save a username before the dashboard renders
-   **/
-  vm.getUserName = function(callback) {
+  ctrl.getUserName = function(callback) {
     ngDialog.openConfirm({
       template: '../../views/ngDialog/facebook.html',
       controller: 'FooterCtrl'
     });
   };
 
-  vm.setUserName = function(username) {
+  ctrl.setUserName = function(username) {
     var payload = {};
     payload._id = $scope.user._id;
     payload.username = username;
-    vm.saveUserName(payload);
+    ctrl.saveUserName(payload);
   };
 
-  vm.saveUserName = function(payload) {
+  ctrl.saveUserName = function(payload) {
     UserApi.saveUserName(payload).then(function(response) {
       localStorageService.remove('isFacebookLogin')
       var user = response.data.user;
@@ -203,7 +198,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
    * Connect to the session
    **/
 
-  vm.connect = function(otSession) {
+  ctrl.connect = function(otSession) {
     localStorageService.set('otSession', otSession);
     var opts = {
       user_id: $scope.user._id,

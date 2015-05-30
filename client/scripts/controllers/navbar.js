@@ -5,17 +5,21 @@ angular.module('RoomBaby')
 
 function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
-  var vm = this;
+  var ctrl = this;
   $scope.user = {};
 
   this.registerEvents = function() {
+
+    PubSub.on('toggleOverlay', function() {
+      $scope.showOverlay = !$scope.showOverlay;
+    });
+
     PubSub.on('toggleNavBar', function(_bool) {
       $scope.showNavBar = _bool;
     });
 
     PubSub.on('setUser', function(user) {
       if (!user.profileImage) {
-        // user.profileImage = 'https://www.libstash.com/public/avatars/default.png';
         user.profileImage = 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
       }
       $scope.user = user;
@@ -24,7 +28,7 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
   this.dropdown = function(opt) {
     if (opt === 'logout') {
-      vm.logout($scope.user._id);
+      ctrl.logout($scope.user._id);
     }
   };
 
@@ -32,7 +36,7 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
     PubSub.trigger('Dashboard:CreateRoom');
   };
 
-  vm.logout = function(user_id) {
+  ctrl.logout = function(user_id) {
     localStorageService.clearAll();
     UserApi.logout(user_id).then(function(response) {
       $state.go('landing');

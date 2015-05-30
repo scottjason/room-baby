@@ -3,9 +3,9 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ngDialog, UserApi, PubSub, Transport, localStorageService) {
 
-  var vm = this;
+  var ctrl = this;
   var now = moment(new Date()).calendar();
   $rootScope.connectionCount = 0;
 
@@ -42,32 +42,39 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     timeSent.splice(0, 2);
     timeSent = timeSent.join(' ');
     obj.timeSent = timeSent;
-    obj.profileImage = $scope.user.profileImage || 'https://www.libstash.com/public/avatars/default.png';
+    obj.profileImage = $scope.user.profileImage || 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
     var messageString = JSON.stringify(obj);
-    vm.broadcast('message', messageString);
+    ctrl.broadcast('message', messageString);
   };
 
   this.init = function() {
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
-    PubSub.on('disconnect', vm.disconnect);
-    PubSub.on('fileShare', vm.shareFile);
+    PubSub.on('shareFile', ctrl.shareFile);
+    PubSub.on('requestPermission', ctrl.requestPermission);
+    PubSub.on('disconnect', ctrl.disconnect);
+    PubSub.on('openUpload', ctrl.openUpload);
+    PubSub.on('closeUpload', ctrl.closeUpload);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('toggleFooter', true);
     PubSub.trigger('setUser', $scope.user);
-    vm.createSession($scope.otSession);
+    ctrl.createSession($scope.otSession);
   };
 
-  vm.createSession = function(otSession) {
+  this.isPermissionGranted = function(isGranted) {
+    console.log('isGranted', isGranted);
+  };
+
+  ctrl.createSession = function(otSession) {
     if (OT.checkSystemRequirements() === 0) {
       console.error('The client does not support WebRTC.');
     } else {
       $scope.session = OT.initSession(otSession.key, otSession.sessionId);
-      vm.registerEvents(otSession);
+      ctrl.registerEvents(otSession);
     }
   };
 
-  vm.registerEvents = function(otSession) {
+  ctrl.registerEvents = function(otSession) {
     $scope.session.on('connectionCreated', function(event) {
       console.log('connectionCreated');
       $rootScope.connectionCount++
@@ -80,7 +87,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
         console.debug('on connectionCreated condition two');
       }
       if ($rootScope.connectionCount !== 1) {
-        vm.emit('connected', $scope.user.username);
+        ctrl.emit('connected', $scope.user.username);
       }
     });
 
@@ -102,7 +109,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       var opts = {
         user_id: $scope.user._id
       }
-      vm.routeToDashboard(opts);
+      ctrl.routeToDashboard(opts);
     });
 
     $scope.session.on('connectionDestroyed', function(event) {
@@ -127,6 +134,27 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       Transport.render(sentBy, message, profileImage, timeSent);
     });
 
+    $scope.session.on('signal:permissionRequest', function(event) {
+      var permissionRequestBy = event.data;
+      if ($scope.user.username !== permissionRequestBy) {
+        Transport.requestPermission(permissionRequestBy, function() {
+          document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
+          document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
+        })
+      } else {
+        // Transport.permissionRequestSent();
+      }
+    });
+
+    $scope.session.on('signal:permissionResponse', function(event) {
+      var isGranted = (event.data).indexOf('granted') !== -1;
+      if (isGranted) {
+        Transport.sendReceipt('recordingPermission', true);
+      } else {
+        Transport.sendReceipt('recordingPermission', null);
+      }
+    });
+
     $scope.session.on('signal:file', function(event) {
       var data = JSON.parse(event.data);
       var sentBy = data.sentBy;
@@ -139,10 +167,18 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       }
     });
 
-    vm.createConnection(otSession);
+    ctrl.createConnection(otSession);
   };
 
-  vm.createConnection = function(otSession) {
+  ctrl.onPermissionResponse = function(event) {
+    if (event.target.id === 'permission-granted') {
+      ctrl.broadcast('permissionResponse', 'granted');
+    } else {
+      ctrl.broadcast('permissionResponse', 'denied');
+    }
+  };
+
+  ctrl.createConnection = function(otSession) {
     $scope.session.connect(otSession.token, function(err) {
       if (err) {
         console.error('error connecting: ', err.code, err.message);
@@ -161,11 +197,23 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
   };
 
-  vm.disconnect = function() {
-    $scope.session.disconnect();
+  ctrl.requestPermission = function() {
+    var permissionRequestedBy = $scope.user.username;
+    ctrl.broadcast('permissionRequest', permissionRequestedBy);
   };
 
-  vm.shareFile = function(fileUrl) {
+  ctrl.openUpload = function() {
+    ngDialog.openConfirm({
+      template: '../../views/ngDialog/upload.html',
+      controller: 'FooterCtrl'
+    });
+  };
+
+  ctrl.closeUpload = function() {
+    ngDialog.closeAll();
+  };
+
+  ctrl.shareFile = function(fileUrl) {
     var obj = {};
     obj.sentBy = $scope.user.username;
     obj.fileUrl = fileUrl;
@@ -175,14 +223,18 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     timeSent = timeSent.join(' ');
     obj.timeSent = timeSent;
     var messageString = JSON.stringify(obj);
-    vm.broadcast('file', messageString);
+    ctrl.broadcast('file', messageString);
   };
 
-  vm.routeToDashboard = function(opts) {
+  ctrl.disconnect = function() {
+    $scope.session.disconnect();
+  };
+
+  ctrl.routeToDashboard = function(opts) {
     $state.go('dashboard', opts);
   };
 
-  vm.emit = function(type, message) {
+  ctrl.emit = function(type, message) {
     $scope.session.signal({
       to: $scope.connectionObj,
       type: type,
@@ -192,7 +244,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
   };
 
-  vm.broadcast = function(type, message) {
+  ctrl.broadcast = function(type, message) {
     $scope.session.signal({
       type: type,
       data: message,
@@ -200,7 +252,5 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
       if (err) console.error('signal error ( ' + err.code + ' ) : ' + err.reason);
     });
   };
-
-
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'UserApi', 'PubSub', 'Transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'ngDialog', 'UserApi', 'PubSub', 'Transport', 'localStorageService'];
 }
