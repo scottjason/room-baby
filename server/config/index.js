@@ -76,6 +76,7 @@ module.exports = {
     username: env.BITLY_LOGIN,
     key: env.BITLY_KEY
   },
+
   facebook: {
     clientID: env.FACEBOOK_ID,
     clientSecret: env.FACEBOOK_SECRET,

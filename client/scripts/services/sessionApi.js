@@ -37,6 +37,23 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     };
 
+    function startRecording(otSessionId) {
+      var request = $http({
+        method: 'GET',
+        url: '/session/record/' + otSessionId
+      });
+      return (request.then(successHandler, errorHandler));
+    };
+
+    function stopRecording(archiveId) {
+      var request = $http({
+        method: 'GET',
+        url: '/session/stop/' + archiveId
+      });
+      return (request.then(successHandler, errorHandler));
+    };
+
+
     function successHandler(response) {
       return (response);
     };
@@ -48,7 +65,9 @@ angular.module('RoomBaby')
     return ({
       create: create,
       getAll: getAll,
-      upload: upload
+      upload: upload,
+      startRecording: startRecording,
+      stopRecording: stopRecording
     });
     SessionApi.$inject('$http');
   });

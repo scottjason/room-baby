@@ -9,21 +9,13 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
   $scope.user = {};
 
   this.registerEvents = function() {
+    PubSub.on('toggleNavBar', ctrl.toggleNavBar);
+    PubSub.on('toggleOverlay', ctrl.toggleOverlay);
+    PubSub.on('setUser', ctrl.setUser);
+  };
 
-    PubSub.on('toggleOverlay', function() {
-      $scope.showOverlay = !$scope.showOverlay;
-    });
-
-    PubSub.on('toggleNavBar', function(_bool) {
-      $scope.showNavBar = _bool;
-    });
-
-    PubSub.on('setUser', function(user) {
-      if (!user.profileImage) {
-        user.profileImage = 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg';
-      }
-      $scope.user = user;
-    });
+  this.createRoom = function() {
+    PubSub.trigger('Dashboard:CreateRoom');
   };
 
   this.dropdown = function(opt) {
@@ -32,8 +24,16 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
     }
   };
 
-  this.createRoom = function() {
-    PubSub.trigger('Dashboard:CreateRoom');
+  ctrl.toggleOverlay = function() {
+    $scope.showOverlay = !$scope.showOverlay;
+  };
+
+  ctrl.toggleNavBar = function(_bool) {
+    $scope.showNavBar = _bool;
+  };
+
+  ctrl.setUser = function (user) {
+   $scope.user = user;
   };
 
   ctrl.logout = function(user_id) {

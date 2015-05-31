@@ -9,7 +9,6 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
   var cleanForm = { email: '', password: '' };
   $scope.user = {};
 
-
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.sessions) {

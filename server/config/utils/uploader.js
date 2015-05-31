@@ -20,11 +20,11 @@ module.exports = {
     return this.obj.uuid;
   },
   generateKey: function(req) {
-    console.log(req);
-    return 'session_id/' + req.body.session_id + '/user_id/' + req.body.user_id + '/' + this.getId() + '.' + req.files.file.extension;
+    console.log('req.session', req.session);
+    return 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension;
   },
   generateUrl: function(req, callback) {
-    this.generateShortUrl(config.aws.base + req.body.session_id + '/user_id/' + req.body.user_id + '/' + this.getId() + '.' + req.files.file.extension, callback);
+    this.generateShortUrl(config.aws.base + 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension, callback);
   },
   generateShortUrl: function(longUrl, callback){
     bitly.shorten(longUrl, function(err, res) {

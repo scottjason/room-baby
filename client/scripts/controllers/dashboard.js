@@ -26,9 +26,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     }
   };
 
-  /*
-   * UI Responders
-   **/
+  /* UI Responders */
   this.registerEvents = function() {
     PubSub.on('setUserName', ctrl.setUserName);
     $scope.$watch('usernameConfirmed', function() {
@@ -73,10 +71,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     }
   };
 
-  /*
-   * Controller Methods
-   **/
-
+  /* Controller Methods */
   ctrl.onFacebookLogin = function(user_id) {
     UserApi.getAll(user_id).then(function(response) {
       console.log('response', response);
@@ -194,10 +189,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     });
   };
 
-  /*
-   * Connect to the session
-   **/
-
+  /* Connect to the session */
   ctrl.connect = function(otSession) {
     localStorageService.set('otSession', otSession);
     var opts = {

@@ -29,9 +29,11 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
       PubSub.trigger('disconnect');
     } else if (type === 'record') {
       PubSub.trigger('requestPermission');
+    } else if (type === 'stop') {
+      PubSub.trigger('stopRecording');
     } else if (type === 'upload') {
       PubSub.trigger('toggleOverlay');
-      PubSub.trigger('openUpload');
+      PubSub.trigger('toggleUpload', true);
     }
   };
 
@@ -48,7 +50,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
           var fileUrl = response.data;
           $scope.showLoadingSpinner = false;
           PubSub.trigger('toggleOverlay');
-          PubSub.trigger('closeUpload');
+          PubSub.trigger('toggleUpload', null);
           $timeout(function(){
           PubSub.trigger('shareFile', fileUrl);
           }, 700);

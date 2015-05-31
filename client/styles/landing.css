@@ -1,3 +1,8 @@
+form#loginForm {
+  width: 100%;
+  height: 44px;
+}
+
 .go-back-container {
   margin-top: 50px;
   color: white;
