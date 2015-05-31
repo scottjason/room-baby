@@ -139,7 +139,7 @@ div.body-overlay {
 .btn-custom-landing:hover,
 .btn-custom-landing:active,
 .btn-custom-landing:focus {
-  width: 120px;
+  width: 100px;
   font-weight: 300;
   text-decoration: none;
   top: 11px;

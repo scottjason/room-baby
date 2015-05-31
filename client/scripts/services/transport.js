@@ -3,9 +3,30 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    var chatbox = angular.element(document.getElementById('chatbox'));
+    function generateHtml(obj, callback) {
+      var type = obj.type;
+      switch (type) {
+        case 'onConnected':
+          onConnected(obj.connectedWith, obj.sessionStartedAt, callback);
+          break;
+        case 'chatMessage':
+          chatMessage(obj.sentBy, obj.message, obj.profileImage, obj.timeSent, callback);
+          break;
+        case 'shareFile':
+          shareFile(obj.sentBy, obj.fileUrl, obj.timeSent, callback);
+          break;
+        case 'sendReceipt':
+          sendReceipt(obj.receiptType, obj.isGranted || null, callback);
+          break;
+        case 'requestPermission':
+          requestPermission(obj.requestedBy, callback);
+          break;
+        default:
+          console.error('No case found for ', type);
+      }
+    };
 
-    function connected(connectedWith, sessionStartedAt) {
+    function onConnected(connectedWith, sessionStartedAt, callback) {
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -19,11 +40,10 @@ angular.module('RoomBaby')
         '</div>' +
         '<hr>' +
         '</div>';
-
-      chatbox.append(html);
+      callback(html);
     };
 
-    function render(userName, userMessage, profileImage, timeSent) {
+    function chatMessage(userName, userMessage, profileImage, timeSent, callback) {
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -41,11 +61,10 @@ angular.module('RoomBaby')
         '</div>' +
         '<hr>' +
         '</div>';
-
-      chatbox.append(html);
+      callback(html);
     };
 
-    function sendFile(sentBy, fileUrl, timeSent) {
+    function shareFile(sentBy, fileUrl, timeSent, callback) {
       var downloadLink = "<a class='download-link' href=" + fileUrl + " target='_blank'>Click to Download</a>";
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
@@ -61,12 +80,11 @@ angular.module('RoomBaby')
         '</div>' +
         '<hr>' +
         '</div>';
-
-      chatbox.append(html);
+      callback(html);
     };
 
-    function sendReceipt(type) {
-      if (type === 'fileShared') {
+    function sendReceipt(receiptType, isGranted, callback) {
+      if (receiptType === 'shareFile') {
         var html = '<div class="row">' +
           '<div class="col-lg-12">' +
           '<div class="media">' +
@@ -80,12 +98,38 @@ angular.module('RoomBaby')
           '</div>' +
           '<hr>' +
           '</div>';
+      } else if (receiptType === 'permissionResponse' && isGranted) {
+        var html = '<div class="row">' +
+          '<div class="col-lg-12">' +
+          '<div class="media">' +
+          '<div class="media-body">' +
+          '<h4 class="media-heading">' +
+          '<span class="session-started"> Request To Record Granted</span>' +
+          '</h4>' +
+          '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp; Recording Started At' + '</p>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '<hr>' +
+          '</div>';
+      } else if (receiptType === 'permissionResponse' && !isGranted) {
+        var html = '<div class="row">' +
+          '<div class="col-lg-12">' +
+          '<div class="media">' +
+          '<div class="media-body">' +
+          '<h4 class="media-heading">' +
+          '<span class="session-started"> Request To Record Was Not Granted</span>' +
+          '</h4>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '<hr>' +
+          '</div>';
       }
-
-      chatbox.append(html);
+      callback(html);
     };
 
-    function requestPermission(requestingUser, callback) {
+    function requestPermission(requestedBy, callback) {
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -93,13 +137,13 @@ angular.module('RoomBaby')
         '<h4 class="media-heading">' +
         '<span class="session-started"> Room Baby Notice</span>' +
         '</h4>' +
-        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + requestingUser.capitalize() + ' Would Like To Record This Session' + '</p>' +
+        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + requestedBy.capitalize() + ' Would Like To Record This Session' + '</p>' +
         '<p class="recording-permission">Is this ok?' +
         '</p>' +
         '<ul class="permision-copy-container">' +
-        '<li id="permission-granted" class="permission-yes">Yup!' +
+        '<li id="permission-granted">OK!' +
         '</li>' +
-        '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; Nope!' +
+        '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
         '</li>' +
         '</ul>' +
         '</div>' +
@@ -107,16 +151,10 @@ angular.module('RoomBaby')
         '</div>' +
         '<hr>' +
         '</div>';
-
-      chatbox.append(html);
-      callback();
+      callback(html);
     };
 
     return ({
-      render: render,
-      connected: connected,
-      sendFile: sendFile,
-      sendReceipt: sendReceipt,
-      requestPermission: requestPermission
+      generateHtml: generateHtml
     });
   });

@@ -145,7 +145,7 @@ exports.upload = function(req, res, next) {
           ContentType: req.files.file.mimetype,
           ACL: config.aws.acl
         };
-        callback(null, params)
+        callback(null, params);
       },
       function(params, callback) {
         s3Bucket.putObject(params, function(err) {
@@ -158,6 +158,7 @@ exports.upload = function(req, res, next) {
           if (err) return callback(err);
           var onShortUrl = function(err, url) {
             if(err) return callback(err);
+            console.log("url", url);
             callback(null, url);
           };
           uploader.generateUrl(req, onShortUrl);

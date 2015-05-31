@@ -26,7 +26,7 @@ var userSchema = new mongoose.Schema({
     name: String,
   },
   profileImage: {
-    type: String
+    type: String, default: 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg'
   },
   createdAt: {
     type: Date,
