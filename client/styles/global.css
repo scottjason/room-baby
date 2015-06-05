@@ -74,6 +74,11 @@ div.body-overlay {
   margin-bottom: 20px;
 }
 
+.btn.btn-md.members {
+  background: transparent;
+  color: rgba(0, 0, 0, .6);
+}
+
 .btn-custom-next,
 .btn-custom-next:hover,
 .btn-custom-next:active,
@@ -135,6 +140,48 @@ div.body-overlay {
   margin: auto;
 }
 
+.btn-custom-email,
+.btn-custom-email:hover,
+.btn-custom-email:active,
+.btn-custom-email:focus {
+  width: 250px;
+  text-decoration: none;
+  top: 28px;
+  height: 38px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  /*color: #CDE3F5;*/
+  
+  color: #efefef;
+  font-weight: 300;
+  background-color: transparent;
+  position: relative;
+  margin: auto;
+  border: 1px solid #efefef;
+}
+
+.btn-custom-facebook,
+.btn-custom-facebook:active,
+.btn-custom-facebook:focus,
+.btn-custom-facebook:hover {
+  position: relative;
+  width: 250px;
+  text-decoration: none;
+  top: 11px;
+  height: 38px;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 3px;
+  cursor: pointer;
+  color: #efefef;
+  font-weight: 300;
+  background-color: transparent;
+  margin: auto;
+  border: 1px solid #efefef;
+}
+
 .btn-custom-landing,
 .btn-custom-landing:hover,
 .btn-custom-landing:active,
@@ -153,9 +200,46 @@ div.body-overlay {
   margin: auto;
 }
 
-.btn.btn-md.members {
-  background: transparent;
-  color: rgba(0, 0, 0, .6);
+.btn-custom-login,
+.btn-custom-login:hover,
+.btn-custom-login:active,
+.btn-custom-login:focus {
+  width: 100px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 30px;
+  border-radius: 9px;
+  text-align: center;
+  cursor: pointer;
+  color: #EFEFEF;
+  border: 1px solid #EFEFEF;
+  background: transparent none repeat scroll 0px 0px;
+  margin: auto;
+  position: relative;
+  padding-top: 3px;
+}
+
+.btn-custom-back,
+.btn-custom-back:hover,
+.btn-custom-back:active,
+.btn-custom-back:focus {
+  width: 100px;
+  font-weight: 400;
+  text-decoration: none;
+  position: relative;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  top: 22px;
+  height: 30px;
+  border: 1px solid #EFEFEF;
+  border-radius: 9px;
+  text-align: center;
+  padding-top: 4px;
+  cursor: pointer;
+  color: #EFEFEF;
+  background-color: transparent;
+  margin: auto;
 }
 
 .btn-custom.share-location,

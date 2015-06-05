@@ -1,11 +1,80 @@
-form#loginForm {
-  width: 100%;
-  height: 44px;
+.fa.fa-facebook {
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  margin: auto;
+  font-size: 19px;
 }
 
-.go-back-container {
-  margin-top: 50px;
+.fa.fa-envelope {
+  position: absolute;
+  top: 7px;
+  left: 12px;
+  margin: auto;
+  font-size: 19px;
+}
+
+.landing-container {
+  min-width: 300px;
+  position: relative;
+  height: 500px;
+  top: -50px;
+}
+
+p.auth-options-copy {
   color: white;
+  position: absolute;
+  top: 53px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+}
+
+.landing-line-auth {
+  background-color: #efefef;
+  width: 300px;
+  height: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5px;
+  bottom: 0;
+  margin: auto;
+}
+
+.landing-btn-container {
+  max-width: 300px;
+  position: relative;
+  width: 493px;
+  height: 97px;
+  bottom: 40px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+  background-color: transparent;
+}
+
+.facebook-btn-container {
+  position: absolute;
+  width: 240px;
+  height: 50px;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: transparent;
+}
+
+form#loginForm {
+  width: 500px;
+  height: 44px;
+  position: relative;
+  margin: auto;
+  padding-bottom: 59px;
 }
 
 .go-back-copy {
@@ -44,11 +113,6 @@ span.add-line-opacity {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.landing-btn-container {
-  position: relative;
-  margin-top: -39px;
-}
-
 .landing-sub-text-container {
   position: relative;
   margin-top: 18px;
@@ -85,18 +149,44 @@ input[type=radio] {
 }
 
 .check-box-container {
-  width: 500px;
-  position: absolute;
-  top: 40px;
+  width: 100%;
+  position: relative;
+  top: 10px;
   bottom: 0;
   margin: auto;
   color: rgba(255, 255, 255, .7);
   font-weight: 300;
   font-size: 14px;
+  height: 32px;
 }
 
 p.auth-sub-menu {
   font-size: 14px;
   text-align: center;
-  padding-top: 7px;
+  color: #FFE0CE;
+  font-weight: 400;
+}
+
+a#facebook {
+  position: relative;
+  top: 4px;
+  padding-top: 8px;
+}
+
+a#email {
+  position: relative;
+  padding-top: 8px;
+}
+
+.or-copy {
+  font-family: 'brandon_grotesquethin';
+  font-size: 18px;
+  position: absolute;
+  top: 39px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: #efefef;
+  font-weight: 300;
 }

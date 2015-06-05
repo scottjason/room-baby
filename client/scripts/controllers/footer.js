@@ -4,20 +4,19 @@ angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
 function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
+
   var ctrl = this;
+  var promise;
+  var fileUrl;
+
   $scope.user = {};
 
   this.registerEvents = function() {
-    PubSub.on('toggleFooter', function(_bool) {
-      $scope.showFooter = _bool;
-    });
-
-    PubSub.on('setUser', function(user) {
-      $scope.user = user;
-    });
+    PubSub.on('toggleFooter', ctrl.toggleFooter);
+    PubSub.on('setUser', ctrl.setUser);
   };
 
-  this.submitUserName = function(data) {
+  this.submitUserName = function() {
     PubSub.trigger('setUserName', $scope.user.username);
   };
 
@@ -44,23 +43,36 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
       console.error('maxSizeExceeded');
     } else {
       $scope.showLoadingSpinner = true;
-      /* verify again on server along with file type */
+      /* Verify again on server along with file type */
       SessionApi.upload($scope.fileUpload, $scope.user._id, $scope.user._id).then(function(response) {
         if (response.status === 200) {
-          var fileUrl = response.data;
+          fileUrl = response.data;
           $scope.showLoadingSpinner = false;
           PubSub.trigger('toggleOverlay');
           PubSub.trigger('toggleUpload', null);
-          $timeout(function(){
-          PubSub.trigger('shareFile', fileUrl);
-          }, 700);
+          promise = $timeout(ctrl.shareFile, 700);
         } else if (response.status === 401) {
-          console.log('401', response)
+          console.error(401, response)
         }
       }, function(err) {
-        console.log(err);
+        console.error(err);
       });
     }
   };
+
+  ctrl.setUser = function(user) {
+    $scope.user = user;
+  };
+
+  ctrl.toggleFooter = function(showFooter) {
+    $scope.showFooter = showFooter;
+  };
+
+  ctrl.shareFile = function() {
+    console.log('promise', promise);
+    PubSub.trigger('shareFile', fileUrl);
+    $timeout.cancel(promise);
+  };
+
   FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi'];
 }

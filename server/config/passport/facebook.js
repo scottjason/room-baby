@@ -15,7 +15,7 @@ module.exports = function(passport) {
 
       var profileImage;
 
-      FB.api('/me?fields=picture.type(large)&access_token=' + token, function(response) {
+      FB.api('/me?fields=picture.type(small)&access_token=' + token, function(response) {
         if (response.picture && response.picture.data.url) {
           profileImage = response.picture.data.url;
         } else {

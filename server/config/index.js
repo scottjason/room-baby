@@ -9,7 +9,7 @@ var env = require('../../env.js');
 
 module.exports = {
   db: {
-    uri:process.env.MONGOLAB_URI || env.MONGOLAB_URI_DEV_SCOTT,
+    uri:process.env.MONGOLAB_URI || env.MONGOLAB_URI_DEV,
     opts: {
       server: {
         socketOptions: {
@@ -84,6 +84,7 @@ module.exports = {
   },
   apis: {
     activeUsers: env.ACTIVE_USERS_API,
-    activeUsersApiKey: env.ACTIVE_USERS_API_KEY
-  }
+    activeUsersApiKey: env.ACTIVE_USERS_API_KEY,
+    videoStatus : env.VIDEO_STATUS_API
+  },
 }

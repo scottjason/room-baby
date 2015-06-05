@@ -1,49 +1,39 @@
-p.permission-yes {
-  font-size: 14px;
-  margin-top: -7px;
-  cursor: pointer;
-  color: #F59A73;
-}
+ #permission-granted {}
 
-#permission-granted {
+ #permission-denied {}
 
-}
-#permission-denied {
-  
-}
-
-p.recording-permission {
-  font-size: 14px;
-  margin-top: -7px;
-  color: rgba(0, 0, 0, .7);
-}
-
-a.download-link {
-  text-decoration: none;
-  color: #16a085;
-  font-size: 13px;
-  margin-top: -8px;
-}
-
-p.file-text {
-  font-size: 13px;
-  color: rgba(0, 0, 0, .7);
-  text-align: left;
-}
-
-#layout-container {
-  position: absolute;
-  top: 85px;
-  height: 80%;
-  width: 70%;
-  left: 10px;
-  right: 200px;
-  bottom: 0;
-  background-color: #DDD;
-}
-
-#layout-container > div {
-  background-color: #000;
-  display: inline-block;
-  border: 1px solid #fff;
-}
+ p.recording-permission {
+   font-size: 14px;
+   margin-top: -7px;
+   color: rgba(0, 0, 0, .7);
+ }
+ 
+ a.download-link {
+   text-decoration: none;
+   color: #16a085;
+   font-size: 13px;
+   margin-top: -8px;
+ }
+ 
+ p.file-text {
+   font-size: 13px;
+   color: rgba(0, 0, 0, .7);
+   text-align: left;
+ }
+ 
+ #layout-container {
+   position: absolute;
+   top: 85px;
+   height: 80%;
+   width: 70%;
+   left: 10px;
+   right: 200px;
+   bottom: 0;
+   background-color: #DDD;
+ }
+ 
+ #layout-container > div {
+   background-color: #000;
+   display: inline-block;
+   border: 1px solid #fff;
+ }

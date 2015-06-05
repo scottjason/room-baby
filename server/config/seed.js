@@ -105,14 +105,14 @@ var createSessionOne = function createSession (arr, arrTwo) {
     session.createdBy.username = session.users[0].username;
     session.save(function(err, savedSession){
       if(err) return console.log(err);
-      console.log('-------------');
-      console.log('');
-      console.log('Session One Created');
-      console.log('');
-      console.log(savedSession);
-      console.log('');
-      console.log('-------------');
-      console.log('');
+      // console.log('-------------');
+      // console.log('');
+      // console.log('Session One Created');
+      // console.log('');
+      // console.log(savedSession);
+      // console.log('');
+      // console.log('-------------');
+      // console.log('');
     });
   });
 };
@@ -137,14 +137,14 @@ var createSessionTwo = function createSessionTwo (arr) {
     if (session.users[1].username) session.createdBy.username = session.users[1].username;
     session.save(function(err, savedSession){
       if(err) return console.log(err);
-      console.log('-------------');
-      console.log('');
-      console.log('Session Two Created');
-      console.log('');
-      console.log(savedSession);
-      console.log('');
-      console.log('-------------');
-      console.log('');
+      // console.log('-------------');
+      // console.log('');
+      // console.log('Session Two Created');
+      // console.log('');
+      // console.log(savedSession);
+      // console.log('');
+      // console.log('-------------');
+      // console.log('');
     });
   });
 }
@@ -169,14 +169,14 @@ var createSessionThree = function createSessionThree (arr) {
     if (session.users[1].username) session.createdBy.username = session.users[1].username;
     session.save(function(err, savedSession){
       if(err) return console.log(err);
-      console.log('-------------');
-      console.log('');      
-      console.log('Session Three Created');
-      console.log('');
-      console.log(savedSession);
-      console.log('');
-      console.log('-------------');
-      console.log('');
+      // console.log('-------------');
+      // console.log('');      
+      // console.log('Session Three Created');
+      // console.log('');
+      // console.log(savedSession);
+      // console.log('');
+      // console.log('-------------');
+      // console.log('');
     });
   });
 }

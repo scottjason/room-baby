@@ -53,6 +53,13 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     };
 
+    function getVideoStatus(archiveId) {
+      var request = $http({
+        method: 'GET',
+        url: '/session/video-status/' + archiveId
+      });
+      return (request.then(successHandler, errorHandler));
+    };
 
     function successHandler(response) {
       return (response);
@@ -67,7 +74,8 @@ angular.module('RoomBaby')
       getAll: getAll,
       upload: upload,
       startRecording: startRecording,
-      stopRecording: stopRecording
+      stopRecording: stopRecording,
+      getVideoStatus: getVideoStatus
     });
     SessionApi.$inject('$http');
   });
