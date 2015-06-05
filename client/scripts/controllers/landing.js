@@ -3,34 +3,36 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDialog, UserApi, PubSub, Animation, localStorageService) {
 
   var ctrl = this;
   var cleanForm = { email: '', password: '' };
   $scope.user = {};
+
+  socket.on('connected', function () {
+    console.log('Socket.io Successfuly Connected');
+  });
+
+  socket.emit('getVideoStatus');
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        var opts = {
-          user_id: user._id
-        }
+        var opts = { user_id: user._id };
         ctrl.accessGranted(opts);
       } else if (response.status === 200) {
         var user = response.data.user;
         var sessions = response.data.sessions;
         localStorageService.set('user', user);
         localStorageService.set('sessions', sessions);
-        var opts = {
-          user_id: user._id
-        }
+        var opts = { user_id: user._id };
         ctrl.accessGranted(opts);
       } else if (response.status === 401) {
-        ctrl.init();
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
+        ctrl.initialize();
       } else {
         console.error('unknown authentication status');
       }
@@ -41,13 +43,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
 
   this.selectedOpt = function(optSelected) {
     if (optSelected === 'login') {
-      $scope.learnMore = null;
       $scope.showRegister = null;
       $scope.showLogin = true;
-    } else if (optSelected === 'register') {
-      $scope.learnMore = null;
-      $scope.showLogin = null;
-      $scope.showRegister = true;
     } else if (optSelected === 'facebook') {
       localStorageService.set('isFacebookLogin', true);
       $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
@@ -58,15 +55,15 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
 
   this.submitForm = function(type) {
     if (type === 'login') {
-      $scope.payload = angular.copy($scope.user);
+      var payload = angular.copy($scope.user);
       $scope.user = angular.copy(cleanForm);
       $scope.authForm.$setPristine();
-      ctrl.login();
+      ctrl.login(payload);
     } else if (type === 'register') {
-      $scope.payload = angular.copy($scope.user);
+      var payload = angular.copy($scope.user);
       $scope.user = angular.copy(cleanForm);
       $scope.authForm.$setPristine();
-      ctrl.register();
+      ctrl.register(payload);
     }
   };
 
@@ -76,17 +73,17 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     $scope.showRegister = null;
   };
 
-  ctrl.init = function() {
+  ctrl.initialize = function() {
     $scope.showLanding = true;
     Animation.run('onLanding');
-    Tipped.create('#facebook', 'login with facebook');
-    Tipped.create('#login', 'login with your email');
-    Tipped.create('#register', 'create an account');
-    Tipped.create('#learn', 'how this works');
+    // Tipped.create('#facebook', 'login with facebook');
+    // Tipped.create('#login', 'login with your email');
+    // Tipped.create('#register', 'create an account');
+    // Tipped.create('#learn', 'how this works');
   };
 
-  ctrl.login = function() {
-    UserApi.login($scope.payload).then(function(response) {
+  ctrl.login = function(payload) {
+    UserApi.login(payload).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
@@ -113,8 +110,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     });
   };
 
-  ctrl.register = function() {
-    UserApi.register($scope.payload).then(function(response) {
+  ctrl.register = function(payload) {
+    UserApi.register(payload).then(function(response) {
       if (response.status === 401) {
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
@@ -136,5 +133,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, UserApi, Pub
     $scope.errMessage = errMessage;
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'ngDialog', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
 };

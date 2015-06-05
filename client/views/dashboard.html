@@ -1,4 +1,5 @@
-<div ng-init='dashCtrl.registerEvents(); dashCtrl.initialize();'></div>
+<div ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'></div>
+<div class='dashboard-overlay'></div>
 <div class="container">
   <div class="row-block">
     <div id='white-block' class='white-block'></div>
@@ -35,7 +36,7 @@
 </div>
 <div ng-show='showTable' class="container">
   <div class="row">
-    <table st-table="allSessions" class="table table-striped">
+    <table st-table="table" class="table table-striped">
       <thead>
         <tr>
           <th>room name</th>
@@ -46,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="obj in allSessions">
+        <tr ng-repeat="obj in table">
           <td class='table-copy-title'>{{obj.name}}</td>
           <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
           <td>
