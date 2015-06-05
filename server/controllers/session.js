@@ -25,7 +25,7 @@ var s3Bucket = new AWS.S3();
 var opentok = new OpenTok(config.openTok.key, config.openTok.secret);
 var transporter = mailer.transporter();
 
-exports.onSocket = function(io) {
+exports.bindSocket = function(io) {
   io.on('connection', function(socket) {
     console.log('Socket.io Connected In Session Ctrl');
     exports.socket = socket;

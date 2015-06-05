@@ -40,9 +40,9 @@ var server = app.listen(app.get('port'), function(){
 
 io = io.listen(server);
 
-/* Pass IO Instance */
-socketCtrl.onSocket(io);
-sessionCtrl.onSocket(io);
-userCtrl.onSocket(io);
+/* Bind The IO Instance */
+socketCtrl.bindSocket(io);
+sessionCtrl.bindSocket(io);
+userCtrl.bindSocket(io);
 
 module.exports = app;
