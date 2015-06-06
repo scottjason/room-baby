@@ -10,5 +10,8 @@ exports.bindSocket = function(io) {
 };
 
 exports.registerEvents = function(socket) {
+  socket.on('userConnected', sessionCtrl.onUserConnected);
+  socket.on('userDisconnected', sessionCtrl.onUserDisconnected);
   socket.on('getVideoStatus', sessionCtrl.getVideoStatus);
+  socket.on('getActiveUsers', sessionCtrl.getActiveUsers);
 };

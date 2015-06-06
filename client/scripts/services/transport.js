@@ -15,6 +15,9 @@ angular.module('RoomBaby')
         case 'shareFile':
           shareFile(obj.sentBy, obj.fileUrl, obj.timeSent, callback);
           break;
+        case 'shareVideo':
+          shareVideo(obj.videoUrl, callback);
+          break;
         case 'sendReceipt':
           sendReceipt(obj.receiptType, obj.isGranted || null, callback);
           break;
@@ -72,6 +75,25 @@ angular.module('RoomBaby')
         '<div class="media-body">' +
         '<h4 class="media-heading">' +
         '<span class="session-started">' + sentBy.capitalize() + ' Has Shared A File' +
+        '</span>' +
+        '</h4>' +
+        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + downloadLink + '</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<hr>' +
+        '</div>';
+      callback(html);
+    };
+
+    function shareVideo(videoUrl, callback) {
+      var downloadLink = "<a class='download-link' href=" + videoUrl + " target='_blank'>Click to Download</a>";
+      var html = '<div class="row">' +
+        '<div class="col-lg-12">' +
+        '<div class="media">' +
+        '<div class="media-body">' +
+        '<h4 class="media-heading">' +
+        '<span class="session-started">Video Ready. Click to Download.' +
         '</span>' +
         '</h4>' +
         '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + downloadLink + '</p>' +

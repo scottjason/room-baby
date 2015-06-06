@@ -25,23 +25,22 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     promise = $timeout(resizeCams, 20);
   };
 
-  /* Client & Server PubSub */
+  /* Client / Server PubSub */
   socket.on('videoStatus', function(isReady, video){
     if (isReady) {
-      console.debug('Video Ready');
       localStorageService.set('video', video);
-      console.log('GOT SOCKET VIDEO', video);
       var videoUrl = video.url;
-      ctrl.broadcast('videoUrl', videoUrl);
+      ctrl.broadcast('shareVideo', videoUrl);
     } else {
-       console.debug('Video Not Ready');
-       var archiveId = localStorageService.get('archive').id;
-      ctrl.getVideoStatus(archiveId);
+      var archiveId = localStorageService.get('archive').id;
+      $timeout(function(){
+        ctrl.getVideoStatus(archiveId);
+      }, 200);
     }
   });
 
-  /* Client Pub Sub */
-  this.registerEvents = function() {
+  /* DOM Event Listeners */
+  this.initialize = function() {
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
     PubSub.on('shareFile', ctrl.shareFile);
@@ -75,17 +74,26 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     }
   };
 
+  /* Controller Methods */
   ctrl.createSession = function(otSession) {
     if (OT.checkSystemRequirements() === 0) {
       console.error('The client does not support WebRTC.');
     } else {
       $scope.session = OT.initSession(otSession.key, otSession.sessionId);
-      ctrl.registerSessionEvents(otSession);
+      ctrl.registerEvents(otSession);
     }
   };
 
-  ctrl.registerSessionEvents = function(otSession) {
+  ctrl.registerEvents = function(otSession) {
     $scope.session.on('connectionCreated', function(event) {
+      var payload = {};
+      var sessionId = localStorageService.get('otSession').sessionId;
+      var user = localStorageService.get('user', user);
+      payload.userId = user._id;
+      payload.username = user.username;
+      payload.connectedAt = moment.utc(new Date());
+      payload.sessionId = sessionId;
+      socket.emit('userConnected', payload);
       console.log('connectionCreated');
       $rootScope.connectionCount++
         if (event.connection.creationTime < $scope.session.connection.creationTime) {
@@ -103,9 +111,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
 
     $scope.session.on('streamCreated', function(event) {
       console.debug('streamCreated');
-      $scope.session.subscribe(event.stream, 'layout-container', {
-        insertMode: 'append'
-      });
+      $scope.session.subscribe(event.stream, 'layout-container', { insertMode: 'append' });
       layout();
     });
 
@@ -191,9 +197,14 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       console.log('archive saved');
     });
 
-    $scope.session.on('signal:videoUrl', function(event) {
-      var videoUrl = event.data;
-      console.log('Video Url', videoUrl);
+    $scope.session.on('signal:shareVideo', function(event) {
+      console.log('onShareVideo', event);
+      var obj = {};
+      obj.type = 'shareVideo';
+      obj.videoUrl = event.data;
+      Transport.generateHtml(obj, function(html){
+        chatbox.append(html);
+      });
     });
 
     $scope.session.on('signal:shareFile', function(event) {
@@ -275,11 +286,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   };
 
   ctrl.getVideoStatus = function(archiveId) {
-    SessionApi.getVideoStatus(archiveId).then(function(response){
-      console.log('response on video status', response);
-      }, function(err){
-      console.log('err', err);
-    })
+    socket.emit('getVideoStatus', archiveId);
   };
 
   ctrl.toggleUpload = function(isClosed) {

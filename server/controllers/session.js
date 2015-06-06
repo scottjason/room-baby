@@ -32,6 +32,35 @@ exports.bindSocket = function(io) {
   });
 };
 
+exports.onUserConnected = function(payload) {
+  console.log(payload);
+  Session.findOne({ sessionId: payload.sessionId }, function(err, session){
+    if (err) return exports.socket.emit('onError', err);
+    session.activeUsers.push(payload);
+    session.save(function(err, savedSession){
+      exports.socket.emit('activateUser', savedSession);
+    });
+  });
+};
+
+exports.onUserDisconnected = function() {
+  console.log('onUserDisconnected');
+};
+
+exports.getVideoStatus = function(archiveId) {
+  Video.findOne({
+    archiveId: archiveId
+  }, function(err, video) {
+    if (err) return next(err);
+    if (video) console.log('found video', video);
+    if (!video || !video.status || video.status !== 'uploaded') {
+      exports.socket.emit('videoStatus', null, null);
+    } else {
+      exports.socket.emit('videoStatus', true, video);
+    }
+  });
+};
+
 exports.getAll = function(req, res, next) {
   var sessionArr = [];
   Session.find({
@@ -146,7 +175,6 @@ exports.create = function(req, res, next) {
   )
 };
 
-
 exports.upload = function(req, res, next) {
   async.waterfall([
       function(callback) {
@@ -209,13 +237,6 @@ exports.stopRecording = function(req, res, next) {
     if (err) return next(err);
     res.json(archive);
   });
-
-  // request
-  //   .post(config.apis.videoStatus)
-  //   .on('response', function(response) {
-  //     console.log(response.statusCode) // 200 
-  //     console.log(response.headers['content-type']) // 'image/png' 
-  //   });
 };
 
 exports.getRecording = function(req, res, next) {
@@ -248,30 +269,8 @@ exports.generateVideoEmbed = function(req, res, next) {
   });
 };
 
-exports.getVideoStatus = function(req, res, next) {
-  Video.findOne({
-    'archiveId': req.params.archive_id
-  }, function(err, video) {
-    if (err) return next(err);
-    if (video) console.log('found video', video);
-    if (!video || !video.status || video.status !== 'uploaded') return exports.videoStatus(req, res, next);
-    res.json(video);
-  });
-}
-exports.videoStatus = function(req, res, next) {
-  Video.findOne({
-    'archiveId': req.params.archive_id
-  }, function(err, video) {
-    if (err) return next(err);
-    if (video) console.log('found video', video);
-    if (!video || !video.status || video.status !== 'uploaded') {
-      res.status(200).end();
-      exports.socket.emit('videoStatus', null, null);
-    } else {
-      res.status(200).end();
-      exports.socket.emit('videoStatus', true, video);
-    }
-  });
+exports.getActiveUsers = function() {
+  console.log('get active users');
 };
 
 exports.deleteSession = function(req, res, next) {
