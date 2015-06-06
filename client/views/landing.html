@@ -4,7 +4,11 @@
       <div class="cover">
         <p ng-click='landingCtrl.reloadState();' id='room-baby' class="text-inverse logo-text cursor-pointer">room baby</p>
         <hr class="landing-line">
+      
         <!-- *** Begin Landing Options Container *** -->
+        <div ng-show='showRegister' class="landing-sub-text-container">
+          <p  class="text-inverse slogan-text">a room for every occassion</p>
+        </div>
         <div ng-hide="showLogin || showRegister || showLearnMore" class="landing-sub-text-container">
           <p class="text-inverse slogan-text">a room for every occassion</p>
           <br>
@@ -18,9 +22,10 @@
           </div>
         </div>
         <!-- *** End Landing Options Container *** -->
+       
         <!-- *** Begin Login Container *** -->
         <div ng-show="showLogin" class='auth-container'>
-          <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.submitForm('login');">
+          <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
             <input id="landing-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
             <input id="landing-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
             <button type="submit" class="btn btn-custom-login">Login</button>
@@ -32,22 +37,24 @@
                 <span id="remember-me"> remember me <input type="checkbox"></span>
             </div>
           </form>
-          <a id='login' ng-click="landingCtrl.goBack();" class="btn btn-md btn-custom-back">Back</a>
+          <a id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
         </div>
         <!-- *** End Login Container *** -->
+       
         <!-- *** Begin Register Container *** -->
-        <div ng-show="showRegister" class='auth-container'>
-          <form id="registForm" name="authForm" class="form-inline" ng-submit="landingCtrl.submitForm('register');">
-            <input id="landing-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-            <input id="landing-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
-            <button type="submit" class="btn btn-custom-landing">Register</button>
-            <br>
-            <div class="check-box-container">
-              <p ng-click="landingCtrl.selectedOpt('login');" class="auth-sub-menu add-cursor">have an account?
-                <span class="add-line-opacity add-cursor">|</span> forgot password?
-            </div>
+        <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>
+          <form class='register-form'  class="form-inline" >
+            <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
+            <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
+            <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
           </form>
-          <a id='login' ng-click="landingCtrl.goBack();" class="btn btn-md btn-custom-back">Back</a>
+          <div ng-hide='showErr' class='register-btn-container'>
+            <a id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
+            <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
+          </div>
+          <div ng-show='showErr' class='register-btn-container'>
+          <p class='landing-err-message'>{{ errMessage }}</p>
+          </div>
         </div>
         <!-- *** End Register Container *** -->
       </div>

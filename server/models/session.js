@@ -15,6 +15,7 @@ var sessionSchema = new mongoose.Schema({
       type: String
     }
   }],
+  activeUsers: [],
   name: {
     type: String,
     required: false
@@ -57,9 +58,6 @@ var sessionSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date
-  },
-  activeUsersApiKey: {
-    type: String
   }
 });
 

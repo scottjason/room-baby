@@ -40,7 +40,7 @@ module.exports = {
     dest: 'client/build/dev.css'
   },
   vendor_styles: {
-    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css', 'client/styles/lib/tooltip.css'],
+    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css'],
     dest: 'client/build/vendor.css'
   },
 };

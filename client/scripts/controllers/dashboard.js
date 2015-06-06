@@ -3,10 +3,14 @@
 angular.module('RoomBaby')
   .controller('DashCtrl', DashCtrl);
 
-function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSub, UserApi, SessionApi, Animation, DataService, localStorageService) {
+function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, PubSub, UserApi, SessionApi, Animation, DataService, localStorageService) {
 
   var ctrl = this;
   var cleanForm = { title: '', email: '' };
+
+  socket.on('activateUser', function(session){
+    console.log('activateUser SessionCtrl', session);
+  });
 
   /* DOM Event Listeners */
   this.initialize = function() {
@@ -174,5 +178,5 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, PubSu
     $state.go('session', opts);
   };
 
-  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'ngDialog', 'PubSub', 'UserApi', 'SessionApi', 'Animation', 'DataService', 'localStorageService'];
+  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'socket', 'ngDialog', 'PubSub', 'UserApi', 'SessionApi', 'Animation', 'DataService', 'localStorageService'];
 }

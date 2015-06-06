@@ -16,8 +16,12 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
     PubSub.on('setUser', ctrl.setUser);
   };
 
-  this.submitUserName = function() {
+  this.onUserName = function() {
     PubSub.trigger('setUserName', $scope.user.username);
+  };
+
+  this.onRegister = function() {
+    console.log('onRegister', $scope.user);
   };
 
   this.options = function(type) {
