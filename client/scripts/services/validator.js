@@ -16,9 +16,8 @@ angular.module('RoomBaby')
       var email = obj.email;
       if (!(emailRegEx.test(email))) {
         cb(null);
-        else {
-          cb(true);
-        }
+      } else {
+        cb(true);
       }
     };
 

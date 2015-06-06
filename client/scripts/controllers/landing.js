@@ -61,7 +61,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     var payload = angular.copy($scope.user);
     $scope.user = angular.copy(cleanForm);
     $scope.authForm.$setPristine();
-    validator.validate(payload, function(type, isValid) {
+    validator.validateLogin(payload, function(type, isValid) {
       if (isValid) {
         ctrl.login(payload);
       } else if (type === 'email') {
@@ -78,7 +78,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     var payload = angular.copy($scope.user);
     $scope.user = angular.copy(cleanForm);
     $scope.authForm.$setPristine();
-    validator.validate(payload, function(type, isValid) {
+    validator.validateRegister(payload, function(type, isValid) {
       if (isValid) {
         ctrl.register(payload);
       } else if (type === 'username') {
