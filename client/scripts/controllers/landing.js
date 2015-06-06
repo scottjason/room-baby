@@ -6,7 +6,6 @@ angular.module('RoomBaby')
 function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, validator, ngDialog, UserApi, PubSub, Animation, localStorageService) {
 
   var ctrl = this;
-  var cleanForm = { username: '', email: '', password: '' };
 
   socket.on('connected', function() {
     console.log('Socket.io Successfuly Connected');
@@ -17,7 +16,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        var opts = { user_id: user._id };
+        var opts = {
+          user_id: user._id
+        };
         ctrl.accessGranted(opts);
       } else if (response.status === 200) {
         var user = response.data.user;
@@ -59,40 +60,36 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
 
   this.onLogin = function() {
     var payload = angular.copy($scope.user);
-    $scope.user = angular.copy(cleanForm);
-    $scope.authForm.$setPristine();
-    validator.validateLogin(payload, function(type, isValid) {
+    payload.type = 'login';
+    validator.validate(payload, function(isValid, badInput, errMessage) {
       if (isValid) {
+        $scope.user = {};
         ctrl.login(payload);
-      } else if (type === 'email') {
+      } else {
+        $scope.user[badInput] = '';
         $scope.showErr = true;
-        $scope.errMessage = 'please enter a valid email';
+        $scope.errMessage = errMessage;
         $timeout(function() {
           $scope.showErr = null;
-        }, 2400);
+        }, 2000);
       }
     });
   };
 
   this.onRegister = function() {
     var payload = angular.copy($scope.user);
-    $scope.user = angular.copy(cleanForm);
-    $scope.authForm.$setPristine();
-    validator.validateRegister(payload, function(type, isValid) {
+    payload.type = 'register';
+    validator.validate(payload, function(isValid, badInput, errMessage) {
       if (isValid) {
+        $scope.user = {};
         ctrl.register(payload);
-      } else if (type === 'username') {
+      } else {
+        $scope.user[badInput] = '';
         $scope.showErr = true;
-        $scope.errMessage = 'please enter a valid username, three to eight characters';
+        $scope.errMessage = errMessage;
         $timeout(function() {
           $scope.showErr = null;
-        }, 2400);
-      } else if (type === 'email') {
-        $scope.showErr = true;
-        $scope.errMessage = 'please enter a valid email';
-        $timeout(function() {
-          $scope.showErr = null;
-        }, 2400);
+        }, 2000);
       }
     });
   };

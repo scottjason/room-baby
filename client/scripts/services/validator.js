@@ -1,42 +1,50 @@
 angular.module('RoomBaby')
   .factory('validator', function() {
 
-    var usernameRegEx = /^([a-zA-Z0-9_-]){3,8}$/;
+    var invalidUserName = 'please enter a valid username, minimum three characters';
+    var invalidEmail = 'please enter a valid email';
+    var invalidPassword = 'please enter a valid password, minimum six characters';
+
+    var userNameRegEx = /^([a-zA-Z0-9_-]){3,8}$/;
     var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
-    function validatePassword(password) {
-      if (password.length < 6 || password.length > 50 || (password.search(/\d/) === -1) || (password.search(/[a-zA-Z]/) === -1) || (password.search(/[^a-zA-Z0-9\!\@\#\$\%\^\&\*\(\)\_\+]/) != -1)) {
-        return null
+    function validate(obj, cb) {
+      if (obj.type === 'login') {
+        validateLogin(obj, cb);
       } else {
-        return true;
+        validateRegistration(obj, cb);
       }
     };
 
     function validateLogin(obj, cb) {
-      var email = obj.email;
-      if (!(emailRegEx.test(email))) {
-        cb(null);
+      var validEmail = emailRegEx.test(obj.email);
+      var validPassword = (obj.password && (obj.password.length >= 6) && (obj.password.length <= 50));
+      if (!validEmail) {
+        cb(null, 'email', invalidEmail);
+      } else if (!validPassword) {
+        cb(null, 'password', invalidPassword);
       } else {
-        cb(true);
+        cb(true, null, null);
       }
     };
 
-    function validateRegister(obj, cb) {
-      var username = obj.username;
-      var email = obj.email;
-      var password = obj.password;
-      if (!(usernameRegEx.test(username))) {
-        cb('username', null)
-      } else if (!(emailRegEx.test(email))) {
-        cb('email', null);
-      } else if (!(validatePassword(password))) {
-        cb('password', null);
+    function validateRegistration(obj, cb) {
+      var validUserName = userNameRegEx.test(obj.username);
+      var validEmail = emailRegEx.test(obj.email);
+      var validPassword = (obj.password && (obj.password.length >= 6) && (obj.password.length <= 50));
+
+      if (!validUserName) {
+        cb(null, 'username', invalidUserName);
+      } else if (!validEmail) {
+        cb(null, 'email', invalidEmail);
+      } else if (!validPassword) {
+        cb(null, 'password', invalidPassword);
       } else {
-        cb(null, true);
+        cb(true, null, null);
       }
     };
+
     return {
-      validateLogin: validateLogin,
-      validateRegister: validateRegister
+      validate: validate
     };
   });
