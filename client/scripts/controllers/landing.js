@@ -7,9 +7,16 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
 
   var ctrl = this;
 
+  var registerCopy = angular.element(document.getElementById('register-copy'));
+
   socket.on('connected', function() {
     console.log('Socket.io Successfuly Connected');
   });
+
+  this.registerEvents = function() {
+    PubSub.on('enterBtn:onLogin', ctrl.onLogin);
+    PubSub.on('enterBtn:onLogin', ctrl.onRegister);
+  }
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
@@ -30,6 +37,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         };
         ctrl.accessGranted(opts);
       } else if (response.status === 401) {
+        console.log('response 401', response);
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
         ctrl.initialize();
@@ -46,13 +54,17 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     if (optSelected === 'login') {
       $scope.showRegister = null;
       $scope.showLogin = true;
+      Animation.run('onLogin');
     } else if (optSelected === 'register') {
+      console.log('selected register')
       $scope.showLogin = null;
       $scope.showRegister = true;
+      Animation.run('onRegister');
     } else if (optSelected === 'facebook') {
       localStorageService.set('isFacebookLogin', true);
       $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
     } else if (optSelected === 'back') {
+      document.getElementById('register-copy').style.display = 'none';
       $scope.showLogin = null;
       $scope.showRegister = null;
     }
@@ -156,7 +168,11 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
   };
 
   ctrl.renderError = function(errMessage) {
+    $scope.showErr = true;
     $scope.errMessage = errMessage;
+    $timeout(function() {
+      $scope.showErr = null;
+    }, 2000);
   };
 
   LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'validator', 'ngDialog', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
