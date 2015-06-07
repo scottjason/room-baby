@@ -27,7 +27,8 @@ module.exports = function(app, passport) {
   router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, data) {
       if (err) return next(err);
-      if (!user) return res.status(401).send(data);
+      if (!user) return res.status(401).json(data);
+
       var otSessions = data;
 
       req.logIn(user, function(err) {
@@ -43,8 +44,8 @@ module.exports = function(app, passport) {
           req.session.otSessions = otSessions;
         }
         return res.json({
-          user: req.session.user,
-          sessions: req.session.otSessions || null
+          user: user,
+          sessions: otSessions
         });
       });
     })(req, res, next);
@@ -53,22 +54,21 @@ module.exports = function(app, passport) {
   router.post('/register', function(req, res, next) {
     passport.authenticate('local-register', function(err, user, data) {
       if (err) return next(err);
-      if (!user) return res.status(401).send(data);
-      var otSession = data;
+      if (!user) return res.status(401).json(data);
+
+      var otSessions = data;
+
       req.logIn(user, function(err) {
         if (err) return next(err);
 
-        if (!req.body.rememberMe) {
-          req.session.cookie.expires = false;
-        }
         req.session.user = user;
 
-        if (otSession) {
-          req.session.otSession = otSession;
+        if (otSessions) {
+          req.session.otSessions = otSessions;
         }
         return res.json({
-          user: req.session.user,
-          session: req.session.otSession || null
+          user: user,
+          session: otSessions
         });
       });
     })(req, res, next);

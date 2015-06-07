@@ -1,3 +1,39 @@
+.register-animation {
+  position: relative;
+  width: 500px;
+  height: 40px;
+  top: -10px;
+  margin: auto;
+}
+
+.login-animation {
+  position: relative;
+  width: 500px;
+  height: 40px;
+  top: -10px;
+  margin: auto;
+}
+
+
+p#register-copy {
+  position: relative;
+  text-align: center;
+  color: rgba(255, 255, 255, .8);
+  font-size: 16px;
+  font-weight: 300;
+  opacity: 0;
+}
+
+p#login-copy {
+  position: relative;
+  text-align: center;
+  color: rgba(255, 255, 255, .8);
+  font-size: 16px;
+  font-weight: 300;
+  opacity: 0;
+}
+
+
 p.landing-err-message {
   color: orange;
   position: relative;
@@ -8,7 +44,7 @@ p.landing-err-message {
 }
 
 .register-btn-container {
-  top: 25px;
+  top: 40px;
   position: absolute;
   left: 0;
   right: 0;
@@ -24,7 +60,19 @@ form.register-form {
   margin: auto;
   left: 0;
   right: 0;
-  top: 0;
+  top: 15px;
+  width: 100%;
+}
+
+form.login-form {
+  display: block;
+  padding-bottom: 10px;
+  color: #fff;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 15px;
   width: 100%;
 }
 
@@ -34,6 +82,14 @@ form.register-form {
   position: relative;
   margin: auto;
 }
+
+.login-container {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  margin: auto;
+}
+
 
 .fa.fa-facebook {
   position: absolute;
@@ -87,10 +143,10 @@ p.auth-options-copy {
   max-width: 300px;
   position: relative;
   width: 493px;
-  height: 97px;
-  bottom: 40px;
-  left: 0px;
-  right: 0px;
+  height: 107px;
+  left: 0;
+  right: 0;
+  top: -20px;
   margin: auto;
   background-color: transparent;
 }
@@ -143,11 +199,16 @@ span.add-line-opacity {
 }
 
 .slogan-text {
-  margin-top: -10px;
   font-family: 'brandon_grotesquethin';
   font-size: 36px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255,255,255,.8);
+  position: relative;
+  top: -15px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 .landing-sub-text-container {

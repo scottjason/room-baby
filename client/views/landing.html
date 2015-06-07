@@ -1,18 +1,15 @@
-<div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.isAuthenticated();">
+<ng-enter>
+<div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.isAuthenticated(); landingCtrl.registerEvents();">
   <div class="col-md-12 text-center">
     <div class="row vertical-align-landing">
       <div class="cover">
         <p ng-click='landingCtrl.reloadState();' id='room-baby' class="text-inverse logo-text cursor-pointer">room baby</p>
         <hr class="landing-line">
-      
         <!-- *** Begin Landing Options Container *** -->
-        <div ng-show='showRegister' class="landing-sub-text-container">
-          <p  class="text-inverse slogan-text">a room for every occassion</p>
-        </div>
-        <div ng-hide="showLogin || showRegister || showLearnMore" class="landing-sub-text-container">
+        <div class="landing-sub-text-container">
           <p class="text-inverse slogan-text">a room for every occassion</p>
-          <br>
-          <br>
+        </div>
+        <div ng-hide="showLogin || showRegister" class="landing-sub-text-container">
           <div class="landing-btn-container">
             <div class="facebook-btn-container">
               <a id='facebook' ng-click="landingCtrl.selectedOpt('facebook');" class="btn btn-md btn-custom-facebook"><i class="fa fa-facebook"></i>Connect With Facebook</a>
@@ -22,12 +19,11 @@
           </div>
         </div>
         <!-- *** End Landing Options Container *** -->
-       
         <!-- *** Begin Login Container *** -->
-        <div ng-show="showLogin" class='auth-container'>
+        <div ng-show="showLogin" class='login-container' class='auth-container'>
           <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
-            <input id="landing-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-            <input id="landing-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
+            <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+            <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
             <button type="submit" class="btn btn-custom-login">Login</button>
             <br>
             <div class="check-box-container">
@@ -37,13 +33,18 @@
                 <span id="remember-me"> remember me <input type="checkbox"></span>
             </div>
           </form>
-          <a id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
+          <a ng-hide='showErr' id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
+          <div ng-show='showErr' class='login-err-container'>
+            <p class='landing-err-message'>{{ errMessage }}</p>
+          </div>
         </div>
         <!-- *** End Login Container *** -->
-       
         <!-- *** Begin Register Container *** -->
         <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>
-          <form class='register-form'  class="form-inline" >
+          <div class="register-animation">
+            <p id='register-copy'>please enter a username, email and password</p>
+          </div>
+          <form class='register-form' class="form-inline">
             <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
             <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
             <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
@@ -53,7 +54,7 @@
             <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
           </div>
           <div ng-show='showErr' class='register-btn-container'>
-          <p class='landing-err-message'>{{ errMessage }}</p>
+            <p class='landing-err-message'>{{ errMessage }}</p>
           </div>
         </div>
         <!-- *** End Register Container *** -->
@@ -61,3 +62,4 @@
     </div>
   </div>
 </div>
+</ng-enter>

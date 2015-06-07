@@ -33,7 +33,7 @@ module.exports = function(passport) {
     function(req, email, password, callback) {
       User.findOne({ email: email }, function(err, user) {
         if (err) return callback(err);
-        if (user) return callback(null, false, { message: dialog.emailAlreadyExists });
+        if (user) return callback(null, null, { message: dialog.emailAlreadyExists });
         var user = new User();
         user.username = req.body.username;
         user.email = email;
