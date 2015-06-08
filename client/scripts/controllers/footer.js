@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
+function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi) {
 
   var ctrl = this;
   var promise;
@@ -12,12 +12,12 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
   $scope.user = {};
 
   this.registerEvents = function() {
-    PubSub.on('toggleFooter', ctrl.toggleFooter);
-    PubSub.on('setUser', ctrl.setUser);
+    pubSub.on('toggleFooter', ctrl.toggleFooter);
+    pubSub.on('setUser', ctrl.setUser);
   };
 
   this.onUserName = function() {
-    PubSub.trigger('setUserName', $scope.user.username);
+    pubSub.trigger('setUserName', $scope.user.username);
   };
 
   this.onRegister = function() {
@@ -29,14 +29,14 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
       return;
     }
     if (type === 'disconnect') {
-      PubSub.trigger('disconnect');
+      pubSub.trigger('disconnect');
     } else if (type === 'record') {
-      PubSub.trigger('requestPermission');
+      pubSub.trigger('requestPermission');
     } else if (type === 'stop') {
-      PubSub.trigger('stopRecording');
+      pubSub.trigger('stopRecording');
     } else if (type === 'upload') {
-      PubSub.trigger('toggleOverlay');
-      PubSub.trigger('toggleUpload', true);
+      pubSub.trigger('toggleOverlay');
+      pubSub.trigger('toggleUpload', true);
     }
   };
 
@@ -48,12 +48,12 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
     } else {
       $scope.showLoadingSpinner = true;
       /* Verify again on server along with file type */
-      SessionApi.upload($scope.fileUpload, $scope.user._id, $scope.user._id).then(function(response) {
+      sessionApi.upload($scope.fileUpload, $scope.user._id, $scope.user._id).then(function(response) {
         if (response.status === 200) {
           fileUrl = response.data;
           $scope.showLoadingSpinner = false;
-          PubSub.trigger('toggleOverlay');
-          PubSub.trigger('toggleUpload', null);
+          pubSub.trigger('toggleOverlay');
+          pubSub.trigger('toggleUpload', null);
           promise = $timeout(ctrl.shareFile, 700);
         } else if (response.status === 401) {
           console.error(401, response)
@@ -74,9 +74,9 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi) {
 
   ctrl.shareFile = function() {
     console.log('promise', promise);
-    PubSub.trigger('shareFile', fileUrl);
+    pubSub.trigger('shareFile', fileUrl);
     $timeout.cancel(promise);
   };
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi'];
 }

@@ -3,19 +3,19 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
 
   var ctrl = this;
   $scope.user = {};
 
   this.registerEvents = function() {
-    PubSub.on('toggleNavBar', ctrl.toggleNavBar);
-    PubSub.on('toggleOverlay', ctrl.toggleOverlay);
-    PubSub.on('setUser', ctrl.setUser);
+    pubSub.on('toggleNavBar', ctrl.toggleNavBar);
+    pubSub.on('toggleOverlay', ctrl.toggleOverlay);
+    pubSub.on('setUser', ctrl.setUser);
   };
 
   this.createRoom = function() {
-    PubSub.trigger('Dashboard:CreateRoom');
+    pubSub.trigger('Dashboard:CreateRoom');
   };
 
   this.dropdown = function(opt) {
@@ -38,10 +38,10 @@ function NavBarCtrl($scope, $state, UserApi, PubSub, localStorageService) {
 
   ctrl.logout = function(user_id) {
     localStorageService.clearAll();
-    UserApi.logout(user_id).then(function(response) {
+    userApi.logout(user_id).then(function(response) {
       $state.go('landing');
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$state', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$state', 'userApi', 'pubSub', 'localStorageService'];
 }
