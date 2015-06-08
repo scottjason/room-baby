@@ -152,8 +152,6 @@ div.body-overlay {
   text-align: center;
   padding-top: 3px;
   cursor: pointer;
-  /*color: #CDE3F5;*/
-  
   color: #efefef;
   font-weight: 300;
   background-color: transparent;
@@ -230,7 +228,7 @@ div.body-overlay {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  top: 22px;
+  top: 16px;
   height: 30px;
   border: 1px solid #EFEFEF;
   border-radius: 9px;

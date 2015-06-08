@@ -3,23 +3,21 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, validator, ngDialog, UserApi, PubSub, Animation, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, validator, stateService, userApi, pubSub, animator, localStorageService) {
 
   var ctrl = this;
-
-  var registerCopy = angular.element(document.getElementById('register-copy'));
 
   socket.on('connected', function() {
     console.log('Socket.io Successfuly Connected');
   });
 
   this.registerEvents = function() {
-    PubSub.on('enterBtn:onLogin', ctrl.onLogin);
-    PubSub.on('enterBtn:onLogin', ctrl.onRegister);
-  }
+    pubSub.on('enterBtn:onLogin', ctrl.onLogin);
+    pubSub.on('enterBtn:onRegister', ctrl.onRegister);
+  };
 
   this.isAuthenticated = function() {
-    UserApi.isAuthenticated().then(function(response) {
+    userApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
@@ -38,8 +36,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         ctrl.accessGranted(opts);
       } else if (response.status === 401) {
         console.log('response 401', response);
-        PubSub.trigger('toggleNavBar', null);
-        PubSub.trigger('toggleFooter', null);
+        pubSub.trigger('toggleNavBar', null);
+        pubSub.trigger('toggleFooter', null);
         ctrl.initialize();
       } else {
         console.error('unknown authentication status');
@@ -51,15 +49,18 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
 
   this.selectedOpt = function(optSelected) {
     $scope.user = {};
+    var obj = {};
     if (optSelected === 'login') {
       $scope.showRegister = null;
       $scope.showLogin = true;
-      Animation.run('onLogin');
+      obj.type = 'onLogin';
+      animator.run(obj);
     } else if (optSelected === 'register') {
-      console.log('selected register')
+      console.log('register');
       $scope.showLogin = null;
       $scope.showRegister = true;
-      Animation.run('onRegister');
+      obj.type = 'onRegister';
+      animator.run(obj);
     } else if (optSelected === 'facebook') {
       localStorageService.set('isFacebookLogin', true);
       $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
@@ -67,6 +68,12 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
       document.getElementById('register-copy').style.display = 'none';
       $scope.showLogin = null;
       $scope.showRegister = null;
+    } else if (optSelected === 'forgotPassword') {
+      console.log('forgotPassword');
+    } else if (optSelected === 'roomBaby') {
+      $state.go($state.current, {}, {
+        reload: true
+      });
     }
   };
 
@@ -89,9 +96,13 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
   };
 
   this.onRegister = function() {
+    console.log('onRegister')
     var payload = angular.copy($scope.user);
     payload.type = 'register';
     validator.validate(payload, function(isValid, badInput, errMessage) {
+      console.log('isValid', isValid);
+      console.log('badInput', badInput);
+      console.log('err', errMessage);
       if (isValid) {
         $scope.user = {};
         ctrl.register(payload);
@@ -110,11 +121,23 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     $scope.showRegister = null;
     $scope.showLogin = null;
     $scope.showLanding = true;
-    Animation.run('onLanding');
+    var runLanding = stateService.data['animation'].runLanding;
+    if (!runLanding) {
+      var obj = {};
+      obj.type = 'onLanding';
+      obj.hasAnimated = true;
+      animator.run(obj);
+    } else {
+      var obj = {};
+      obj.type = 'onLanding';
+      obj.hasAnimated = false;
+      animator.run(obj);
+      stateService.data['animation'].runLanding = false;
+    }
   };
 
   ctrl.login = function(payload) {
-    UserApi.login(payload).then(function(response) {
+    userApi.login(payload).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
@@ -141,15 +164,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     });
   };
 
-  ctrl.openRegister = function() {
-    ngDialog.openConfirm({
-      template: '../../views/ngDialog/register.html',
-      controller: 'FooterCtrl'
-    });
-  };
-
   ctrl.register = function(payload) {
-    UserApi.register(payload).then(function(response) {
+    userApi.register(payload).then(function(response) {
       if (response.status === 401) {
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
@@ -175,5 +191,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'validator', 'ngDialog', 'UserApi', 'PubSub', 'Animation', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'validator', 'stateService', 'userApi', 'pubSub', 'animator', 'localStorageService'];
 };

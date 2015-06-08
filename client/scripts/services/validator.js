@@ -18,7 +18,7 @@ angular.module('RoomBaby')
 
     function validateLogin(obj, cb) {
       var validEmail = emailRegEx.test(obj.email);
-      var validPassword = (obj.password && (obj.password.length >= 6) && (obj.password.length <= 50));
+      var validPassword = (obj.password && (obj.password.length >= 3) && (obj.password.length <= 50));
       if (!validEmail) {
         cb(null, 'email', invalidEmail);
       } else if (!validPassword) {
@@ -31,7 +31,7 @@ angular.module('RoomBaby')
     function validateRegistration(obj, cb) {
       var validUserName = userNameRegEx.test(obj.username);
       var validEmail = emailRegEx.test(obj.email);
-      var validPassword = (obj.password && (obj.password.length >= 6) && (obj.password.length <= 50));
+      var validPassword = (obj.password && (obj.password.length >= 3) && (obj.password.length <= 50));
 
       if (!validUserName) {
         cb(null, 'username', invalidUserName);

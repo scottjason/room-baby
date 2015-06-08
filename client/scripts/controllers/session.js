@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDialog, userApi, sessionApi, pubSub, transport, localStorageService) {
 
   var ctrl = this;
   var promise;
@@ -14,7 +14,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   var chatbox = angular.element(document.getElementById('chatbox'));
   var transportContainer = document.getElementById('transport-container');
   var layoutContainer = document.getElementById('layout-container');
-  var layoutOpts = { animate: { duration: 500, easing: 'swing' }, bigFixedRatio: false };
+  var layoutOpts = { animator: { duration: 500, easing: 'swing' }, bigFixedRatio: false };
   var layout = TB.initLayoutContainer(layoutContainer, layoutOpts).layout;
 
   $window.onresize = function() {
@@ -25,7 +25,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     promise = $timeout(resizeCams, 20);
   };
 
-  /* Client / Server PubSub */
+  /* Client / Server pubSub */
   socket.on('videoStatus', function(isReady, video){
     if (isReady) {
       localStorageService.set('video', video);
@@ -43,14 +43,14 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   this.initialize = function() {
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
-    PubSub.on('shareFile', ctrl.shareFile);
-    PubSub.on('requestPermission', ctrl.requestPermission);
-    PubSub.on('stopRecording', ctrl.stopRecording);
-    PubSub.on('disconnect', ctrl.disconnect);
-    PubSub.on('toggleUpload', ctrl.toggleUpload);
-    PubSub.trigger('toggleNavBar', true);
-    PubSub.trigger('toggleFooter', true);
-    PubSub.trigger('setUser', $scope.user);
+    pubSub.on('shareFile', ctrl.shareFile);
+    pubSub.on('requestPermission', ctrl.requestPermission);
+    pubSub.on('stopRecording', ctrl.stopRecording);
+    pubSub.on('disconnect', ctrl.disconnect);
+    pubSub.on('toggleUpload', ctrl.toggleUpload);
+    pubSub.trigger('toggleNavBar', true);
+    pubSub.trigger('toggleFooter', true);
+    pubSub.trigger('setUser', $scope.user);
     ctrl.createSession($scope.otSession);
   };
 
@@ -142,7 +142,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       obj.sessionStartedAt = sessionStartedAt;
       localStorageService.set('connectedWith', connectedWith);
       localStorageService.set('sessionStartedAt', sessionStartedAt);
-      Transport.generateHtml(obj, function(html) {
+      transport.generateHtml(obj, function(html) {
         chatbox.append(html);
       });
     });
@@ -155,7 +155,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       obj.message = data.message;
       obj.profileImage = data.profileImage;
       obj.timeSent = data.timeSent;
-      Transport.generateHtml(obj, function(html) {
+      transport.generateHtml(obj, function(html) {
         chatbox.append(html);
         $timeout(scrollBottom, 100);
         function scrollBottom() {
@@ -171,7 +171,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       if (obj.requestedBy === $scope.user.username) {
         return false;
       }
-      Transport.generateHtml(obj, function(html) {
+      transport.generateHtml(obj, function(html) {
         chatbox.append(html);
         $timeout(bindListeners, 100);
         function bindListeners() {
@@ -186,7 +186,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       obj.type = 'sendReceipt';
       obj.receiptType = 'permissionResponse';
       obj.isGranted = (event.data).indexOf('granted') !== -1;
-      Transport.generateHtml(obj, function(html) {
+      transport.generateHtml(obj, function(html) {
         chatbox.append(html);
       });
     });
@@ -202,7 +202,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       var obj = {};
       obj.type = 'shareVideo';
       obj.videoUrl = event.data;
-      Transport.generateHtml(obj, function(html){
+      transport.generateHtml(obj, function(html){
         chatbox.append(html);
       });
     });
@@ -216,13 +216,13 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
         obj.sentBy = sentBy;
         obj.fileUrl = data.fileUrl;
         obj.timeSent = data.timeSent;
-        Transport.generateHtml(obj, function(html) {
+        transport.generateHtml(obj, function(html) {
           chatbox.append(html);
         });
       } else {
         obj.type = 'sendReceipt';
         obj.receiptType = 'shareFile';
-        Transport.generateHtml(obj, function(html) {
+        transport.generateHtml(obj, function(html) {
           chatbox.append(html);
         });
       }
@@ -266,7 +266,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   };
 
   ctrl.startRecording = function(otSessionId) {
-    SessionApi.startRecording(otSessionId).then(function(response) {
+    sessionApi.startRecording(otSessionId).then(function(response) {
       localStorageService.set('archive', response.data);
       var archiveMessage = JSON.stringify(response.data);
       ctrl.emit('archive', archiveMessage);
@@ -278,7 +278,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   ctrl.stopRecording = function() {
     var archive = localStorageService.get('archive');
     var archiveId = archive.id;
-    SessionApi.stopRecording(archiveId).then(function(response) {
+    sessionApi.stopRecording(archiveId).then(function(response) {
       var archiveResponse = response.data;
       localStorageService.set('archiveResponse', archiveResponse);
       ctrl.getVideoStatus(archiveId);
@@ -340,5 +340,5 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     });
   };
 
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'ngDialog', 'userApi', 'sessionApi', 'pubSub', 'transport', 'localStorageService'];
 }

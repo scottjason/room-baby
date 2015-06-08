@@ -1,65 +1,62 @@
 <ng-enter>
-<div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.isAuthenticated(); landingCtrl.registerEvents();">
-  <div class="col-md-12 text-center">
-    <div class="row vertical-align-landing">
-      <div class="cover">
-        <p ng-click='landingCtrl.reloadState();' id='room-baby' class="text-inverse logo-text cursor-pointer">room baby</p>
-        <hr class="landing-line">
-        <!-- *** Begin Landing Options Container *** -->
-        <div class="landing-sub-text-container">
-          <p class="text-inverse slogan-text">a room for every occassion</p>
-        </div>
-        <div ng-hide="showLogin || showRegister" class="landing-sub-text-container">
-          <div class="landing-btn-container">
-            <div class="facebook-btn-container">
-              <a id='facebook' ng-click="landingCtrl.selectedOpt('facebook');" class="btn btn-md btn-custom-facebook"><i class="fa fa-facebook"></i>Connect With Facebook</a>
-              <span class="or-copy">or</span>
-              <a id='email' ng-click="landingCtrl.selectedOpt('login');" class="btn btn-md btn-custom-email"><i class="fa fa-envelope"></i>Connect With Email</a>
+  <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.isAuthenticated(); landingCtrl.registerEvents();">
+    <div class="col-md-12 text-center">
+      <div class="row vertical-align-landing">
+        <div class="cover">
+          <a href='' ng-click='landingCtrl.selectedOpt("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
+          <hr class="landing-line">
+          <!-- *** Begin Landing Options Container *** -->
+          <div class="landing-sub-text-container">
+            <p class="text-inverse slogan-text">a room for every occassion</p>
+          </div>
+          <div ng-hide="showLogin || showRegister" class="landing-sub-text-container">
+            <div class="landing-btn-container">
+              <div class="facebook-btn-container">
+                <a id='facebook' ng-click="landingCtrl.selectedOpt('facebook');" class="btn btn-md btn-custom-facebook"><i class="fa fa-facebook"></i>Connect With Facebook</a>
+                <span class="or-copy">or</span>
+                <a id='email' ng-click="landingCtrl.selectedOpt('login');" class="btn btn-md btn-custom-email"><i class="fa fa-envelope"></i>Connect With Email</a>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- *** End Landing Options Container *** -->
-        <!-- *** Begin Login Container *** -->
-        <div ng-show="showLogin" class='login-container' class='auth-container'>
-          <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
-            <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-            <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
-            <button type="submit" class="btn btn-custom-login">Login</button>
-            <br>
-            <div class="check-box-container">
-              <p ng-click="landingCtrl.selectedOpt('register');" class="auth-sub-menu add-cursor">need an account?
-                <span class="add-line-opacity add-cursor">|</span> forgot password?
-                <span class="add-line-opacity">|</span>
-                <span id="remember-me"> remember me <input type="checkbox"></span>
+          <!-- *** End Landing Options Container *** -->
+          <!-- *** Begin Login Container *** -->
+          <div ng-reset ng-show="showLogin" class='login-container' class='auth-container'>
+            <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
+              <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+              <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
+              <button type="submit" class="btn btn-custom-login">Login</button>
+              <br>
+              <div class='login-subtext-container'>
+                <p id='need-account' ng-click="landingCtrl.selectedOpt('register');">need an account?</p>
+                <p id='forgot-password' ng-click="landingCtrl.selectedOpt('forgotPassword');"> forgot password?</p>
+                <p id='remember-me'> remember me <input type="checkbox"></p>
+              </div>
+            </form>
+            <div ng-show='showErr' class='login-btn-container'>
+              <p class='landing-err-message'>{{ errMessage }}</p>
             </div>
-          </form>
-          <a ng-hide='showErr' id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
-          <div ng-show='showErr' class='login-err-container'>
-            <p class='landing-err-message'>{{ errMessage }}</p>
+          </div ng-reset>
+          <!-- *** End Login Container ***
+          <!-- *** Begin Register Container *** -->
+          <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>
+            <div class="register-animation">
+              <p id='register-copy'>please enter a username, email and password</p>
+            </div>
+            <form class='register-form' class="form-inline">
+              <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
+              <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
+              <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
+            </form>
+            <div ng-hide='showErr' class='register-btn-container'>
+              <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
+            </div>
+            <div ng-show='showErr' class='register-btn-container'>
+              <p class='landing-err-message'>{{ errMessage }}</p>
+            </div>
           </div>
+          <!-- *** End Register Container *** -->
         </div>
-        <!-- *** End Login Container *** -->
-        <!-- *** Begin Register Container *** -->
-        <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>
-          <div class="register-animation">
-            <p id='register-copy'>please enter a username, email and password</p>
-          </div>
-          <form class='register-form' class="form-inline">
-            <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
-            <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
-            <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
-          </form>
-          <div ng-hide='showErr' class='register-btn-container'>
-            <a id='login' ng-click="landingCtrl.selectedOpt('back');" class="btn btn-md btn-custom-back">Back</a>
-            <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
-          </div>
-          <div ng-show='showErr' class='register-btn-container'>
-            <p class='landing-err-message'>{{ errMessage }}</p>
-          </div>
-        </div>
-        <!-- *** End Register Container *** -->
       </div>
     </div>
   </div>
-</div>
 </ng-enter>

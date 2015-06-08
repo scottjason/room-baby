@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('Transport', function() {
+  .factory('transport', function() {
 
     'use strict'
 

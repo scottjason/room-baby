@@ -1,9 +1,9 @@
 angular.module('RoomBaby')
-  .directive('upload', function($parse) {
+  .directive('ngUpload', function($parse) {
     return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-      var model = $parse(attrs.upload);
+      var model = $parse(attrs.ngUpload);
       var modelSetter = model.assign;
       element.bind('change', function() {
         scope.$apply(function() {
@@ -12,5 +12,5 @@ angular.module('RoomBaby')
       })
     }
   };
-  upload.$inject('$parse');
+  ngUpload.$inject('$parse');
 });

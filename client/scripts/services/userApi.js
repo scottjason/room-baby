@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('UserApi', function($http) {
+  .factory('userApi', function($http) {
 
     'use strict'
 
@@ -99,5 +99,5 @@ angular.module('RoomBaby')
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated
     });
-    UserApi.$inject('$http');
+    userApi.$inject('$http');
   });

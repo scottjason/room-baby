@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('DataService', function() {
+  .factory('dataService', function() {
 
     'use strict'
 
