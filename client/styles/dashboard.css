@@ -1,17 +1,130 @@
+#date-picker {
+  display: inline-block;
+  min-height: 290px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: transparent;
+  width: 283px;
+  top: 177px;
+}
 
+div.form-container {
+  background-color: transparent;
+  position: relative;
+  width: 400px;
+  height: 300px;
+  top: 30px;
+  margin: auto;
+}
+
+.fa.fa-times {
+  position: absolute;
+  color: #efefef;
+  right: 20px;
+  bottom: 0;
+  top: 10px;
+  margin: auto;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.dashboard-overlay {
+  position: fixed;
+  width: 600px;
+  height: 550px;
+  background-color: black;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #EFEFEF;
+  border-radius: 15px;
+  opacity: 0;
+}
 
 .fa.fa-circle-o-notch.fa-spin {
   font-size: 34px;
   margin-top: 20px;
 }
 
-input.input-small#create-room-input[type=text] {
+input.input-small#create-room-title[type=text] {
   color: #fff;
-  font-family: 'Open Sans', sans-serif;
   font-weight: 300;
   background-color: rgba(0, 0, 0, .7);
   width: 300px;
-  margin-top: 8px;
+  text-align: center;
+  left: 0;
+  right: 0;
+  top: 25px;
+  margin: auto;
+  position: absolute;
+}
+
+p.create-room-title-copy {
+  position: absolute;
+  color: #efefef;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+input.input-small#create-room-email[type=text] {
+  color: #fff;
+  font-weight: 300;
+  background-color: rgba(0, 0, 0, .7);
+  width: 300px;
+  text-align: center;
+  left: 0;
+  right: 0;
+  top: 100px;
+  margin: auto;
+  position: absolute;
+}
+
+p.create-room-email-copy {
+  position: absolute;
+  color: #efefef;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 77px;
+}
+
+input.input-small#create-room-start-time[type=text] {
+  color: #fff;
+  font-weight: 300;
+  background-color: rgba(0, 0, 0, .7);
+  width: 300px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100px;
+  margin: auto;
+}
+
+p.create-room-start-copy {
+  position: absolute;
+  color: #efefef;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  left: 0;
+  right: 0;
+  top: 154px;
+  bottom: 0;
+  margin: auto;
 }
 
 p.opts-description {
@@ -117,7 +230,7 @@ p.enter-username {
 .white-block {
   width: 400px;
   height: 120px;
-  background-color: rgba(255, 255, 255, 1.0);
+  background-color: rgba(0, 0, 0, .7);
   top: -145px;
   left: 0;
   right: 0;

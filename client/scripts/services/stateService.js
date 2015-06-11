@@ -6,6 +6,11 @@ angular.module('RoomBaby')
     var stateData = {
       'animation': {
         'runLanding': true
+      },
+      'landing': {
+        'members': {
+          'isOpen': false
+        }
       }
     };
 

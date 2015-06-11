@@ -3,17 +3,21 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi) {
+function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) {
 
   var ctrl = this;
   var promise;
   var fileUrl;
 
   $scope.user = {};
+  $scope.showFooter = true;
+
+  animator.run('onFooter');
 
   this.registerEvents = function() {
     pubSub.on('toggleFooter', ctrl.toggleFooter);
     pubSub.on('setUser', ctrl.setUser);
+    $scope.showFooterOverlay = true;
   };
 
   this.onUserName = function() {
@@ -78,5 +82,5 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi) {
     $timeout.cancel(promise);
   };
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi', 'animator'];
 }

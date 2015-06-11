@@ -64,16 +64,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     } else if (optSelected === 'facebook') {
       localStorageService.set('isFacebookLogin', true);
       $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
-    } else if (optSelected === 'back') {
-      document.getElementById('register-copy').style.display = 'none';
-      $scope.showLogin = null;
-      $scope.showRegister = null;
     } else if (optSelected === 'forgotPassword') {
       console.log('forgotPassword');
     } else if (optSelected === 'roomBaby') {
-      $state.go($state.current, {}, {
-        reload: true
-      });
+      $state.go($state.current, {}, { reload: true  });
     }
   };
 
@@ -100,9 +94,6 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     var payload = angular.copy($scope.user);
     payload.type = 'register';
     validator.validate(payload, function(isValid, badInput, errMessage) {
-      console.log('isValid', isValid);
-      console.log('badInput', badInput);
-      console.log('err', errMessage);
       if (isValid) {
         $scope.user = {};
         ctrl.register(payload);
@@ -113,6 +104,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         $timeout(function() {
           $scope.showErr = null;
         }, 2000);
+        $scope.$apply();
       }
     });
   };

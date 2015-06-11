@@ -1,66 +1,64 @@
-<div ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'></div>
-<div class='dashboard-overlay'></div>
-<div class="container">
-  <div class="row-block">
-    <div id='white-block' class='white-block'></div>
-    <div class="center-block btn-opts-container">
-      <div ng-hide='showCreateRoom || showCreateBroadcast || showNext || showLoading'>
-        <div id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
-        <div id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
-      </div>
-      <div ng-show='showCreateRoom' class='create-a-room-container'>
-        <p class='room-option-copy'>enter the title of the room</p>
-        <hr class='room-option-line'>
-        <form name="roomForm" id="create-a-room" class="form-inline">
-          <input id="create-room-input" class="input-small" ng-model="invitedUser.title" type="text" placeholder="Monday Morning Meeting">
-          <button name="cancel" type="submit" ng-click="dashCtrl.createRoomOpt($event);" class="btn btn-custom-cancel">cancel</button>
-          <button name="next" type="submit" class="btn btn-custom-next" ng-click="dashCtrl.createRoomOpt($event);">next</button>
-        </form>
-      </div>
-      <div ng-show='showNext' class='create-a-room-container'>
-        <p class='room-option-copy'>enter the email address of your guest</p>
-        <hr class='room-option-line'>
-        <form name="roomForm" id="create-a-room" class="form-inline">
-          <input id="create-room-input" class="input-small" ng-model="invitedUser.email" type="text" placeholder="yourguest@gmail.com">
-          <button name="cancel" type="submit" ng-click="dashCtrl.createRoomOpt($event);" class="btn btn-custom-cancel">cancel</button>
-          <button name="create" type="submit" class="btn btn-custom-next" ng-click="dashCtrl.createRoomOpt($event);">create</button>
-        </form>
-      </div>
-      <div ng-show='showLoading' class='create-a-room-container'>
-        <p class='room-option-copy'>creating room</p>
-        <hr class='room-option-line'>
-        <i class="fa fa-circle-o-notch fa-spin"></i>
+<div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
+  <div id='dashboard-overlay' class='dashboard-overlay'>
+    <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
+    <div class='form-container'>
+      <form name="createRoom" id="create-a-room">
+        <p class='create-room-title-copy'>please enter a name for the room</p>
+        <input id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
+        <p class='create-room-email-copy'>the email address of your guest</p>
+        <input id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
+        <p class='create-room-start-copy'>and a start date for the session</p>
+        <div class"date-picker-container-custom">
+          <datepicker id='date-picker' ng-model="room.startDate" min-date="minDate" show-weeks="true"></datepicker>
+        </div>
+        <div ng-click='dashCtrl.options($event, null);'id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
+      </form>
+    </div>
+  </div>
+  <div id='dashboard-container' class="container">
+    <div class="row-block">
+      <div id='opts-container' class='white-block'></div>
+      <div class="center-block btn-opts-container">
+        <div>
+          <div id="create-room-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-room">create a room</div>
+          <div id="create-broadcast-btn" ng-click='dashCtrl.options($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
+        </div>
+        <div ng-show='showLoading' class='create-a-room-container'>
+          <p class='room-option-copy'>creating room</p>
+          <hr class='room-option-line'>
+          <i class="fa fa-circle-o-notch fa-spin"></i>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div ng-show='showTable' class="container">
-  <div class="row">
-    <table st-table="table" class="table table-striped">
-      <thead>
-        <tr>
-          <th>room name</th>
-          <th>room details</th>
-          <th>room members</th>
-          <th>status</th>
-          <th>options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="obj in table">
-          <td class='table-copy-title'>{{obj.name}}</td>
-          <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
-          <td>
-            <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
-              <i class="fa fa-child">&nbsp;members</i>
-            </button>
-          </td>
-          <td class='table-copy-status'>{{obj.status }}</td>
-          <td><i class="fa fa-refresh fa-spin"></i>
-            <a id='connect' name='connect' ng-click="dashCtrl.options($event, obj);" class="table-copy-connect">&nbsp;connect</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div id="dashboard-table" class="container">
+    <div class="row">
+      <table st-table="table" class="table table-striped">
+        <thead>
+          <tr>
+            <th>room name</th>
+            <th>room details</th>
+            <th>room members</th>
+            <th>status</th>
+            <th>options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="obj in table">
+            <td class='table-copy-title'>{{obj.name}}</td>
+            <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
+            <td>
+              <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
+                <i class="fa fa-child">&nbsp;members</i>
+              </button>
+            </td>
+            <td class='table-copy-status'>{{obj.status }}</td>
+            <td><i class="fa fa-refresh fa-spin"></i>
+              <a id='connect' name='connect' ng-click="dashCtrl.options($event, obj);" class="table-copy-connect">&nbsp;connect</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

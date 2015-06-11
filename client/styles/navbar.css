@@ -9,7 +9,7 @@ p.welcome-username {
   top: 18px;
   right: 40px;
   padding-right: 10px;
-  color: rgba(0, 0, 0, .6);
+  color: #efefef;
 }
 
 .navbar-nav>li>.dropdown-menu {
@@ -49,6 +49,8 @@ p.welcome-username {
 
 .navbar.navbar-default.navbar-fixed-bottom {
   opacity: 0;
+  border-top: transparent;
+  background-color: transparent;
 }
 
 .navbar.navbar-default.navbar-fixed-bottom.show-footer {
@@ -56,9 +58,15 @@ p.welcome-username {
 }
 
 .navbar-custom {
-  background-color: #efefef;
-  color: #ffffff;
-  border-radius: 0;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxOTE5MTkiIHN0b3Atb3BhY2l0eT0iMC43MyIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 0.73) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 1)), color-stop(100%, rgba(25, 25, 25, 0.73)));
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 0.73) 100%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 0.73) 100%);
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 0.73) 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 0.73) 100%);
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ba191919', GradientType=0);
+  border-bottom: 1px solid #efefef;
 }
 
 ul.nav.navbar-nav.footer-custom {
@@ -98,10 +106,11 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 }
 
 .navbar-custom .navbar-brand {
-  color: #337ab7;
+  color: #7EB1DC;
   font-family: 'Open Sans', sans-serif;
   font-size: 24px;
   font-weight: 300;
+  text-transform: capitalize;
 }
 
 .navbar-custom .navbar-toggle {

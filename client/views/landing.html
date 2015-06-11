@@ -20,7 +20,7 @@
           </div>
           <!-- *** End Landing Options Container *** -->
           <!-- *** Begin Login Container *** -->
-          <div ng-reset ng-show="showLogin" class='login-container' class='auth-container'>
+          <div ng-show="showLogin" class='login-container' class='auth-container'>
             <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
               <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
               <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
@@ -29,13 +29,13 @@
               <div class='login-subtext-container'>
                 <p id='need-account' ng-click="landingCtrl.selectedOpt('register');">need an account?</p>
                 <p id='forgot-password' ng-click="landingCtrl.selectedOpt('forgotPassword');"> forgot password?</p>
-                <p id='remember-me'> remember me <input type="checkbox"></p>
+                <p id='remember-me'> remember me <input ng-model="user.rememberMe" type="checkbox"></p>
               </div>
             </form>
             <div ng-show='showErr' class='login-btn-container'>
               <p class='landing-err-message'>{{ errMessage }}</p>
             </div>
-          </div ng-reset>
+          </div>
           <!-- *** End Login Container ***
           <!-- *** Begin Register Container *** -->
           <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>

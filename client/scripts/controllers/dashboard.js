@@ -6,7 +6,7 @@ angular.module('RoomBaby')
 function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, pubSub, userApi, sessionApi, animator, dataService, localStorageService) {
 
   var ctrl = this;
-  var cleanForm = { title: '', email: '' };
+  var cleanRoom = { title: '', guestEmail: '', startDate: '', startTime: '' };
 
   socket.on('activateUser', function(session){
     console.log('activateUser SessionCtrl', session);
@@ -15,6 +15,9 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   socket.on('inviteReceived', function(session){
     console.log('inviteReceived SessionCtrl', session);
   });
+
+    $scope.room = {};
+    $scope.room.startDate = new Date();
 
   /* DOM Event Listeners */
   this.initialize = function() {
@@ -25,11 +28,12 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       localStorageService.clearAll();
       $state.go('landing');
     } else {
+      var obj = {};
+      obj.type = 'onDashboard';
       $scope.user = localStorageService.get('user');
       pubSub.trigger('setUser', $scope.user);
       pubSub.trigger('toggleNavBar', true);
-      pubSub.trigger('toggleFooter', true);
-      animator.run('onDashboard');
+      animator.run(obj);
       ctrl.renderTable();
     }
   };
@@ -42,30 +46,33 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
     } else if ($event.currentTarget.innerHTML === 'create a room') {
-      $scope.showCreateRoom = true;
+      // $scope.showCreateRoom = true;
     } else if ($event.currentTarget.innerHTML === 'create a broadcast') {
       $scope.showCreateBroadcast = true;
+    } else if ($event.target.id === 'on-create-room-submit') {
+      console.log('on-create-room-submit');
+      console.log($scope.room);
     }
   };
 
-  this.createRoomOpt = function($event) {
-    if ($event.currentTarget.name === 'cancel') {
-      $scope.invitedUser = angular.copy(cleanForm);
-      $scope.roomForm.$setPristine();
-      $scope.showCreateRoom = false;
-      $scope.showNext = false;
-    } else if ($event.currentTarget.name === 'next') {
-      $scope.showCreateRoom = false;
-      $scope.showNext = true;
-    } else if ($event.currentTarget.name === 'create') {
-      $scope.showNext = false;
-      $scope.showLoading = true;
-      var invitedUser = angular.copy($scope.invitedUser);
-      $scope.invitedUser = cleanForm;
-      $scope.roomForm.$setPristine();
-      ctrl.createRoom($scope.user, invitedUser);
-    }
-  };
+  // this.createRoomOpt = function($event) {
+  //   if ($event.currentTarget.name === 'cancel') {
+  //     $scope.invitedUser = angular.copy(cleanRoom);
+  //     $scope.roomForm.$setPristine();
+  //     $scope.showCreateRoom = false;
+  //     $scope.showNext = false;
+  //   } else if ($event.currentTarget.name === 'next') {
+  //     $scope.showCreateRoom = false;
+  //     $scope.showNext = true;
+  //   } else if ($event.currentTarget.name === 'create') {
+  //     $scope.showNext = false;
+  //     $scope.showLoading = true;
+  //     var invitedUser = angular.copy($scope.invitedUser);
+  //     $scope.invitedUser = cleanRoom;
+  //     $scope.roomForm.$setPristine();
+  //     ctrl.createRoom($scope.user, invitedUser);
+  //   }
+  // };
 
   /* Controller Methods */
   ctrl.onFacebookLogin = function(user_id) {

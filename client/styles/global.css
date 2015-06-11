@@ -36,6 +36,38 @@ div.body-overlay {
   z-index: 2;
 }
 
+.btn-custom.disconnect,
+.btn-custom.disconnect:active,
+.btn-custom.disconnect:focus,
+.btn-custom.disconnect:hover,
+.btn-custom.record-session,
+.btn-custom.record-session:active,
+.btn-custom.record-session:focus,
+.btn-custom.record-session:hover,
+.btn-custom.share-file,
+.btn-custom.share-file:active,
+.btn-custom.share-file:focus,
+.btn-custom.share-file:hover {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 11px;
+  bottom: 0;
+  width: 160px;
+  height: 30px;
+  border: 1px solid #efefef;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  color: #efefef;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 400;
+  padding-top: 5px;
+  margin: auto;
+}
+
 #uploadForm > div {
   background-color: white !important;
   color: rgba(0, 0, 0, .7);
@@ -51,21 +83,19 @@ div.body-overlay {
   text-align: center;
 }
 
-.custom-footer {
-  margin-top: 10px !important;
-}
-
 .show-footer > div > ul > li > div {
   width: 800px;
 }
 
 .nav.navbar-nav.footer-custom {
-  display: inline-flex;
-  width: 800px;
-  margin: auto;
+  position: relative;
   left: 0;
   right: 0;
-  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 47px;
 }
 
 .table {
@@ -240,114 +270,48 @@ div.body-overlay {
   margin: auto;
 }
 
-.btn-custom.share-location,
-.btn-custom.share-location:hover,
-.btn-custom.share-location:active,
-.btn-custom.share-location:focus {
-  border: 1px solid #337ab7;
-  width: 160px;
-  position: relative;
-  font-weight: 400;
+.btn-custom.create-room-submit-btn,
+.btn-custom.create-room-submit-btn:hover,
+.btn-custom.create-room-submit-btn:active,
+.btn-custom.create-room-submit-btn:focus {
+  border: 1px solid #7EB1DC;
+  width: 200px;
+  position: absolute;
+  font-weight: 300;
   text-decoration: none;
   height: 30px;
   border-radius: 12px;
   text-align: center;
   cursor: pointer;
-  color: #517fa4;
-  background: white;
+  color: rgba(255, 255, 255, .9);
+  top: 437px;
+  margin: auto;
   left: 0;
   right: 0;
-  top: 9px;
-  bottom: 0;
-  margin: auto;
-}
-
-.btn-custom.share-file,
-.btn-custom.share-file:hover,
-.btn-custom.share-file:active,
-.btn-custom.share-file:focus {
-  position: relative;
-  border: 1px solid #337ab7;
-  width: 160px;
-  font-weight: 400;
-  text-decoration: none;
-  height: 30px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  color: #517fa4;
-  background: #fff;
-  left: 0;
-  right: 0;
-  top: 9px;
-  bottom: 0;
-  margin: auto;
-}
-
-.btn-custom.record-session,
-.btn-custom.record-session:hover,
-.btn-custom.record-session:active,
-.btn-custom.record-session:focus {
-  position: relative;
-  border: 1px solid #337ab7;
-  width: 160px;
-  font-weight: 400;
-  text-decoration: none;
-  height: 30px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  color: #517fa4;
-  background: #fff;
-  left: 0;
-  right: 0;
-  top: 9px;
-  bottom: 0;
-  margin: auto;
-}
-
-.btn-custom.disconnect,
-.btn-custom.disconnect:hover,
-.btn-custom.disconnect:active,
-.btn-custom.disconnect:focus {
-  position: relative;
-  border: 1px solid #337ab7;
-  width: 160px;
-  font-weight: 400;
-  text-decoration: none;
-  height: 30px;
-  border-radius: 12px;
-  text-align: center;
-  cursor: pointer;
-  color: #517fa4;
-  background: #fff;
-  left: 0;
-  right: 0;
-  top: 9px;
-  bottom: 0;
-  margin: auto;
+  background: 0 0;
+  padding-top: 4px;
 }
 
 .btn-custom.create-a-broadcast,
 .btn-custom.create-a-broadcast:hover,
 .btn-custom.create-a-broadcast:active,
 .btn-custom.create-a-broadcast:focus {
-  border: 1px solid #337ab7;
+  border: 1px solid #7EB1DC;
   width: 200px;
   position: absolute;
-  font-weight: 400;
+  font-weight: 300;
   text-decoration: none;
   height: 30px;
   border-radius: 12px;
   text-align: center;
   cursor: pointer;
-  color: #517fa4;
+  color: rgba(255, 255, 255, .9);
   top: 130px;
   margin: auto;
   left: 0;
   right: 0;
-  background: white;
-  z-index: 10;
+  background: transparent;
+  padding-top: 4px;
   opacity: 0;
 }
 
@@ -355,22 +319,24 @@ div.body-overlay {
 .btn-custom.create-a-room:hover,
 .btn-custom.create-a-room:active,
 .btn-custom.create-a-room:focus {
-  border: 1px solid #337ab7;
+  border: 1px solid #7EB1DC;
   width: 120px;
   position: absolute;
-  font-weight: 400;
+  font-weight: 300;
   text-decoration: none;
   height: 30px;
   border-radius: 12px;
   text-align: center;
   cursor: pointer;
-  color: #517fa4;
+  color: rgba(255, 255, 255, .9);
   top: 91px;
   margin: auto;
   left: 0;
   right: 0;
-  background: white;
+  background: 0 0;
   opacity: 0;
+  font-size: 13px;
+  padding-top: 4px;
 }
 
 .btn-custom,

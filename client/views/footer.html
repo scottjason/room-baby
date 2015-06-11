@@ -1,0 +1,20 @@
+  <div class='footer-overlay' ng-class='{ "footer-overlay" : (showFooterOverlay) }'></div>
+  <div ng-controller='FooterCtrl as footerCtrl' ng-class="{'show-footer': ( showFooter )}"  ng-init='footerCtrl.registerEvents();' class="navbar navbar-default navbar-fixed-bottom text-center">
+    <modal-dialog show='showOverlay' width='750px' height='60%'></modal-dialog>
+    <div ng-hide="showUpload" class="container">
+      <ul id="footer-btns">
+        <li>
+          <div id='share-file' ng-click='footerCtrl.options("location")' class="btn-custom share-file">share location</div>
+        </li>
+        <li>
+          <div id='share-file' ng-click='footerCtrl.options("upload")' class="btn-custom share-file">share a file</div>
+        </li>
+        <li>
+          <div id='record' ng-click='footerCtrl.options("record")' class="btn-custom record-session">record session</div>
+        </li>
+        <li>
+          <div id='disconnect' ng-click='footerCtrl.options("disconnect")' class="btn-custom disconnect">disconnect</div>
+        </li>
+      </ul>
+    </div>
+  </div>
