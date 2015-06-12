@@ -13,6 +13,7 @@ var fs = require('fs');
 var validator = require('validator');
 var request = require('request');
 var async = require('async');
+var moment = require('moment');
 var mailer = require('../config/utils/mailer');
 var dialog = require('../config/utils/dialog');
 var uploader = require('../config/utils/uploader');
@@ -84,6 +85,17 @@ exports.getAll = function(req, res, next) {
       session: sessionArr
     })
   });
+};
+
+exports.saveRoom = function(req, res, next) {
+  var guestEmail = req.body.guestEmail;
+  var connectedUserEmail = req.session.user.email;
+  var roomName = req.body.name;
+  var startsAt = moment(req.body.startsAtObj).toString();
+  console.log('guestEmail', guestEmail);
+  console.log('connectedUserEmail', connectedUserEmail);
+  console.log('roomName', roomName);
+  console.log('startsAt', startsAt);
 };
 
 exports.create = function(req, res, next) {

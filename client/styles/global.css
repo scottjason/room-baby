@@ -282,7 +282,7 @@ div.body-overlay {
   height: 30px;
   border-radius: 12px;
   text-align: center;
-  cursor: pointer;
+  cursor: d
   color: rgba(255, 255, 255, .9);
   top: 500px;
   margin: auto;
@@ -291,6 +291,18 @@ div.body-overlay {
   background: 0 0;
   padding-top: 4px;
   z-index: 5;
+  opacity: 0;
+}
+
+.btn-custom.create-room-submit-btn.activate-create-room-btn {
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
 }
 
 .btn-custom.create-a-broadcast,

@@ -1,19 +1,19 @@
 <div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
-    <div ng-error name='room.name' guest-email='room.guestEmail' class='form-container'>
+    <div ng-invite name='room.name' guest-email='room.guestEmail' on-time-set='room.isTimeSet' class='form-container'>
       <form name="createRoom" id="create-a-room">
         <p class='create-room-title-copy'>{{ createRoomTitle }}</p>
         <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
         <p class='create-room-email-copy'>{{ createRoomEmail }}</p>
         <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
-        <p class='create-room-start-copy'>{{ createRoomDate }}</p>
+        <p class='create-room-start-copy' ng-class='{ "on-time-set" : (isTimeSet) }'>{{ createRoomDate }}</p>
         <div class "date-picker-container-custom">
           <datetimepicker id="date-picker" data-ng-model="date.dates" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)"></datetimepicker>
         </div>
-        <div ng-click='dashCtrl.options($event, null);' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
+        <div ng-class='{"activate-create-room-btn" : ( renderInviteBtn ) }' ng-click='dashCtrl.options($event, null);' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
       </form>
-    </div ng-error>
+    </div ng-invite>
   </div>
   <div id='dashboard-container' class="container">
     <div class="row-block">
@@ -45,14 +45,14 @@
         </thead>
         <tbody>
           <tr ng-repeat="obj in table">
-            <td class='table-copy-title'>{{obj.name}}</td>
+            <td class='table-copy-title'>{{ obj.name }}</td>
             <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
             <td>
               <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
                 <i class="fa fa-child">&nbsp;members</i>
               </button>
             </td>
-            <td class='table-copy-status'>{{obj.status }}</td>
+            <td class='table-copy-status'>{{ obj.status }}</td>
             <td><i class="fa fa-refresh fa-spin"></i>
               <a id='connect' name='connect' ng-click="dashCtrl.options($event, obj);" class="table-copy-connect">&nbsp;connect</a>
             </td>

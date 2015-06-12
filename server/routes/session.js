@@ -15,7 +15,7 @@ module.exports = function(app) {
   router.get('/get/:archive_id', sessionCtrl.getRecording);
   router.get('/delete-recording/:archive_id', sessionCtrl.deleteRecording);
   router.get('/:archive_id/:partner_id', sessionCtrl.generateVideoEmbed);
-  router.post('/create', sessionCtrl.create);
+  router.post('/save-room', sessionCtrl.saveRoom);
   router.post('/upload', sessionCtrl.upload);
   router.delete('/:session_id/:user_id', sessionCtrl.deleteSession);
   app.use('/session', router);

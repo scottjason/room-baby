@@ -1,3 +1,9 @@
+p.create-room-start-copy.on-time-set {
+  color: #7EB1DC;
+  text-align: center;
+  text-transform: lowercase;
+}
+
 #date-picker {
   position: relative;
   top: 175px;
