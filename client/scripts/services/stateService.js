@@ -18,10 +18,12 @@ angular.module('RoomBaby')
       'createRoom': {
         'name': {
           'isValid': false,
+          'isPristine': true,
           'text': ''
         },
         'guestEmail': {
           'isValid': false,
+          'isPristine': true,
           'text': ''
         },
         'startDate': {
