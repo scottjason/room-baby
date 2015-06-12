@@ -17,6 +17,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   });
 
   $scope.room = {};
+
   $scope.createRoomTitle = 'please enter a name for the room';
   $scope.createRoomEmail = 'the email address of your guest';
   $scope.createRoomDate = 'and a start date and start time for the session';
@@ -42,6 +43,10 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   this.registerEvents = function() {
     pubSub.on('setUserName', ctrl.setUserName);
+    pubSub.on('dashCtrl:inValidName', ctrl.renderMessage);
+    pubSub.on('dashCtrl:validName', ctrl.renderMessage);
+    pubSub.on('dashCtrl:validEmail', ctrl.renderMessage);
+    pubSub.on('dashCtrl:inValidEmail', ctrl.renderMessage);
   };
 
   this.options = function($event, otSession) {
@@ -76,6 +81,12 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   // };
 
   /* Controller Methods */
+
+  ctrl.renderMessage = function(binding, message) {
+    $scope[binding] = message;
+    $scope.$apply();
+  };
+
   ctrl.onFacebookLogin = function(user_id) {
     userApi.getAll(user_id).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {

@@ -1,17 +1,17 @@
 <div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
-    <div ng-error room-name='room.name' room-guest-email='room.guestEmail' room-start-date='room.startDate' class='form-container'>
+    <div ng-error name='room.name' guest-email='room.guestEmail' class='form-container'>
       <form name="createRoom" id="create-a-room">
         <p class='create-room-title-copy'>{{ createRoomTitle }}</p>
-        <input id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
+        <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
         <p class='create-room-email-copy'>{{ createRoomEmail }}</p>
-        <input id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
+        <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
         <p class='create-room-start-copy'>{{ createRoomDate }}</p>
-        <div class"date-picker-container-custom">
-        <datetimepicker id="date-picker" data-ng-model="date.dates" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)"></datetimepicker>
+        <div class "date-picker-container-custom">
+          <datetimepicker id="date-picker" data-ng-model="date.dates" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)"></datetimepicker>
         </div>
-        <div ng-click='dashCtrl.options($event, null);'id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
+        <div ng-click='dashCtrl.options($event, null);' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
       </form>
     </div ng-error>
   </div>
