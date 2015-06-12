@@ -32,6 +32,7 @@ angular.module('RoomBaby')
     }
 
     function onDashboard() {
+      console.log('onDashboard');
       var optsContainer = angular.element(document.getElementById('opts-container'));
       var createRoomBtn = angular.element(document.getElementById('create-room-btn'));
       var createBroadcastBtn = angular.element(document.getElementById('create-broadcast-btn'));

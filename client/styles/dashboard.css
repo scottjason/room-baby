@@ -1,13 +1,11 @@
 #date-picker {
-  display: inline-block;
-  min-height: 290px;
-  position: absolute;
+  position: relative;
+  top: 175px;
   left: 0;
   right: 0;
+  width: 100%;
   margin: auto;
-  background-color: transparent;
-  width: 283px;
-  top: 177px;
+  overflow: hidden;
 }
 
 div.form-container {
@@ -33,7 +31,7 @@ div.form-container {
 .dashboard-overlay {
   position: fixed;
   width: 600px;
-  height: 550px;
+  height: 580px;
   background-color: black;
   margin: auto;
   top: 0;

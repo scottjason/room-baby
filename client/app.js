@@ -5,6 +5,7 @@ angular
     'ngRoute',
     'ui.router',
     'ui.bootstrap',
+    'ui.bootstrap.datetimepicker',
     'ngSanitize',
     'ngDialog',
     'LocalStorageModule'

@@ -31,6 +31,7 @@ module.exports = {
       'client/bower_components/angular-mocks/angular-mocks.js',
       'client/bower_components/ngDialog/js/ngDialog.js',
       'client/bower_components/moment/moment.js',
+      'client/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'client/bower_components/html5shiv/dist/html5shiv.js'
     ],
     dest: 'client/build/vendor.js'
@@ -40,7 +41,7 @@ module.exports = {
     dest: 'client/build/dev.css'
   },
   vendor_styles: {
-    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css'],
+    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css', 'client/bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'],
     dest: 'client/build/vendor.css'
   },
 };

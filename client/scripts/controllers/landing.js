@@ -36,6 +36,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         ctrl.accessGranted(opts);
       } else if (response.status === 401) {
         console.log('response 401', response);
+        localStorageService.clearAll()
         pubSub.trigger('toggleNavBar', null);
         pubSub.trigger('toggleFooter', null);
         ctrl.initialize();

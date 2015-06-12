@@ -16,8 +16,10 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     console.log('inviteReceived SessionCtrl', session);
   });
 
-    $scope.room = {};
-    $scope.room.startDate = new Date();
+  $scope.room = {};
+  $scope.createRoomTitle = 'please enter a name for the room';
+  $scope.createRoomEmail = 'the email address of your guest';
+  $scope.createRoomDate = 'and a start date and start time for the session';
 
   /* DOM Event Listeners */
   this.initialize = function() {
@@ -45,14 +47,13 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   this.options = function($event, otSession) {
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
-    } else if ($event.currentTarget.innerHTML === 'create a room') {
-      // $scope.showCreateRoom = true;
-    } else if ($event.currentTarget.innerHTML === 'create a broadcast') {
-      $scope.showCreateBroadcast = true;
-    } else if ($event.target.id === 'on-create-room-submit') {
-      console.log('on-create-room-submit');
-      console.log($scope.room);
     }
+  };
+
+  this.onTimeSet = function (newDate, oldDate) {
+    if (newDate) $scope.room.startsAt = newDate;
+    if (!$scope.room.startsAt) $scope.room.startsAt = oldDate;
+    console.log($scope.room);
   };
 
   // this.createRoomOpt = function($event) {

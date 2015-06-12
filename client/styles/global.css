@@ -284,12 +284,13 @@ div.body-overlay {
   text-align: center;
   cursor: pointer;
   color: rgba(255, 255, 255, .9);
-  top: 437px;
+  top: 500px;
   margin: auto;
   left: 0;
   right: 0;
   background: 0 0;
   padding-top: 4px;
+  z-index: 5;
 }
 
 .btn-custom.create-a-broadcast,
