@@ -21,7 +21,7 @@ angular.module('RoomBaby')
           if (!isValidEmail) pubSub.trigger('dashCtrl:inValidEmail');
           if (!isValidDate) pubSub.trigger('dashCtrl:inValidDate');
 
-          if (isValidEmail || isValidEmail ||isValidDate) pubSub.trigger('dashCtrl:activateBtn');
+          if (isValidEmail && isValidEmail && isValidDate) pubSub.trigger('dashCtrl:activateBtn');
 
         });
       },
