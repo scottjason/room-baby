@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .directive('ngInvite', function($window, pubSub, validator, stateService) {
+  .directive('ngInvite', function(pubSub, validator, stateService) {
 
     'use strict';
 
@@ -111,5 +111,5 @@ angular.module('RoomBaby')
         });
       }],
     }
-    ngInvite.$inject('$window, pubSub, validator, stateService')
+    ngInvite.$inject('pubSub, validator, stateService')
   });
