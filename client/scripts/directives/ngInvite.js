@@ -44,8 +44,6 @@ angular.module('RoomBaby')
       },
       controller: ['$scope', function($scope) {
 
-
-
         $scope.$watch('onTimeSet', function() {
           if ($scope.onTimeSet) {
             stateService.data['createRoom']['startDate'].isValid = true;
