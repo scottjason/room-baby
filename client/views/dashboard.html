@@ -3,11 +3,23 @@
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
     <div ng-show="!(dashCtrl.isValidInput('form'))" ng-invite name='room.name' guest-email='room.guestEmail' on-time-set='room.isTimeSet' class='form-container'>
       <form name="createRoom" id="create-a-room">
-        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }} <span><i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("name") ) }' class="fa fa-check"></i></span></p>
+        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
+          <span>
+        <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("name") ) }' class="fa fa-check"></i>
+        </span>
+        </p>
         <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
-        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("guestEmail") )) }' class='create-room-email-copy'>{{ createRoomEmail || 'the email address of your guest' }} <span><i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("guestEmail") ) }' class="fa fa-check"></i></span></p>
+        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("guestEmail") )) }' class='create-room-email-copy'>{{ createRoomEmail || 'the email address of your guest' }}
+          <span>
+          <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("guestEmail") ) }' class="fa fa-check"></i>
+          </span>
+        </p>
         <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
-        <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time<span><i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("startDate") ) }' class="fa fa-check"></i></span></p>
+        <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time
+          <span>
+          <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("startDate") ) }' class="fa fa-check"></i>
+          </span>
+        </p>
         <p class='create-room-start-copy' ng-class='{ "on-time-set" : ( dashCtrl.isValidInput("startDate") ) }'>{{ createRoomDate || 'and a start date and start time for the session' }}</p>
         <div class "date-picker-container-custom">
           <datetimepicker id="date-picker" data-ng-model="date.dates" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)"></datetimepicker>

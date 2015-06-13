@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .directive('ngInvite', function(pubSub, validator, stateService) {
+  .directive('ngInvite', function(validator, stateService) {
 
     'use strict';
 
@@ -10,38 +10,7 @@ angular.module('RoomBaby')
         guestEmail: '=',
         onTimeSet: '='
       },
-      link: function(scope, element, attrs) {
-
-        element.bind('keyup keydown click', function(event) {
-
-          var isNamePristine = stateService.data['createRoom']['name'].isPristine;
-          var isEmailPristine = stateService.data['createRoom']['guestEmail'].isPristine;
-
-          var createRoomTitle = 'please enter a name for the room';
-          var createRoomTitleErr = 'please enter a room name of three or more characters';
-
-          var createRoomEmail = 'the email address of your guest';
-          var createRoomEmailErr = 'please enter a valid email address'
-
-          var isValidName = stateService.data['createRoom']['name'].isValid;
-          var isValidEmail = stateService.data['createRoom']['guestEmail'].isValid;
-
-          if (!isValidName && !isNamePristine) {
-            scope.isNameErr = true;
-            scope.$apply();
-            pubSub.trigger('dashCtrl:inValidName', 'createRoomTitle', createRoomTitleErr);
-          } else if (isValidName || isNamePristine) {
-            scope.isNameErr = false
-            scope.$apply();
-            pubSub.trigger('dashCtrl:validName', 'createRoomTitle', createRoomTitle);
-          }
-          if (!isValidEmail && !isEmailPristine) {
-            pubSub.trigger('dashCtrl:inValidEmail', 'createRoomEmail', createRoomEmailErr);
-          } else if (isValidEmail || isEmailPristine) {
-            pubSub.trigger('dashCtrl:validEmail', 'createRoomEmail', createRoomEmail);
-          }
-        });
-      },
+      link: function(scope, element, attrs) {},
       controller: ['$scope', function($scope) {
 
         $scope.$watch('onTimeSet', function() {
@@ -111,5 +80,5 @@ angular.module('RoomBaby')
         });
       }],
     }
-    ngInvite.$inject('pubSub, validator, stateService')
+    ngInvite.$inject('validator, stateService')
   });
