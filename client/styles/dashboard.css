@@ -1,9 +1,3 @@
-p.create-room-start-copy.on-time-set {
-  color: #7EB1DC;
-  text-align: center;
-  text-transform: lowercase;
-}
-
 #date-picker {
   position: relative;
   top: 175px;
@@ -54,82 +48,6 @@ div.form-container {
   margin-top: 20px;
 }
 
-input.input-small#create-room-title[type=text] {
-  color: #fff;
-  font-weight: 300;
-  background-color: rgba(0, 0, 0, .7);
-  width: 300px;
-  text-align: center;
-  left: 0;
-  right: 0;
-  top: 25px;
-  margin: auto;
-  position: absolute;
-}
-
-p.create-room-title-copy {
-  position: absolute;
-  color: #efefef;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 300;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-}
-
-input.input-small#create-room-email[type=text] {
-  color: #fff;
-  font-weight: 300;
-  background-color: rgba(0, 0, 0, .7);
-  width: 300px;
-  text-align: center;
-  left: 0;
-  right: 0;
-  top: 100px;
-  margin: auto;
-  position: absolute;
-}
-
-p.create-room-email-copy {
-  position: absolute;
-  color: #efefef;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 300;
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 77px;
-}
-
-input.input-small#create-room-start-time[type=text] {
-  color: #fff;
-  font-weight: 300;
-  background-color: rgba(0, 0, 0, .7);
-  width: 300px;
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100px;
-  margin: auto;
-}
-
-p.create-room-start-copy {
-  position: absolute;
-  color: #efefef;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 300;
-  left: 0;
-  right: 0;
-  top: 154px;
-  bottom: 0;
-  margin: auto;
-}
 
 p.opts-description {
   font-size: 12px;

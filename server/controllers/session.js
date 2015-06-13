@@ -35,10 +35,12 @@ exports.bindSocket = function(io) {
 
 exports.onUserConnected = function(payload) {
   console.log(payload);
-  Session.findOne({ sessionId: payload.sessionId }, function(err, session){
+  Session.findOne({
+    sessionId: payload.sessionId
+  }, function(err, session) {
     if (err) return exports.socket.emit('onError', err);
     session.activeUsers.push(payload);
-    session.save(function(err, savedSession){
+    session.save(function(err, savedSession) {
       exports.socket.emit('activateUser', savedSession);
     });
   });
@@ -87,102 +89,89 @@ exports.getAll = function(req, res, next) {
   });
 };
 
-exports.saveRoom = function(req, res, next) {
-  var guestEmail = req.body.guestEmail;
-  var connectedUserEmail = req.session.user.email;
-  var roomName = req.body.name;
-  var startsAt = moment(req.body.startsAtObj).toString();
-  console.log('guestEmail', guestEmail);
-  console.log('connectedUserEmail', connectedUserEmail);
-  console.log('roomName', roomName);
-  console.log('startsAt', startsAt);
-};
 
-exports.create = function(req, res, next) {
+exports.saveRoom = function(req, res, next) {
+
+  var tempPass;
+  var roomName = req.body.name;
+  var guestEmail = req.body.guestEmail;
+  var startsAt = moment(req.body.startsAtObj).toString();
+  var host = req.body.connectedUser;
+
   async.waterfall([
       function(callback) {
         /* Validate the email */
-        var isValid = validator.isEmail(req.body.invitedUser.email);
-        if (!isValid || req.body.invitedUser.email.length > 64) return res.status(401).send(dialog.badEmail);
+        var isValid = validator.isEmail(guestEmail);
+        if (!isValid || (guestEmail.length > 64)) return res.status(401).send(dialog.badEmail);
         callback(null);
       },
       function(callback) {
         /* See if the invited user already has an account */
         User.find({
-          email: req.body.invitedUser.email
-        }, function(err, user) {
+          email: guestEmail
+        }, function(err, guest) {
           if (err) return callback(err);
-          if (!user.length) return callback(null, null);
-          callback(null, user[0]);
+          if (!guest.length) return callback(null, null);
+          callback(null, guest[0]);
         })
       },
-      function(invitedUser, callback) {
+      function(guest, callback) {
         var session = new Session();
-        /* If the invited user has an account, push users to session.users arr */
-        if (invitedUser) {
-          session.users.push(req.body.connectedUser, invitedUser);
+        /* If the guest already has an account, push users to session.users arr */
+        if (guest) {
+          session.users.push(host, guest);
           return callback(null, null, session);
         }
         /* Otherwise create the user, assign temp pass, save and then push users to session.users arr */
         var newUser = new User();
-        newUser.email = req.body.invitedUser.email;
-        req.tempPass = newUser.generateTempPass();
-        newUser.password = req.tempPass;
-        newUser.save(function(err, savedUser) {
+        newUser.email = guestEmail;
+        tempPass = newUser.generateTempPass();
+        newUser.password = tempPass;
+        newUser.save(function(err, guest) {
           if (err) return callback(err);
-          session.users.push(req.body.connectedUser, savedUser);
-          callback(null, savedUser, session);
+          session.users.push(host, guest);
+          callback(null, guest, session);
         });
       },
-      function(newUser, session, callback) {
+      function(guest, session, callback) {
+
         /* Create the otSession and add to the Session Instance */
-        opentok.createSession({
-          mediaMode: 'routed'
-        }, function(err, otSession) {
-          if (err) return callback(err)
-            /* Iterate over each user obj in the session.users arr */
-          async.map(session.users, session.generateUserObj, function(err, usersArr) {
+        opentok.createSession({ mediaMode: 'routed' }, function(err, otSession) {
+
+          session.key = config.openTok.key;
+          session.secret = config.openTok.secret;
+          session.sessionId = otSession.sessionId;
+          session.token = opentok.generateToken(session.sessionId);
+          session.createdBy.username = host.username;
+          session.createdBy.user_id = host._id;
+          session.roomName = roomName;
+          session.startsAt = startsAt;
+
+          session.save(function(err, savedSession) {
             if (err) return callback(err);
-            /* Redfine session.users to the resulting arr of filtered user objects */
-            session.users = usersArr;
-            session.sessionId = otSession.sessionId;
-            session.token = opentok.generateToken(session.sessionId);
-            session.createdBy.username = req.body.connectedUser.username;
-            session.createdBy.user_id = req.body.connectedUser._id;
-            session.name = req.body.invitedUser.title;
-            /* Save the session with the arr of now filtered user objects */
-            session.save(function(err, savedSession) {
-              /* Add credens to the session object after saving and before passing to the client */
-              if (err) return callback(err);
-              savedSession.key = config.openTok.key;
-              savedSession.secret = config.openTok.secret;
-              if (!newUser) return callback(null, null, savedSession);
-              callback(null, newUser, savedSession);
-            })
+            if (!guest) return callback(null, null, savedSession);
+            callback(null, guest, savedSession);
           });
         });
       },
-      function(newUser, session, callback) {
+      function(guest, session, callback) {
         /* Send the guest an invitation */
         var mailOpts = {
-          to: req.body.invitedUser.email,
+          to: guestEmail,
           from: config.transport.email,
           subject: mailer.emails.subject.invite,
-          html: newUser ? mailer.emails.content.inviteNewAcct(newUser.email, req.tempPass, req.body.connectedUser.email) : mailer.emails.content.invite(req.body.connectedUser.email)
+          html: guest ? mailer.emails.content.inviteNewAcct(guestEmail, tempPass, host.email) : mailer.emails.content.invite(host.email)
         };
         transporter.sendMail(mailOpts, function(err, results) {
           if (err) return callback(err);
-          if (req.tempPass) req.tempPass = null;
-          req.session.otSession = session;
-          callback(null, req.session.otSession, results);
+          if (tempPass) tempPass = null;
+          callback(null, session);
         })
       }
     ],
-    function(err, otSession, results) {
+    function(err, otSession) {
       if (err) return next(err);
-      res.json({
-        session: otSession
-      });
+      res.json({ session: otSession });
     }
   )
 };

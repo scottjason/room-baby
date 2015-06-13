@@ -6,12 +6,6 @@ angular.module('RoomBaby')
 function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, dataService, localStorageService) {
 
   var ctrl = this;
-  var cleanRoom = {
-    title: '',
-    guestEmail: '',
-    startDate: '',
-    startTime: ''
-  };
 
   socket.on('activateUser', function(session) {
     console.log('activateUser SessionCtrl', session);
@@ -22,11 +16,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   });
 
   $scope.room = {};
-
-
-  $scope.createRoomTitle = 'please enter a name for the room';
-  $scope.createRoomEmail = 'the email address of your guest';
-  $scope.createRoomDate = 'and a start date and start time for the session';
 
   /* DOM Event Listeners */
   this.initialize = function() {
@@ -53,14 +42,16 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     pubSub.on('dashCtrl:validName', ctrl.renderMessage);
     pubSub.on('dashCtrl:validEmail', ctrl.renderMessage);
     pubSub.on('dashCtrl:inValidEmail', ctrl.renderMessage);
-    pubSub.on('dashCtrl:onInviteReady', ctrl.onInviteReady);
   };
 
-  this.options = function($event, otSession) {
+  this.onOptSelected = function($event, otSession) {
+    console.log($event)
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
     } else if ($event.currentTarget.id === 'on-create-room-submit') {
       ctrl.createRoom();
+    } else if ($event.currentTarget.id === 'on-update-room-submit') {
+      ctrl.updateRoom();
     }
   };
 
@@ -71,14 +62,14 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       startsAt = moment(newDate).format('MMMM Do YYYY, h:mm:ss a');
       stateService.data['createRoom']['startDate'].text = startsAt;
       stateService.data['createRoom']['startDate'].utc = deepCopy;
-      $scope.createRoomDate = 'Selcted Start Time: ' + startsAt;
+      $scope.createRoomDate = startsAt;
       $scope.room.isTimeSet = true;
     } else if (oldDate) {
       var deepCopy = angular.copy(newDate);
       startsAt = moment(oldDate).format('MMMM Do YYYY, h:mm:ss a');
       stateService.data['createRoom']['startDate'].text = startsAt;
       stateService.data['createRoom']['startDate'].utc = deepCopy;
-      $scope.createRoomDate = 'Selcted Start Time: ' + startsAt;
+      $scope.createRoomDate = startsAt;
       $scope.room.isTimeSet = true;
 
     } else {
@@ -88,12 +79,21 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     }
   };
 
-  /* Controller Methods */
-
-  ctrl.onInviteReady = function() {
-    $scope.renderInviteBtn = true;
+  this.isValidInput = function(key) {
+    var isValid = stateService.data['createRoom'][key].isValid;
+    var isPristine = stateService.data['createRoom'][key].isPristine;
+    if (isPristine || isValid) return true;
+    return false;
   };
 
+  this.markChecked = function(key) {
+    var isValid = stateService.data['createRoom'][key].isValid;
+    var isPristine = stateService.data['createRoom'][key].isPristine;
+    if (isValid && !isPristine) return true;
+    return false;
+  };
+
+  /* Controller Methods */
 
   ctrl.createRoom = function() {
     var startsAt = stateService.data['createRoom']['startDate'].text;
@@ -102,13 +102,25 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     delete $scope.room.isSet;
     $scope.room.startsAt = startsAt;
     $scope.room.startsAtObj = startsAtObj;
-    ctrl.saveRoom($scope.room);
+    var payload = angular.copy($scope.room);
+    payload.connectedUser = angular.copy($scope.user);
+    ctrl.saveRoom(payload);
+  };
+
+  ctrl.updateRoom = function() {
+    $scope.createRoomDate = false;
+    $scope.room.isTimeSet = false;
+    stateService.data['createRoom']['startDate'].text = '';
+    stateService.data['createRoom']['startDate'].utc = '';
+    stateService.data['createRoom']['startDate'].isValid = false;
+    stateService.data['createRoom']['form'].isValid = false;
+    console.log($scope)
   };
 
   ctrl.saveRoom = function(payload) {
     sessionApi.saveRoom(payload).then(function(response) {
       console.log('onSaveRoom', response);
-    }, function(err){
+    }, function(err) {
       console.log(err)
     });
   };
@@ -215,8 +227,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       ctrl.renderTable();
     }, 350);
   };
-
-
 
   ctrl.connect = function(otSession) {
     localStorageService.set('otSession', otSession);

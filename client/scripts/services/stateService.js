@@ -27,12 +27,13 @@ angular.module('RoomBaby')
           'text': ''
         },
         'startDate': {
-          'isSet': false,
+          'isValid': false,
           'text': ''
         },
         'form': {
-          'isReady': false
-        }
+          'isValid': false
+        },
+        'isOnload': true
       }
     };
 

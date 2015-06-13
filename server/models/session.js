@@ -67,12 +67,4 @@ sessionSchema.pre('save', function(callback) {
   callback();
 });
 
-sessionSchema.methods.generateUserObj = function(user, callback) {
-  var obj = {};
-  obj._id = user._id;
-  obj.email = user.email;
-  obj.username = user.username || null;
-  callback(null, obj)
-};
-
 module.exports = mongoose.model('Session', sessionSchema);
