@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var moment = require('moment');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var sessionSchema = new mongoose.Schema({
@@ -17,37 +16,30 @@ var sessionSchema = new mongoose.Schema({
   }],
   activeUsers: [],
   name: {
-    type: String,
-    required: false
+    type: String
   },
   sessionId: {
-    type: String,
-    required: false
+    type: String
   },
   token: {
-    type: String,
-    required: false
+    type: String
   },
   key: {
-    type: String,
-    required: false
+    type: String
   },
   secret: {
-    type: String,
-    required: false
+    type: String
   },
   activeUsers: {
     type: Array
   },
   createdBy: {
     username: {
-      type: String,
-      required: true
+      type: String
     },
     user_id: {
       type: ObjectId,
       ref: 'User',
-      required: true
     }
   },
   createdAt: {
@@ -62,9 +54,12 @@ var sessionSchema = new mongoose.Schema({
 });
 
 sessionSchema.pre('save', function(callback) {
-  var now = moment().utc();
-  if (!this.createdAt) this.createdAt = now;
+  if (!this.createdAt) this.createdAt = new Date();
   callback();
 });
+
+sessionSchema.methods.addMinutes = function(date, minutes) {
+  return new Date(date.getTime() + minutes * 60000);
+};
 
 module.exports = mongoose.model('Session', sessionSchema);

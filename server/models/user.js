@@ -29,29 +29,24 @@ var userSchema = new mongoose.Schema({
     type: String, default: 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg'
   },
   createdAt: {
-    type: Date,
-    required: false
+    type: Date
   },
   updatedAt: {
-    type: Date,
-    required: false
+    type: Date
   },
   utils: {
     resetPassToken: {
-      type: String,
-      required: false
+      type: String
     },
     resetPassExpires: {
-      type: Date,
-      required: false
+      type: Date
     }
   }
 });
 
 userSchema.pre('save', function(callback) {
-  var now = moment().utc();
-  if (!this.createdAt) this.createdAt = now;
-  this.updatedAt = now;
+  if (!this.createdAt) this.createdAt = new Date();
+  this.updatedAt = new Date();
 
   if (this.password) {
     var _this = this;

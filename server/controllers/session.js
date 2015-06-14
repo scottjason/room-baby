@@ -95,8 +95,8 @@ exports.saveRoom = function(req, res, next) {
   var tempPass;
   var roomName = req.body.name;
   var guestEmail = req.body.guestEmail;
-  var startsAt = moment(req.body.startsAtObj).toString();
-  var host = req.body.connectedUser;
+  var startsAt = moment(req.body.startsAt);
+  var host = req.body.host;
 
   async.waterfall([
       function(callback) {
@@ -211,7 +211,6 @@ exports.upload = function(req, res, next) {
           if (err) return callback(err);
           var onShortUrl = function(err, url) {
             if (err) return callback(err);
-            console.log("url", url);
             callback(null, url);
           };
           uploader.generateUrl(req, onShortUrl);

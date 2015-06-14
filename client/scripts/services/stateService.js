@@ -28,12 +28,15 @@ angular.module('RoomBaby')
         },
         'startDate': {
           'isValid': false,
-          'text': ''
+          'jsDateObj': ''
         },
         'form': {
           'isValid': false
         },
         'isOnload': true
+      },
+      'Session': {
+        'table': []
       }
     };
 

@@ -1,34 +1,105 @@
 angular.module('RoomBaby')
-  .factory('dataService', function() {
+  .service('dataService', function(socket) {
 
     'use strict'
 
-  function generateTable(sessions, callback) {
-    var arr = [];
-    sessions.forEach(function(elem) {
-      var obj = {};
-      obj.sessionId = elem.sessionId;
-      obj.key = elem.key;
-      obj.secret = elem.secret;
-      obj.token = elem.token
-      obj.name = elem.name;
-      obj.createdBy = 'created by ' + elem.createdBy.username + ', ' + (moment(elem.createdAt).calendar()).toLowerCase();
-      var lastIndex = elem.users.length - 1;
-      elem.users.forEach(function(invitedUser, index) {
-        if (index === lastIndex) {
-          obj.members = (obj.members || '') + invitedUser.email;
-        } else {
-          obj.members = (obj.members || '') + invitedUser.email + ', ';
+    var module = {
+      isReady: function(startTime) {
+        var currentTime = moment();
+        var duration = moment.duration(startTime.diff(currentTime));
+        var minutesLeft = duration.asMinutes();
+        if (minutesLeft <= 3) return true;
+        return false;
+      },
+      isExpired: function(expiresAt) {
+        var currentTime = moment();
+        var duration = moment.duration(startTime.diff(currentTime));
+        var minutesLeft = duration.asMinutes();
+        if (minutesLeft <= -6) return true;
+        return false;
+      },
+      sortByExpiration: function(arr) {
+        console.log('arr', arr);
+        return _.sortBy(arr, function(obj) { return -obj.expiresAtValue; });
+      }
+    };
+
+    function getStatus(sessions, callback) {
+
+      var isSessionReady;
+
+      _.each(sessions, function(session) {
+
+        if (session.status !== 'ready') {
+
+          var startsAt = angular.copy(session.startsAt);
+          var isReady = module.isReady(startsAt);
+
+          if (isReady) {
+            session.status = 'ready';
+            session.options = 'connect';
+            isSessionReady = true;
+          }
         }
       });
-      obj.status = 'ready';
-      obj.options = 'connect';
-      arr.push(obj);
-    });
-    callback(arr);
-  };
+      callback(isSessionReady);
+    }
 
-  return ({
-    generateTable: generateTable
+    function generateTable(sessions, callback) {
+
+      var arr = [];
+      sessions.forEach(function(session) {
+        var obj = {};
+        obj.sessionId = session.sessionId;
+        obj.key = session.key;
+        obj.secret = session.secret;
+        obj.token = session.token
+        obj.name = session.name;
+        obj.createdBy = 'created by ' + session.createdBy.username;
+
+        var startsAt = angular.copy(session.startsAt);
+        var expiresAt = angular.copy(session.expiresAt);
+
+        obj.startsAt = moment(startsAt);
+        obj.expiresAt = moment(expiresAt);
+
+        var startsAt = angular.copy(session.startsAt);
+        var expiresAt = angular.copy(session.expiresAt);
+
+        obj.startsAtFormatted = moment(startsAt).format("ddd, MMMM Do YYYY, h:mm:ss a");
+        obj.expiresAtFormatted = moment(expiresAt).format("ddd, MMMM Do YYYY, h:mm:ss a");
+
+        var expiresAt = angular.copy(session.expiresAt);
+        obj.expiresAtValue = moment(expiresAt).valueOf();
+
+        var lastIndex = session.users.length - 1;
+        session.users.forEach(function(invitedUser, index) {
+          if (index === lastIndex) {
+            obj.members = (obj.members || '') + invitedUser.email;
+          } else {
+            obj.members = (obj.members || '') + invitedUser.email + ', ';
+          }
+        });
+
+        var startsAt = angular.copy(session.startsAt);
+        var isReady = module.isReady(moment(startsAt));
+
+        if (isReady) {
+          obj.status = 'ready';
+          obj.options = 'connect';
+        } else {
+          obj.status = 'scheduled'
+          obj.options = 'details';
+        }
+        arr.push(obj);
+      });
+      var sortedArr = module.sortByExpiration(arr);
+      callback(arr);
+    }
+
+    return ({
+      generateTable: generateTable,
+      getStatus: getStatus
+    });
+    dataService.$inject('socket');
   });
-});

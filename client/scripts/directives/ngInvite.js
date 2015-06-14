@@ -39,9 +39,9 @@ angular.module('RoomBaby')
           if (isValid) {
             stateService.data['createRoom']['name'].text = $scope.name;
             stateService.data['createRoom']['name'].isValid = true;
-            var isTimeSet = stateService.data['createRoom']['startDate'].isValid
+            var isValidDate = stateService.data['createRoom']['startDate'].isValid
             var isValidEmail = stateService.data['createRoom']['guestEmail'].isValid;
-            if (isTimeSet && isValidEmail) {
+            if (isValidDate && isValidEmail) {
               stateService.data['createRoom']['form'].isValid = true;
             }
           } else {
@@ -65,11 +65,11 @@ angular.module('RoomBaby')
 
           validator.validate(obj, function(isValid) {
             if (isValid) {
-              var isTimeSet = stateService.data['createRoom']['startDate'].isValid
+              var isValidDate = stateService.data['createRoom']['startDate'].isValid
               var isValidName = stateService.data['createRoom']['name'].isValid;
               stateService.data['createRoom']['guestEmail'].text = $scope.name;
               stateService.data['createRoom']['guestEmail'].isValid = true;
-              if (isTimeSet && isValidName) {
+              if (isValidDate && isValidName) {
                 stateService.data['createRoom']['form'].isValid = true;
               }
             } else {
