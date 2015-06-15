@@ -6,10 +6,9 @@ angular.module('RoomBaby')
 function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, dataService, localStorageService) {
 
   var ctrl = this;
-
   $scope.room = {};
 
-  /* DOM Event Listeners */
+  /* Dom Bindings */
   this.initialize = function() {
     if (localStorageService.get('isFacebookLogin')) {
       var user_id = $state.params.user_id
@@ -36,12 +35,34 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     pubSub.on('dashCtrl:inValidEmail', ctrl.renderMessage);
   };
 
+  /* on dashboard option selected */
+  this.onOptSelected = function($event, otSession) {
+    if ($event.currentTarget.name === 'connect') {
+      ctrl.connect(otSession);
+    } else if ($event.currentTarget.id === 'on-create-room-submit') {
+      ctrl.createRoom();
+    } else if ($event.currentTarget.id === 'on-update-room-submit') {
+      ctrl.updateRoom();
+    }
+  };
+
+  /* on dashboard table row option selected */
+  this.onRowSelected = function(otSession) {
+    if (otSession.status === 'ready') {
+      ctrl.connect(otSession);
+    } else {
+      ctrl.showOverlay(otSession.status);
+    }
+  };
+
+  /* date timepicker config */
   this.configDateTimePicker = function() {
     return {
       startView: 'day'
     };
   };
 
+  /* set current date to active onload */
   this.beforeRender = function($view, $dates, $leftDate, $upDate, $rightDate) {
 
     var formattedUpDate = moment().format('MMMM YYYY');
@@ -71,25 +92,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     });
   };
 
-  this.onOptSelected = function($event, otSession) {
-    if ($event.currentTarget.name === 'connect') {
-      ctrl.connect(otSession);
-    } else if ($event.currentTarget.id === 'on-create-room-submit') {
-      ctrl.createRoom();
-    } else if ($event.currentTarget.id === 'on-update-room-submit') {
-      ctrl.updateRoom();
-    }
-  };
-
-  this.onRowSelected = function(otSession) {
-    if (otSession.status === 'ready') {
-      ctrl.connect(otSession);
-    } else {
-      ctrl.showOverlay(otSession.status);
-    }
-    console.log('otSession', otSession);
-  };
-
+  /* on collect date time */
   this.onTimeSet = function(newDate, oldDate) {
     var startsAt;
     if (newDate) {
@@ -112,6 +115,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     }
   };
 
+  /* return state of input field for copy (instructions or error) */
   this.isValidInput = function(key) {
     var isValid = stateService.data['createRoom'][key].isValid;
     var isPristine = stateService.data['createRoom'][key].isPristine;
@@ -119,6 +123,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     return false;
   };
 
+  /* return state of input field for checkmark (field validated) */
   this.markChecked = function(key) {
     var isValid = stateService.data['createRoom'][key].isValid;
     var isPristine = stateService.data['createRoom'][key].isPristine;
@@ -126,59 +131,13 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     return false;
   };
 
-  /* Controller Methods */
-
-  ctrl.createRoom = function() {
-    var startsAt = stateService.data['createRoom']['startDate'].jsDateObj;
-    $scope.room.startsAt = startsAt;
-    var payload = angular.copy($scope.room);
-    payload.host = angular.copy($scope.user);
-    ctrl.saveRoom(payload);
-  };
-
-  ctrl.updateRoom = function() {
-    $scope.createRoomDate = false;
-    $scope.room.isTimeSet = false;
-    stateService.data['createRoom']['startDate'].jsDateObj = '';
-    stateService.data['createRoom']['startDate'].utc = '';
-    stateService.data['createRoom']['startDate'].isValid = false;
-    stateService.data['createRoom']['form'].isValid = false;
-    console.log($scope)
-  };
-
-  ctrl.saveRoom = function(payload) {
-    sessionApi.saveRoom(payload).then(function(response) {
-      console.log('onSaveRoom', response);
-    }, function(err) {
-      console.log(err)
-    });
-  };
-
-  ctrl.addRoom = function(newRoom) {
-    var sessions = localStorageService.get('sessions');
-    sessions.push(newRoom);
-    localStorageService.set('sessions', sessions);
-    $scope.showLoading = false;
-    ctrl.renderTable();
-  };
-
-  ctrl.renderTable = function() {
-    $scope.showTable = true;
-    var sessions = localStorageService.get('sessions');
-    if (sessions && sessions.length) {
-      dataService.generateTable(sessions, function(table) {
-        stateService.data['Session'].table = table;
-        $scope.table = table;
-        getStatus();
-      });
-    };
-  };
-
+  /* return state of session status, ability for user to connect */
   this.getState = function(obj) {
     var isReady = (obj.status === 'ready');
     return isReady;
   };
 
+  /* recursive method to get statuses of room */
   function getStatus() {
     var table = stateService.data['Session'].table
     dataService.getStatus(table, function(isSessionReady, table) {
@@ -192,11 +151,63 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     });
   }
 
+  /* Controller Methods */
+
+  /* on invite form update option selected */
+  ctrl.updateRoom = function() {
+    $scope.createRoomDate = false;
+    $scope.room.isTimeSet = false;
+    stateService.data['createRoom']['startDate'].jsDateObj = '';
+    stateService.data['createRoom']['startDate'].utc = '';
+    stateService.data['createRoom']['startDate'].isValid = false;
+    stateService.data['createRoom']['form'].isValid = false;
+    console.log($scope)
+  };
+
+  /* on invite form complete, create room */
+  ctrl.createRoom = function() {
+    var startsAt = stateService.data['createRoom']['startDate'].jsDateObj;
+    $scope.room.startsAt = startsAt;
+    var payload = angular.copy($scope.room);
+    payload.host = angular.copy($scope.user);
+    ctrl.saveRoom(payload);
+  };
+
+  /* then save the room to mongo */
+  ctrl.saveRoom = function(payload) {
+    sessionApi.saveRoom(payload).then(function(response) {
+      console.log('onSaveRoom', response);
+    }, function(err) {
+      console.log(err)
+    });
+  };
+
+  /* then on success, add the new room to client-side storage and re-render table */
+  ctrl.addRoom = function(newRoom) {
+    var sessions = localStorageService.get('sessions');
+    sessions.push(newRoom);
+    localStorageService.set('sessions', sessions);
+    $scope.showLoading = false;
+    ctrl.renderTable();
+  };
+
+  /* render table (or re-render after save room) */
+  ctrl.renderTable = function() {
+    $scope.showTable = true;
+    var sessions = localStorageService.get('sessions');
+    if (sessions && sessions.length) {
+      dataService.generateTable(sessions, function(table) {
+        stateService.data['Session'].table = table;
+        $scope.table = table;
+        getStatus();
+      });
+    };
+  };
+
   ctrl.renderMessage = function(binding, message) {
     $scope[binding] = message;
     $scope.$apply();
   };
-
 
   ctrl.onFacebookLogin = function(user_id) {
     userApi.getAll(user_id).then(function(response) {
