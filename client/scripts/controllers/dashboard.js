@@ -64,23 +64,16 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   /* manipulate datepicker before it renders */
   this.beforeRender = function($view, $dates, $leftDate, $upDate, $rightDate) {
-    // console.log('clicked');
-    // console.log('$view', $view);
-    // console.log('$dates', $dates);
-    // console.log('$leftDate', $leftDate);
-    console.log('$upDate', $upDate);
-    $upDate.display = dataService.generateUpDate($upDate.display);
-    // console.log('$rightDate', $rightDate);
 
-    /* set update to selected month */
-    // var upDateUtcValue = $upDate.utcDateValue;
-    // var upDateFormatted = moment($upDate).format('MMMM YYYY');
-    // $upDate.display = upDateFormatted;
+    /* format the upDate */
+    if ($view === 'day') {
+      $upDate.display = dataService.formatUpDate($upDate.display);
+    }
 
     /* set onload current date to active */
-    angular.forEach($dates, function(date) {
+    angular.forEach($dates, function(date, index) {
 
-      var incomingUtcValue = date.utcDateValue;
+      var incomingUtcValue = date.localDateValue();
       var currentUtcValue = new Date().getTime();
 
       var incomingDate = moment(incomingUtcValue).format('YYYY/MM/DD');
@@ -97,31 +90,69 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       var isToday = ((currentDay === incomingDay) && (currentMonth === incomingMonth) && (currentYear === incomingYear));
       if (isToday) {
         date.active = true;
+      } else {
+        date.active = false;
       }
     });
   };
 
   /* on collect date time */
   this.onTimeSet = function(newDate, oldDate) {
+    console.log('newDate', newDate);
+    console.log('oldDate', oldDate);
+
     var startsAt;
     if (newDate) {
       var deepCopy = angular.copy(newDate);
-      stateService.data['createRoom']['startDate'].jsDateObj = newDate;
-      startsAt = moment(newDate).format('MMMM Do YYYY, h:mm:ss a');
-      $scope.createRoomDate = startsAt;
-      $scope.room.isTimeSet = true;
-    } else if (oldDate) {
-      var deepCopy = angular.copy(newDate);
-      stateService.data['createRoom']['startDate'].jsDateObj = oldDate;
-      startsAt = moment(oldDate).format('MMMM Do YYYY, h:mm:ss a');
-      $scope.createRoomDate = startsAt;
-      $scope.room.isTimeSet = true;
+      var selectedLocalTime = moment.utc(newDate).toDate();
+      var currentLocalTime = moment.utc().toDate();
+
+      var isValid = (selectedLocalTime >= currentLocalTime);
+      if (isValid) {
+        console.log('isValid selectedLocalTime', selectedLocalTime)
+        console.log('isValid currentLocalTime', currentLocalTime)
+      } else {
+        console.log('Not Valid selectedLocalTime', selectedLocalTime)
+        console.log('Not Valid currentLocalTime', currentLocalTime)
+      }
+
+      var localTimeFormmated = moment(deepCopy).format('MMMM Do YYYY, h:mm:ss a');
 
     } else {
-      stateService.data['createRoom']['startDate'].isValid = false;
-      $scope.room.startsAt = false;
-      $scope.room.isTimeSet = false;
+      var deepCopy = angular.copy(oldDate);
+      var selectedLocalTime = moment.utc(oldDate).toDate();
+      var currentLocalTime = moment.utc().toDate();
+      // var localTimeFormmated = moment(deepCopy).format('MMMM Do YYYY, h:mm:ss a');
+      var isValid = (selectedLocalTime >= currentLocalTime);
+      if (isValid) {
+        console.log('isValid selectedLocalTime', selectedLocalTime)
+        console.log('isValid currentLocalTime', currentLocalTime)
+      } else {
+        console.log('Not Valid selectedLocalTime', selectedLocalTime)
+        console.log('Not Valid currentLocalTime', currentLocalTime)
+      }
+
     }
+
+    // var startsAt;
+    // if (newDate) {
+    //   var deepCopy = angular.copy(newDate);
+    //   stateService.data['createRoom']['startDate'].jsDateObj = newDate;
+    //   startsAt = moment(newDate).format('MMMM Do YYYY, h:mm:ss a');
+    //   $scope.createRoomDate = startsAt;
+    //   $scope.room.isTimeSet = true;
+    // } else if (oldDate) {
+    //   var deepCopy = angular.copy(newDate);
+    //   stateService.data['createRoom']['startDate'].jsDateObj = oldDate;
+    //   startsAt = moment(oldDate).format('MMMM Do YYYY, h:mm:ss a');
+    //   $scope.createRoomDate = startsAt;
+    //   $scope.room.isTimeSet = true;
+
+    // } else {
+    //   stateService.data['createRoom']['startDate'].isValid = false;
+    //   $scope.room.startsAt = false;
+    //   $scope.room.isTimeSet = false;
+    // }
   };
 
   /* return state of input field for copy (instructions or error) */
@@ -140,10 +171,9 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     return false;
   };
 
-  /* return state of session status, ability for user to connect */
-  this.getState = function(obj) {
-    var isReady = (obj.status === 'ready');
-    return isReady;
+  /* return the ready state of session status, ability for user to connect */
+  this.getReadyState = function(obj) {
+    return (obj.status === 'ready');
   };
 
   /* recursive method to get statuses of room */

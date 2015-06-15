@@ -1,7 +1,12 @@
 <div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
-    <div ng-show="!(dashCtrl.isValidInput('form'))" ng-invite name='room.name' guest-email='room.guestEmail' on-time-set='room.isTimeSet' class='form-container'>
+    <div ng-invite
+         on-time-set='room.isTimeSet'
+         ng-show="!(dashCtrl.isValidInput('form'))"
+         name='room.name'
+         guest-email='room.guestEmail'
+         class='form-container'>
       <form name="createRoom" id="create-a-room">
         <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
           <span>
@@ -86,7 +91,7 @@
                 <i class="fa fa-child">&nbsp;&nbsp;members</i>
               </button>
             </td>
-            <td ng-class='{ "connect-option" : ( dashCtrl.getState(obj) ) }' class='table-copy-status'>
+            <td ng-class='{ "connect-option" : ( dashCtrl.getReadyState(obj) ) }' class='table-copy-status'>
               {{ obj.status }}
             </td>
             <td>

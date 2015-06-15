@@ -1,4 +1,41 @@
 #date-picker {
+  height: 315px !important;
+}
+
+i.glyphicon.glyphicon-arrow-left {
+  opacity: 1;
+  position: absolute;
+  top: 19px;
+  bottom: 0;
+  left: 51px;
+  margin: auto;
+}
+
+i.glyphicon.glyphicon-arrow-right {
+  opacity: 1;
+  display: inline;
+  position: absolute;
+  top: 19px;
+  bottom: 0;
+  right: 51px;
+  margin: auto;
+}
+
+#date-picker > table > thead > tr:nth-child(1) {
+  height: 40px;
+}
+
+#date-picker > table > thead > tr:nth-child(1) > th.switch.ng-binding {
+  position: absolute;
+  left: 0;
+  width: 189px;
+  top: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: transparent;
+}
+
+#date-picker {
   position: relative;
   top: 175px;
   left: 0;
@@ -36,8 +73,38 @@
   opacity: .8;
 }
 
-.datetimepicker table tr td.past:hover {
-  cursor: not-allowed;
+.datetimepicker table tr td span.active.active,
+.datetimepicker table tr td span.active.disabled.active,
+.datetimepicker table tr td span.active.disabled:active,
+.datetimepicker table tr td span.active.disabled:hover.active,
+.datetimepicker table tr td span.active.disabled:hover:active,
+.datetimepicker table tr td span.active:active,
+.datetimepicker table tr td span.active:hover.active,
+.datetimepicker table tr td span.active:hover:active {
+  background: transparent !important;
+}
+
+.datetimepicker table tr td span.active.active,
+.datetimepicker table tr td span.active.disabled,
+.datetimepicker table tr td span.active.disabled.active,
+.datetimepicker table tr td span.active.disabled.disabled,
+.datetimepicker table tr td span.active.disabled:active,
+.datetimepicker table tr td span.active.disabled:hover,
+.datetimepicker table tr td span.active.disabled:hover.active,
+.datetimepicker table tr td span.active.disabled:hover.disabled,
+.datetimepicker table tr td span.active.disabled:hover:active,
+.datetimepicker table tr td span.active.disabled:hover:hover,
+.datetimepicker table tr td span.active.disabled:hover[disabled],
+.datetimepicker table tr td span.active.disabled[disabled],
+.datetimepicker table tr td span.active:active,
+.datetimepicker table tr td span.active:hover,
+.datetimepicker table tr td span.active:hover.active,
+.datetimepicker table tr td span.active:hover.disabled,
+.datetimepicker table tr td span.active:hover:active,
+.datetimepicker table tr td span.active:hover:hover,
+.datetimepicker table tr td span.active:hover[disabled],
+.datetimepicker table tr td span.active[disabled] {
+  background: transparent !important;
 }
 
 .table>caption+thead>tr:first-child>td,
@@ -74,9 +141,9 @@
   color: rgba(255, 255, 255, .8);
 }
 
-.datetimepicker .table td:hover,
-.datetimepicker .table th:hover {
+.datetimepicker table tr td span:hover {
   color: #79DFB6;
+  background: black;
 }
 
 .datetimepicker .table-striped>tbody>tr>td:hover {

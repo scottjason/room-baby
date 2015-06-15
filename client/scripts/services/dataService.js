@@ -62,7 +62,7 @@ angular.module('RoomBaby')
             return 'December'
             break;
           default:
-            console.error('no case found on formatMonth');
+            console.error('no case found on formatMonth', month);
         }
       }
     };
@@ -140,7 +140,7 @@ angular.module('RoomBaby')
       callback(sortedArr);
     }
 
-    function generateUpDate(upDate) {
+    function formatUpDate(upDate) {
       var arr = upDate.split('-');
       var year = arr[0];
       var month = arr[1];
@@ -152,7 +152,7 @@ angular.module('RoomBaby')
     return ({
       generateTable: generateTable,
       getStatus: getStatus,
-      generateUpDate: generateUpDate
+      formatUpDate: formatUpDate
     });
     dataService.$inject('socket');
   });
