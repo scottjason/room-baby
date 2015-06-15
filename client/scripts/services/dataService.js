@@ -19,7 +19,51 @@ angular.module('RoomBaby')
         return false;
       },
       sortByExpiration: function(arr) {
-        return _.sortBy(arr, function(obj) { return obj.expiresAtValue; });
+        return _.sortBy(arr, function(obj) {
+          return obj.expiresAtValue;
+        });
+      },
+      formatMonth: function(month) {
+        switch (month) {
+          case 'Jan':
+            return 'January';
+            break;
+          case 'Feb':
+            return 'February';
+            break;
+          case 'Mar':
+            return 'March'
+            break;
+          case 'Apr':
+            return 'April'
+            break;
+          case 'May':
+            return 'May'
+            break;
+          case 'Jun':
+            return 'June'
+            break;
+          case 'Jul':
+            return 'July'
+            break;
+          case 'Aug':
+            return 'August'
+            break;
+          case 'Sep':
+            return 'September'
+            break;
+          case 'Oct':
+            return 'October'
+            break;
+          case 'Nov':
+            return 'November'
+            break;
+          case 'Dec':
+            return 'December'
+            break;
+          default:
+            console.error('no case found on formatMonth');
+        }
       }
     };
 
@@ -96,9 +140,19 @@ angular.module('RoomBaby')
       callback(sortedArr);
     }
 
+    function generateUpDate(upDate) {
+      var arr = upDate.split('-');
+      var year = arr[0];
+      var month = arr[1];
+      month = module.formatMonth(month);
+      var formattedUpDate = (month + ' ' + year);
+      return formattedUpDate;
+    }
+
     return ({
       generateTable: generateTable,
-      getStatus: getStatus
+      getStatus: getStatus,
+      generateUpDate: generateUpDate
     });
     dataService.$inject('socket');
   });

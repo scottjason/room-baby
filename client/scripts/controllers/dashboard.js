@@ -62,13 +62,22 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     };
   };
 
-  /* set current date to active onload */
+  /* manipulate datepicker before it renders */
   this.beforeRender = function($view, $dates, $leftDate, $upDate, $rightDate) {
+    // console.log('clicked');
+    // console.log('$view', $view);
+    // console.log('$dates', $dates);
+    // console.log('$leftDate', $leftDate);
+    console.log('$upDate', $upDate);
+    $upDate.display = dataService.generateUpDate($upDate.display);
+    // console.log('$rightDate', $rightDate);
 
-    var formattedUpDate = moment().format('MMMM YYYY');
+    /* set update to selected month */
+    // var upDateUtcValue = $upDate.utcDateValue;
+    // var upDateFormatted = moment($upDate).format('MMMM YYYY');
+    // $upDate.display = upDateFormatted;
 
-    $upDate.display = formattedUpDate;
-
+    /* set onload current date to active */
     angular.forEach($dates, function(date) {
 
       var incomingUtcValue = date.utcDateValue;
