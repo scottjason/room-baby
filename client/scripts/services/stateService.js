@@ -37,6 +37,16 @@ angular.module('RoomBaby')
       },
       'Session': {
         'table': []
+      },
+      'Dashboard': {
+        'options': {
+          'connect': false
+        }
+      },
+      'Authentication': {
+        'type': {
+          'isFacebook': false
+        }
       }
     };
 

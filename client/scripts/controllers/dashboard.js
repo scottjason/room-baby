@@ -36,8 +36,42 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     pubSub.on('dashCtrl:inValidEmail', ctrl.renderMessage);
   };
 
+  this.configDateTimePicker = function() {
+    return {
+      startView: 'day'
+    };
+  };
+
+  this.beforeRender = function($view, $dates, $leftDate, $upDate, $rightDate) {
+
+    var formattedUpDate = moment().format('MMMM YYYY');
+
+    $upDate.display = formattedUpDate;
+
+    angular.forEach($dates, function(date) {
+
+      var incomingUtcValue = date.utcDateValue;
+      var currentUtcValue = new Date().getTime();
+
+      var incomingDate = moment(incomingUtcValue).format('YYYY/MM/DD');
+      var currentDate = moment(currentUtcValue).format('YYYY/MM/DD');
+
+      var incomingDay = parseInt(moment(angular.copy(incomingDate)).format('D'));
+      var incomingMonth = parseInt(moment(angular.copy(incomingDate)).format('M'));
+      var incomingYear = parseInt(moment(angular.copy(incomingDate)).format('YYYY'));
+
+      var currentDay = parseInt(moment(angular.copy(currentDate)).format('D'));
+      var currentMonth = parseInt(moment(angular.copy(currentDate)).format('M'));
+      var currentYear = parseInt(moment(angular.copy(currentDate)).format('YYYY'));
+
+      var isToday = ((currentDay === incomingDay) && (currentMonth === incomingMonth) && (currentYear === incomingYear));
+      if (isToday) {
+        date.active = true;
+      }
+    });
+  };
+
   this.onOptSelected = function($event, otSession) {
-    console.log($event)
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
     } else if ($event.currentTarget.id === 'on-create-room-submit') {
@@ -45,6 +79,15 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     } else if ($event.currentTarget.id === 'on-update-room-submit') {
       ctrl.updateRoom();
     }
+  };
+
+  this.onRowSelected = function(otSession) {
+    if (otSession.status === 'ready') {
+      ctrl.connect(otSession);
+    } else {
+      ctrl.showOverlay(otSession.status);
+    }
+    console.log('otSession', otSession);
   };
 
   this.onTimeSet = function(newDate, oldDate) {
@@ -131,10 +174,21 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     };
   };
 
+  this.getState = function(obj) {
+    var isReady = (obj.status === 'ready');
+    return isReady;
+  };
+
   function getStatus() {
     var table = stateService.data['Session'].table
-    dataService.getStatus(table, function() {
-      $timeout(getStatus, 1000);
+    dataService.getStatus(table, function(isSessionReady, table) {
+      if (!isSessionReady) {
+        $timeout(getStatus, 1000);
+      } else {
+        stateService.data['Session'].table = table;
+        $scope.table = table;
+        $timeout(getStatus, 1000);
+      }
     });
   }
 

@@ -1,3 +1,36 @@
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  padding-top: 14px;
+}
+
+.table>thead>tr>th {
+  vertical-align: bottom;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd),
+.table-striped>tbody>tr:nth-of-type(even) {
+  background-color: rgba(0, 0, 0, .7);
+}
+
+#dashboard-table > div > table > tbody > tr > td.table-copy-status {
+  color: #efefef;
+  top: 3px;
+  position: relative;
+}
+
+#dashboard-table > div > table > tbody > tr > td.table-copy-status.connect-option {
+  color: #79DFB6!important;
+  position: relative;
+  top: 3px;
+}
+
 #date-picker {
   position: relative;
   top: 175px;
@@ -164,7 +197,7 @@ p.enter-username {
 }
 
 .fa-spin {
-  color: #337ab7;
+  color: #79DFB6;
   opacity: .8;
 }
 
@@ -189,17 +222,21 @@ p.enter-username {
 }
 
 .table-copy-title {
-  font-size: 15px;
-  color: rgba(0, 0, 0, .8);
+  font-size: 14px;
+  color: #efefef;
   font-weight: 300;
-  text-decoration: none !important;
+  text-decoration: none!important;
+  top: 3px;
+  position: relative;
 }
 
 .table-copy-created-by {
-  font-size: 15px;
-  color: rgba(0, 0, 0, .8);
+  font-size: 14px;
+  color: #efefef;
   font-weight: 300;
-  text-decoration: none !important;
+  text-decoration: none!important;
+  top: 3px;
+  position: relative;
 }
 
 .table-copy-status {
@@ -211,19 +248,23 @@ p.enter-username {
 
 .table-copy-connect,
 .table-copy-connect:hover {
+  position: relative;
   font-size: 15px;
-  color: #337ab7;
+  color: white;
+  border: 1px solid #337ab7;
   font-weight: 300;
   cursor: pointer;
+  width: 200px;
+  height: 30px;
   text-decoration: none !important;
 }
 
 tbody {
-  background: #efefef;
+  background: transparent;
 }
 
 th {
-  color: white;
+  color: #efefef;
   font-weight: 300;
 }
 

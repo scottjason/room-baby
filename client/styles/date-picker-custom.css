@@ -1,0 +1,68 @@
+#date-picker {
+  position: relative;
+  top: 175px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+}
+
+.datetimepicker table tr td.future,
+.datetimepicker table tr td.past,
+.datetimepicker table tr td.future:hover,
+.datetimepicker table tr td.past:hover {
+  color: #999;
+  opacity: .8;
+}
+
+.datetimepicker table tr td.past:hover {
+  cursor: not-allowed;
+}
+
+.table>caption+thead>tr:first-child>td,
+.table>caption+thead>tr:first-child>th,
+.table>colgroup+thead>tr:first-child>td,
+.table>colgroup+thead>tr:first-child>th,
+.table>thead:first-child>tr:first-child>td,
+.table>thead:first-child>tr:first-child>th {
+  border: none;
+}
+
+.datetimepicker tfoot tr:first-child th:hover,
+.datetimepicker thead tr:first-child th:hover {
+  background: transparent !important;
+}
+
+.datetimepicker tfoot tr:first-child th,
+.datetimepicker thead tr:first-child th,
+.datetimepicker thead tr:first-child th:hover {
+  color: #7EB1DC;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.datetimepicker .table td,
+.datetimepicker .table th {
+  text-align: center;
+  width: 14.6%;
+  height: 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  color: rgba(255, 255, 255, .8);
+}
+
+.datetimepicker .table td:hover,
+.datetimepicker .table th:hover {
+  color: #79DFB6;
+}
+
+.datetimepicker .table-striped>tbody>tr>td:hover {
+  background-color: black;
+}
+
+#date-picker > table > thead > tr:nth-child(2) > th {
+  color: #79DFB6;
+}

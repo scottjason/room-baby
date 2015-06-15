@@ -15,12 +15,11 @@ angular.module('RoomBaby')
         var currentTime = moment();
         var duration = moment.duration(startTime.diff(currentTime));
         var minutesLeft = duration.asMinutes();
-        if (minutesLeft <= -6) return true;
+        if (minutesLeft <= -5) return true;
         return false;
       },
       sortByExpiration: function(arr) {
-        console.log('arr', arr);
-        return _.sortBy(arr, function(obj) { return -obj.expiresAtValue; });
+        return _.sortBy(arr, function(obj) { return obj.expiresAtValue; });
       }
     };
 
@@ -42,7 +41,7 @@ angular.module('RoomBaby')
           }
         }
       });
-      callback(isSessionReady);
+      callback(isSessionReady, sessions);
     }
 
     function generateTable(sessions, callback) {
@@ -94,7 +93,7 @@ angular.module('RoomBaby')
         arr.push(obj);
       });
       var sortedArr = module.sortByExpiration(arr);
-      callback(arr);
+      callback(sortedArr);
     }
 
     return ({

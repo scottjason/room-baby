@@ -93,17 +93,7 @@ p.create-room-start-copy.on-time-set {
   text-transform: uppercase;
 }
 
-.datetimepicker tfoot tr:first-child th:hover,
-.datetimepicker thead tr:first-child th:hover {
-  background: transparent !important;
-}
 
-.datetimepicker tfoot tr:first-child th,
-.datetimepicker thead tr:first-child th {
-  color: #7EB1DC;
-  font-size: 18px;
-  font-weight: 300;
-}
 
 .confirmation-line {
   background-color: #fff;

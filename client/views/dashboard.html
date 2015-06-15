@@ -22,7 +22,13 @@
         </p>
         <p class='create-room-start-copy' ng-class='{ "on-time-set" : ( dashCtrl.isValidInput("startDate") ) }'>{{ createRoomDate || 'and a start date and start time for the session' }}</p>
         <div class "date-picker-container-custom">
-          <datetimepicker id="date-picker" data-ng-model="date.dates" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)"></datetimepicker>
+          <datetimepicker
+          id="date-picker"
+          data-ng-model="date.dates"
+          data-before-render="dashCtrl.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
+          data-datetimepicker-config="dashCtrl.configDateTimePicker()"
+          data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)">
+          </datetimepicker>
         </div>
       </form>
     </div ng-invite>
@@ -65,8 +71,8 @@
         <thead>
           <tr>
             <th>room name</th>
-            <th>room details</th>
-            <th>room members</th>
+            <th>created by</th>
+            <th>members</th>
             <th>status</th>
             <th>options</th>
           </tr>
@@ -77,12 +83,19 @@
             <td class='table-copy-created-by'>{{ obj.createdBy }} </td>
             <td>
               <button class="btn btn-md members" popover-placement="top" popover="{{obj.members}}" type="button">
-                <i class="fa fa-child">&nbsp;members</i>
+                <i class="fa fa-child">&nbsp;&nbsp;members</i>
               </button>
             </td>
-            <td class='table-copy-status'>{{ obj.status }}</td>
-            <td><i class="fa fa-refresh fa-spin"></i>
-              <a id='connect' name='connect' ng-click="dashCtrl.onOptSelected($event, obj);" class="table-copy-connect">&nbsp;{{ obj.options }}</a>
+            <td ng-class='{ "connect-option" : ( dashCtrl.getState(obj) ) }' class='table-copy-status'>
+              {{ obj.status }}
+            </td>
+            <td>
+              <button ng-if="(obj.options === 'connect')" ng-click='dashCtrl.onRowSelected(obj);' id='connect' name='connect' class="btn btn-md members" type="button">
+                <i class="fa fa-refresh fa-spin"></i> &nbsp;&nbsp;{{ obj.options }}
+              </button>
+              <button ng-if="(obj.options === 'details')" ng-click='dashCtrl.onRowSelected(obj);' id='details' name='details' class="btn btn-md members" type="button">
+                <i class="fa fa-tag"></i>&nbsp;&nbsp;{{ obj.options }}
+              </button>
             </td>
           </tr>
         </tbody>

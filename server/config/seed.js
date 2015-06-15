@@ -127,7 +127,7 @@ var createSessionTwo = function createSessionTwo(arr) {
       session.users.push(obj);
     });
     session.name = 'Document Overview';
-    session.startsAt = moment().add(6, 'minutes');
+    session.startsAt = moment().add(4, 'minutes');
     session.expiresAt = moment().add(11, 'minutes');
     session.sessionId = otSession.sessionId;
     session.token = opentok.generateToken(session.sessionId);
