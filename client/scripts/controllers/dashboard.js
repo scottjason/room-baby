@@ -3,10 +3,19 @@
 angular.module('RoomBaby')
   .controller('DashCtrl', DashCtrl);
 
-function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, dataService, localStorageService) {
+function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, timeService, localStorageService) {
 
   var ctrl = this;
+
   $scope.room = {};
+
+  $scope.$watch('invalidDateErr', function() {
+    if ($scope.invalidDateErr) {
+      $timeout(function() {
+        $scope.invalidDateErr = false;
+      }, 1600);
+    }
+  });
 
   /* Dom Bindings */
   this.initialize = function() {
@@ -23,23 +32,25 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       pubSub.trigger('setUser', $scope.user);
       pubSub.trigger('toggleNavBar', true);
       animator.run(obj);
-      ctrl.renderTable();
+      ctrl.renderTable(true);
     }
   };
 
   this.registerEvents = function() {
     pubSub.on('setUserName', ctrl.setUserName);
-    pubSub.on('dashCtrl:inValidName', ctrl.renderMessage);
-    pubSub.on('dashCtrl:validName', ctrl.renderMessage);
-    pubSub.on('dashCtrl:validEmail', ctrl.renderMessage);
-    pubSub.on('dashCtrl:inValidEmail', ctrl.renderMessage);
+    pubSub.on('createRoom:renderMessage', ctrl.renderMessage);
+    pubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
+
+  ctrl.renderConfirmation = function() {
+    $scope.showConfirmation = true;
+  }
 
   /* on dashboard option selected */
   this.onOptSelected = function($event, otSession) {
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
-    } else if ($event.currentTarget.id === 'on-create-room-submit') {
+    } else if ($event.currentTarget.id === 'on-create-room-confirm') {
       ctrl.createRoom();
     } else if ($event.currentTarget.id === 'on-update-room-submit') {
       ctrl.updateRoom();
@@ -67,92 +78,33 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
     /* format the upDate */
     if ($view === 'day') {
-      $upDate.display = dataService.formatUpDate($upDate.display);
+      $upDate.display = timeService.formatUpDate($upDate.display);
     }
-
-    /* set onload current date to active */
-    angular.forEach($dates, function(date, index) {
-
-      var incomingUtcValue = date.localDateValue();
-      var currentUtcValue = new Date().getTime();
-
-      var incomingDate = moment(incomingUtcValue).format('YYYY/MM/DD');
-      var currentDate = moment(currentUtcValue).format('YYYY/MM/DD');
-
-      var incomingDay = parseInt(moment(angular.copy(incomingDate)).format('D'));
-      var incomingMonth = parseInt(moment(angular.copy(incomingDate)).format('M'));
-      var incomingYear = parseInt(moment(angular.copy(incomingDate)).format('YYYY'));
-
-      var currentDay = parseInt(moment(angular.copy(currentDate)).format('D'));
-      var currentMonth = parseInt(moment(angular.copy(currentDate)).format('M'));
-      var currentYear = parseInt(moment(angular.copy(currentDate)).format('YYYY'));
-
-      var isToday = ((currentDay === incomingDay) && (currentMonth === incomingMonth) && (currentYear === incomingYear));
-      if (isToday) {
-        date.active = true;
-      } else {
-        date.active = false;
-      }
-    });
+    timeService.setStartDate($dates);
   };
 
   /* on collect date time */
   this.onTimeSet = function(newDate, oldDate) {
-    console.log('newDate', newDate);
-    console.log('oldDate', oldDate);
 
-    var startsAt;
-    if (newDate) {
-      var deepCopy = angular.copy(newDate);
-      var selectedLocalTime = moment.utc(newDate).toDate();
-      var currentLocalTime = moment.utc().toDate();
+    var obj = {};
 
-      var isValid = (selectedLocalTime >= currentLocalTime);
+    var dateSelected = newDate || oldDate
+    var startsAtMsUtc = dateSelected.getTime();
+
+    obj.isStartTime = true;
+    obj.startsAt = startsAtMsUtc;
+
+    timeService.validate(obj, function(isValid, obj) {
       if (isValid) {
-        console.log('isValid selectedLocalTime', selectedLocalTime)
-        console.log('isValid currentLocalTime', currentLocalTime)
+        stateService.data['createRoom']['startDate'].isValid = true;
+        $scope.room.isTimeSet = true;
+        $scope.room.startsAt = startsAtMsUtc;
+        $scope.room.startsAtFormatted = obj.localFormatted;
+        $scope.room.expiresAt = obj.expiresAtMsUtc;
       } else {
-        console.log('Not Valid selectedLocalTime', selectedLocalTime)
-        console.log('Not Valid currentLocalTime', currentLocalTime)
+        $scope.invalidDateErr = 'you cannot schedule a room for a date in the past';
       }
-
-      var localTimeFormmated = moment(deepCopy).format('MMMM Do YYYY, h:mm:ss a');
-
-    } else {
-      var deepCopy = angular.copy(oldDate);
-      var selectedLocalTime = moment.utc(oldDate).toDate();
-      var currentLocalTime = moment.utc().toDate();
-      // var localTimeFormmated = moment(deepCopy).format('MMMM Do YYYY, h:mm:ss a');
-      var isValid = (selectedLocalTime >= currentLocalTime);
-      if (isValid) {
-        console.log('isValid selectedLocalTime', selectedLocalTime)
-        console.log('isValid currentLocalTime', currentLocalTime)
-      } else {
-        console.log('Not Valid selectedLocalTime', selectedLocalTime)
-        console.log('Not Valid currentLocalTime', currentLocalTime)
-      }
-
-    }
-
-    // var startsAt;
-    // if (newDate) {
-    //   var deepCopy = angular.copy(newDate);
-    //   stateService.data['createRoom']['startDate'].jsDateObj = newDate;
-    //   startsAt = moment(newDate).format('MMMM Do YYYY, h:mm:ss a');
-    //   $scope.createRoomDate = startsAt;
-    //   $scope.room.isTimeSet = true;
-    // } else if (oldDate) {
-    //   var deepCopy = angular.copy(newDate);
-    //   stateService.data['createRoom']['startDate'].jsDateObj = oldDate;
-    //   startsAt = moment(oldDate).format('MMMM Do YYYY, h:mm:ss a');
-    //   $scope.createRoomDate = startsAt;
-    //   $scope.room.isTimeSet = true;
-
-    // } else {
-    //   stateService.data['createRoom']['startDate'].isValid = false;
-    //   $scope.room.startsAt = false;
-    //   $scope.room.isTimeSet = false;
-    // }
+    });
   };
 
   /* return state of input field for copy (instructions or error) */
@@ -179,7 +131,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   /* recursive method to get statuses of room */
   function getStatus() {
     var table = stateService.data['Session'].table
-    dataService.getStatus(table, function(isSessionReady, table) {
+    timeService.getStatus(table, function(isSessionReady, table) {
       if (!isSessionReady) {
         $timeout(getStatus, 1000);
       } else {
@@ -194,28 +146,23 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   /* on invite form update option selected */
   ctrl.updateRoom = function() {
-    $scope.createRoomDate = false;
+    $scope.room.startsAt = null;
+    $scope.room.startsAtFormatted = null;
     $scope.room.isTimeSet = false;
-    stateService.data['createRoom']['startDate'].jsDateObj = '';
-    stateService.data['createRoom']['startDate'].utc = '';
     stateService.data['createRoom']['startDate'].isValid = false;
     stateService.data['createRoom']['form'].isValid = false;
-    console.log($scope)
   };
 
-  /* on invite form complete, create room */
+  /* on invite form complete, create the room, save to mongo */
   ctrl.createRoom = function() {
-    var startsAt = stateService.data['createRoom']['startDate'].jsDateObj;
-    $scope.room.startsAt = startsAt;
     var payload = angular.copy($scope.room);
     payload.host = angular.copy($scope.user);
-    ctrl.saveRoom(payload);
-  };
-
-  /* then save the room to mongo */
-  ctrl.saveRoom = function(payload) {
-    sessionApi.saveRoom(payload).then(function(response) {
-      console.log('onSaveRoom', response);
+    sessionApi.createRoom(payload).then(function(response) {
+      stateService.data['overlay'].isOpen = false;
+      var obj = {};
+      obj.type = 'onOverlayExit';
+      animator.run(obj);
+      ctrl.addRoom(response.data.session);
     }, function(err) {
       console.log(err)
     });
@@ -227,18 +174,21 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     sessions.push(newRoom);
     localStorageService.set('sessions', sessions);
     $scope.showLoading = false;
-    ctrl.renderTable();
+    ctrl.renderTable(null);
   };
 
   /* render table (or re-render after save room) */
-  ctrl.renderTable = function() {
+  ctrl.renderTable = function(isOnLoad) {
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
+
     if (sessions && sessions.length) {
-      dataService.generateTable(sessions, function(table) {
+      timeService.generateTable(sessions, function(table) {
         stateService.data['Session'].table = table;
         $scope.table = table;
-        getStatus();
+        if (isOnLoad) {
+          getStatus();
+        }
       });
     };
   };
@@ -246,6 +196,9 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   ctrl.renderMessage = function(binding, message) {
     $scope[binding] = message;
     $scope.$apply();
+    $timeout(function() {
+      $scope[binding] = '';
+    }, 1600);
   };
 
   ctrl.onFacebookLogin = function(user_id) {
@@ -288,7 +241,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       pubSub.trigger('toggleNavBar', true);
       pubSub.trigger('toggleFooter', true);
       animator.run('onDashboard');
-      ctrl.renderTable();
+      ctrl.renderTable(true);
     }
   };
 
@@ -323,7 +276,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     pubSub.trigger('toggleFooter', true);
     $timeout(function() {
       animator.run('onDashboard');
-      ctrl.renderTable();
+      ctrl.renderTable(true);
     }, 350);
   };
 
@@ -335,5 +288,5 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     $state.go('session', opts);
   };
 
-  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'socket', 'ngDialog', 'stateService', 'pubSub', 'userApi', 'sessionApi', 'animator', 'dataService', 'localStorageService'];
+  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'socket', 'ngDialog', 'stateService', 'pubSub', 'userApi', 'sessionApi', 'animator', 'timeService', 'localStorageService'];
 }

@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .directive('ngInvite', function(validator, stateService) {
+  .directive('ngInvite', function(validator, pubSub, stateService) {
 
     'use strict';
 
@@ -8,13 +8,25 @@ angular.module('RoomBaby')
       scope: {
         name: '=',
         guestEmail: '=',
-        onTimeSet: '='
+        onTimeSet: '=',
       },
-      link: function(scope, element, attrs) {},
+      link: function(scope, element, attrs) {
+        element.bind('click', function($event){
+          var isSubmitBtn = ($event.target.id === 'on-create-room-submit');
+          var isValid = stateService.data['createRoom']['form'].isValid;
+          if (isSubmitBtn && isValid) {
+            pubSub.trigger('createRoom:renderConfirmation');
+          } else if (isSubmitBtn && !isValid)  {
+            pubSub.trigger('createRoom:renderMessage', 'createRoomErr', 'please complete all fields');
+          }
+        });
+      },
       controller: ['$scope', function($scope) {
 
         $scope.$watch('onTimeSet', function() {
+          console.log("watching on timeset")
           if ($scope.onTimeSet) {
+            console.log('timeset valid');
             stateService.data['createRoom']['startDate'].isValid = true;
             var isValidName = stateService.data['createRoom']['name'].isValid;
             var isValidEmail = stateService.data['createRoom']['guestEmail'].isValid;
@@ -22,11 +34,13 @@ angular.module('RoomBaby')
               stateService.data['createRoom']['form'].isValid = true;
             }
           } else {
+            console.log('timeset invalid');
             stateService.data['createRoom']['form'].isValid = false;
           }
         });
 
         $scope.$watch('name', function() {
+          console.log("scope.name", $scope.name);
           var isPristine = !$scope.name;
           if (isPristine) {
             stateService.data['createRoom']['name'].isPristine = true;
@@ -45,6 +59,7 @@ angular.module('RoomBaby')
               stateService.data['createRoom']['form'].isValid = true;
             }
           } else {
+            console.log('name invalid');
             stateService.data['createRoom']['name'].isValid = false;
             stateService.data['createRoom']['form'].isValid = false;
           }
@@ -65,6 +80,7 @@ angular.module('RoomBaby')
 
           validator.validate(obj, function(isValid) {
             if (isValid) {
+            console.log('email valid');
               var isValidDate = stateService.data['createRoom']['startDate'].isValid
               var isValidName = stateService.data['createRoom']['name'].isValid;
               stateService.data['createRoom']['guestEmail'].text = $scope.name;
@@ -73,6 +89,7 @@ angular.module('RoomBaby')
                 stateService.data['createRoom']['form'].isValid = true;
               }
             } else {
+            console.log('email invalid');
               stateService.data['createRoom']['guestEmail'].isValid = false;
               stateService.data['createRoom']['form'].isValid = false;
             }
@@ -80,5 +97,5 @@ angular.module('RoomBaby')
         });
       }],
     }
-    ngInvite.$inject('validator, stateService')
+    ngInvite.$inject('validator, pubSub, stateService')
   });

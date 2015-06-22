@@ -3,10 +3,10 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function saveRoom(params) {
+    function createRoom(params) {
       var request = $http({
         method: 'POST',
-        url: '/session/save-room',
+        url: '/session/create-room',
         data: params
       });
       return (request.then(successHandler, errorHandler));
@@ -70,7 +70,7 @@ angular.module('RoomBaby')
     };
 
     return ({
-      saveRoom: saveRoom,
+      createRoom: createRoom,
       getAll: getAll,
       upload: upload,
       startRecording: startRecording,

@@ -12,9 +12,15 @@ var moment = require('moment');
 var promise = require('./utils/promise');
 var config = require('./');
 
+var dateTime = require('./utils/dateTime');
+
 require('colors');
 
 var opentok = new OpenTok(config.openTok.key, config.openTok.secret);
+
+var currentMsUtc = dateTime.getMsUtc();
+
+var inThirtySeconds = dateTime.addSeconds(currentMsUtc, 30);
 
 var clearDb = function clearDb() {
   async.parallel({
@@ -101,8 +107,11 @@ var createSessionOne = function createSession(arr, arrTwo) {
       session.users.push(obj);
     });
     session.name = 'Monday Meeting';
-    session.startsAt = moment().add(3, 'minutes');
-    session.expiresAt = moment().add(8, 'minutes');
+    var currentMsUtc = dateTime.getMsUtc();
+    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 1);
+    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
+    session.startsAt = startsAtMsUtc;
+    session.expiresAt = expiresAtMsUtc;
     session.sessionId = otSession.sessionId;
     session.token = opentok.generateToken(session.sessionId);
     session.createdBy.user_id = session.users[0]._id;
@@ -127,8 +136,11 @@ var createSessionTwo = function createSessionTwo(arr) {
       session.users.push(obj);
     });
     session.name = 'Document Overview';
-    session.startsAt = moment().add(4, 'minutes');
-    session.expiresAt = moment().add(11, 'minutes');
+    var currentMsUtc = dateTime.getMsUtc();
+    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 2);
+    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
+    session.startsAt = startsAtMsUtc;
+    session.expiresAt = expiresAtMsUtc;
     session.sessionId = otSession.sessionId;
     session.token = opentok.generateToken(session.sessionId);
     if (session.users[0]._id) session.createdBy.user_id = session.users[0]._id;
@@ -155,8 +167,11 @@ var createSessionThree = function createSessionThree(arr) {
       session.users.push(obj);
     });
     session.name = "Mom's Birthday";
-    session.startsAt = moment().add(10, 'minutes');
-    session.expiresAt = moment().add(15, 'minutes');
+    var currentMsUtc = dateTime.getMsUtc();
+    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 5);
+    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
+    session.startsAt = startsAtMsUtc;
+    session.expiresAt = expiresAtMsUtc;
     session.sessionId = otSession.sessionId;
     session.token = opentok.generateToken(session.sessionId);
     if (session.users[0]._id) session.createdBy.user_id = session.users[0]._id;

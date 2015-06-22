@@ -1,43 +1,45 @@
 <div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
-    <div ng-invite
-         on-time-set='room.isTimeSet'
-         ng-show="!(dashCtrl.isValidInput('form'))"
-         name='room.name'
-         guest-email='room.guestEmail'
-         class='form-container'>
-      <form name="createRoom" id="create-a-room">
-        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
-          <span>
+    
+
+    <!-- Begin Show Create Room Overlay -->
+    <div ng-hide="showConfirmation">
+      <div ng-invite on-time-set='room.isTimeSet' name='room.name' guest-email='room.guestEmail' class='form-container'>
+        <form name="createRoom" id="create-a-room">
+          <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
+            <span>
         <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("name") ) }' class="fa fa-check"></i>
         </span>
-        </p>
-        <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
-        <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("guestEmail") )) }' class='create-room-email-copy'>{{ createRoomEmail || 'the email address of your guest' }}
-          <span>
+          </p>
+          <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
+          <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("guestEmail") )) }' class='create-room-email-copy'>{{ createRoomEmail || 'the email address of your guest' }}
+            <span>
           <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("guestEmail") ) }' class="fa fa-check"></i>
           </span>
-        </p>
-        <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
-        <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time
-          <span>
+          </p>
+          <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
+          <p ng-hide='dashCtrl.isValidInput("startDate")' class='create-room-start-copy' ng-class='{ "error-color" : ( invalidDateErr ) }'>{{ invalidDateErr || 'and a start date and start time for the session' }}</p>
+          <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time
+            <span>
           <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("startDate") ) }' class="fa fa-check"></i>
           </span>
-        </p>
-        <p class='create-room-start-copy' ng-class='{ "on-time-set" : ( dashCtrl.isValidInput("startDate") ) }'>{{ createRoomDate || 'and a start date and start time for the session' }}</p>
-        <div class "date-picker-container-custom">
-          <datetimepicker
-          id="date-picker"
-          data-ng-model="date.dates"
-          data-before-render="dashCtrl.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
-          data-datetimepicker-config="dashCtrl.configDateTimePicker()"
-          data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)">
-          </datetimepicker>
-        </div>
-      </form>
-    </div ng-invite>
-    <div ng-show="dashCtrl.isValidInput('form')" class='confirmation-container'>
+            <br>
+            <span class='starts-at-formatted'>{{ room.startsAtFormatted }}</span>
+          </p>
+          <div class "date-picker-container-custom">
+            <datetimepicker id="date-picker" data-ng-model="date.dates" data-before-render="dashCtrl.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" data-datetimepicker-config="dashCtrl.configDateTimePicker()" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)">
+            </datetimepicker>
+          </div>
+        </form>
+        <div ng-hide='createRoomErr' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
+        <p class='create-room-err'>{{ createRoomErr }}</p>
+      </div ng-invite>
+    </div>
+    <!-- End Show Create Room Overlay -->
+
+    <!-- Begin Show Room Confirmation Overlay -->
+    <div ng-show="showConfirmation" class='confirmation-container'>
       <p class="confirmation-header">Here's The Details of Your Room</p>
       <p class="confirmation-sub-header">Click create room and we'll send you and your guest a reminder an hour before the session starts.</p>
       <a ng-click='dashCtrl.onOptSelected($event);' href='' id='on-update-room-submit' class="confirmation-sub-header-update">or click to update</a>
@@ -48,9 +50,9 @@
         <p class='confirmation-copy'>Guest Email</p>
         <p class='confirmation-data'> {{ room.guestEmail }}</p>
         <p class='confirmation-copy'>Starts On</p>
-        <p class='confirmation-data'> {{ createRoomDate }}</p>
+        <p class='confirmation-data'> {{ room.startsAtFormatted }}</p>
         <div class='confirmation-line'></div>
-        <div ng-click='dashCtrl.onOptSelected($event);' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
+        <div ng-click='dashCtrl.onOptSelected($event);' id="on-create-room-confirm" class="btn-custom create-room-confirm-btn">Confirm Room</div>
       </div>
     </div>
   </div>

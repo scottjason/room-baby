@@ -1,3 +1,15 @@
+#dashboard-overlay > div:nth-child(2) > div > p {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  color: white;
+  top: 210px;
+  font-size: 18px;
+  color: orange;
+}
+
 .table>tbody>tr>td,
 .table>tbody>tr>th,
 .table>tfoot>tr>td,
@@ -13,19 +25,6 @@
 .table>thead>tr>th {
   vertical-align: bottom;
 }
-
-#date-picker > table > thead > tr:nth-child(1) > th.switch.ng-binding{
-  position: absolute;
-  left: 60px;
-  width: 189px;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0 auto;
-  height: 0;
-  background-color: transparent;
-}
-
 
 .table-striped>tbody>tr:nth-of-type(odd),
 .table-striped>tbody>tr:nth-of-type(even) {
@@ -67,7 +66,7 @@ div.form-container {
 .dashboard-overlay {
   position: fixed;
   width: 600px;
-  height: 580px;
+  height: 619px;
   background-color: black;
   margin: auto;
   top: 0;
