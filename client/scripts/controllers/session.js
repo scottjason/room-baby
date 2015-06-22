@@ -49,7 +49,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     pubSub.on('disconnect', ctrl.disconnect);
     pubSub.on('toggleUpload', ctrl.toggleUpload);
     pubSub.trigger('toggleNavBar', true);
-    pubSub.trigger('toggleFooter', true);
     pubSub.trigger('setUser', $scope.user);
     ctrl.createSession($scope.otSession);
   };
@@ -244,11 +243,17 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
           layoutContainer.appendChild(pubElem);
           layout();
           localStorageService.set('publisher', publisher);
+          ctrl.pubCallback();
         });
       }
     });
   };
 
+  ctrl.pubCallback = function() {
+    console.log('pubCallback');
+    pubSub.trigger('toggleFooter', true);
+  }
+  
   ctrl.requestPermission = function() {
     var permissionRequestedBy = $scope.user.username;
     ctrl.broadcast('requestPermission', permissionRequestedBy);

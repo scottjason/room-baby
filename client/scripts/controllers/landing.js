@@ -11,6 +11,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     console.log('Socket.io Successfuly Connected');
   });
 
+
   this.registerEvents = function() {
     pubSub.on('enterBtn:onLogin', ctrl.onLogin);
     pubSub.on('enterBtn:onRegister', ctrl.onRegister);
@@ -68,7 +69,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     } else if (optSelected === 'forgotPassword') {
       console.log('forgotPassword');
     } else if (optSelected === 'roomBaby') {
-      $state.go($state.current, {}, { reload: true  });
+      $state.go($state.current, {}, {
+        reload: true
+      });
     }
   };
 

@@ -32,6 +32,10 @@ p.create-room-title-copy.error-color {
   color: orange;
 }
 
+p.create-room-start-copy.error-color {
+  color: orange;
+}
+
 input.input-small#create-room-email[type=text] {
   color: #fff;
   font-weight: 300;

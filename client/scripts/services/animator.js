@@ -19,6 +19,8 @@ angular.module('RoomBaby')
         onCreateRoom();
       }else if (type === 'onOverlayExit') {
         onOverlayExit();
+      } else if (type === 'onFooterOverlay') {
+        onFooterOverlay(obj.callback);
       }
     }
 
@@ -90,6 +92,18 @@ angular.module('RoomBaby')
         { e: dashboardTable, p: 'fadeIn', o: { duration: 700, opacity: 1, sequenceQueue: false } }
       ];
       $.Velocity.RunSequence(sequence);
+    }
+
+    function onFooterOverlay(cb) {
+      var footerOverlay = angular.element(document.getElementById('footer-overlay'));
+      var footerBtnContainer = angular.element(document.getElementById('footer-btn-container'));
+      console.log(footerOverlay)
+      var sequence = [
+        { e: footerOverlay, p: 'transition.slideUpIn', o: { duration: 800, delay: 200, display: 'block' } },
+        { e: footerBtnContainer, p: 'transition.slideUpIn', o: { duration: 800, delay: 10,  display: 'block' } } 
+      ];
+      $.Velocity.RunSequence(sequence);
+      cb();
     }
 
     return ({

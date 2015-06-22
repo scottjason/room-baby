@@ -28,7 +28,8 @@ angular.module('RoomBaby')
         },
         'startDate': {
           'isValid': false,
-          'jsDateObj': ''
+          'localUtc': {},
+          'localFormatted': {}
         },
         'form': {
           'isValid': false
@@ -41,11 +42,6 @@ angular.module('RoomBaby')
       'Dashboard': {
         'options': {
           'connect': false
-        }
-      },
-      'Authentication': {
-        'type': {
-          'isFacebook': false
         }
       }
     };

@@ -83,20 +83,7 @@ div.body-overlay {
   text-align: center;
 }
 
-.show-footer > div > ul > li > div {
-  width: 800px;
-}
 
-.nav.navbar-nav.footer-custom {
-  position: relative;
-  left: 0;
-  right: 0;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  height: 47px;
-}
 
 .table {
   width: 100%;
@@ -325,7 +312,34 @@ button#details.btn.btn-md.members {
   text-align: center;
   cursor: pointer;
   color: rgba(255, 255, 255, .9);
-  top: 31px;
+  top: 209px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  background: 0 0;
+  z-index: 5;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+.btn-custom.create-room-confirm-btn,
+.btn-custom.create-room-confirm-btn:hover,
+.btn-custom.create-room-confirm-btn:active,
+.btn-custom.create-room-confirm-btn:focus {
+  border: 1px solid #7EB1DC;
+  width: 200px;
+  position: relative;
+  font-weight: 300;
+  text-decoration: none;
+  height: 30px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, .9);
+  top: 74px;
   margin: auto;
   left: 0;
   right: 0;

@@ -73,7 +73,6 @@ exports.getAll = function(req, res, next) {
       }
     }
   }, function(err, sessions) {
-    console.log(sessions);
     if (err) return next(err);
     if (!sessions.length) return res.json({
       session: sessionArr
@@ -89,13 +88,15 @@ exports.getAll = function(req, res, next) {
   });
 };
 
-
-exports.saveRoom = function(req, res, next) {
+exports.createRoom = function(req, res, next) {
 
   var tempPass;
-  var roomName = req.body.name;
+  var name = req.body.name;
   var guestEmail = req.body.guestEmail;
-  var startsAt = moment(req.body.startsAt);
+  var startsAt = req.body.startsAt;
+  var expiresAt = req.body.expiresAt;
+  var startsAtObj = moment.utc(startsAt);
+  var startsAtFormatted = req.body.startsAtFormatted;
   var host = req.body.host;
 
   async.waterfall([
@@ -144,10 +145,11 @@ exports.saveRoom = function(req, res, next) {
           session.token = opentok.generateToken(session.sessionId);
           session.createdBy.username = host.username;
           session.createdBy.user_id = host._id;
-          session.roomName = roomName;
+          session.name = name;
           session.startsAt = startsAt;
-
+          session.expiresAt = expiresAt;
           session.save(function(err, savedSession) {
+            console.log(158, savedSession)
             if (err) return callback(err);
             if (!guest) return callback(null, null, savedSession);
             callback(null, guest, savedSession);

@@ -10,14 +10,11 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   var fileUrl;
 
   $scope.user = {};
-  $scope.showFooter = true;
 
-  animator.run('onFooter');
 
   this.registerEvents = function() {
     pubSub.on('toggleFooter', ctrl.toggleFooter);
     pubSub.on('setUser', ctrl.setUser);
-    $scope.showFooterOverlay = true;
   };
 
   this.onUserName = function() {
@@ -73,7 +70,19 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   };
 
   ctrl.toggleFooter = function(showFooter) {
-    $scope.showFooter = showFooter;
+    if (showFooter) {
+      $scope.showFooter = showFooter;
+      var obj = {};
+      obj.type = 'onFooterOverlay';
+      obj.callback = onSuccess;
+      animator.run(obj)
+      function onSuccess() {
+        console.log('onsuccess cb')
+        $scope.$apply();
+      }
+    } else {
+      $scope.showFooter = showFooter;
+    }
   };
 
   ctrl.shareFile = function() {

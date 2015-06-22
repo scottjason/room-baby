@@ -1,6 +1,47 @@
+.nav.navbar-nav.footer-custom {
+  position: relative;
+  left: 0;
+  right: 0;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 47px;
+}
+
 #footer-btns {
-  visibility: hidden;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
+}
+
+#footer-overlay {
+  position: fixed;
+  background-color: rgba(0,0,0,.8);
+  width: 100%;
+  height: 47px;
+  bottom: 0;
+  margin: auto;
+  display: none;
+}
+
+.navbar.navbar-default.navbar-fixed-bottom {
+  opacity: 0;
+  border-top: transparent;
+  background-color: transparent;
+}
+
+.navbar.navbar-default.navbar-fixed-bottom.show-footer {
+  opacity: 0;
+}
+
+ul.nav.navbar-nav.footer-custom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  text-align: center;
 }

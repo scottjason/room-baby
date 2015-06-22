@@ -46,10 +46,10 @@ var sessionSchema = new mongoose.Schema({
     type: Date
   },
   startsAt: {
-    type: Date
+    type: Number
   },
   expiresAt: {
-    type: Date
+    type: Number
   }
 });
 

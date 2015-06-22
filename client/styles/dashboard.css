@@ -1,3 +1,15 @@
+#dashboard-overlay > div:nth-child(2) > div > p {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  color: white;
+  top: 210px;
+  font-size: 18px;
+  color: orange;
+}
+
 .table>tbody>tr>td,
 .table>tbody>tr>th,
 .table>tfoot>tr>td,
@@ -31,16 +43,6 @@
   top: 3px;
 }
 
-#date-picker {
-  position: relative;
-  top: 175px;
-  left: 0;
-  right: 0;
-  width: 100%;
-  margin: auto;
-  overflow: hidden;
-}
-
 div.form-container {
   background-color: transparent;
   position: relative;
@@ -64,7 +66,7 @@ div.form-container {
 .dashboard-overlay {
   position: fixed;
   width: 600px;
-  height: 580px;
+  height: 619px;
   background-color: black;
   margin: auto;
   top: 0;
