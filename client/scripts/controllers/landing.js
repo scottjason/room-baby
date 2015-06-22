@@ -7,9 +7,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
 
   var ctrl = this;
 
-  socket.on('connected', function() {
-    console.log('Socket.io Successfuly Connected');
-  });
+  socket.on('connected', function() {});
 
 
   this.registerEvents = function() {
@@ -36,7 +34,6 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         };
         ctrl.accessGranted(opts);
       } else if (response.status === 401) {
-        console.log('response 401', response);
         localStorageService.clearAll()
         pubSub.trigger('toggleNavBar', null);
         pubSub.trigger('toggleFooter', null);

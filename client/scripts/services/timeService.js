@@ -4,6 +4,20 @@ angular.module('RoomBaby')
     'use strict'
 
     var oneMinute = 60000;
+    var map = {
+      'Jan': 0,
+      'Feb': 1,
+      'Mar': 2,
+      'Apr': 3,
+      'May': 4,
+      'Jun': 5,
+      'Jul': 6,
+      'Aug': 7,
+      'Sep': 8,
+      'Oct': 9,
+      'Nov': 10,
+      'Dec': 11
+    }
 
     function getReadyStatus(startTimeMsUtc) {
       var currentMsUtc = new Date().getTime();
@@ -116,7 +130,7 @@ angular.module('RoomBaby')
             obj.members = (obj.members || '') + invitedUser.email + ', ';
           }
         });
-        console.log(this);
+
         var isReady = getReadyStatus(obj.startsAtMsUtc);
 
         if (isReady) {
@@ -158,28 +172,24 @@ angular.module('RoomBaby')
     }
 
     function setStartDate($dates) {
-      /* onload, set current date to active */
       angular.forEach($dates, function(date, index) {
 
-        var incomingUtcValue = date.localDateValue();
-        var currentUtcValue = new Date().getTime();
+        var incomingDate = moment.parseZone(date.utcDateValue).format('D MMM YYYY');
+        incomingDate = incomingDate.split(' ');
 
-        var incomingDate = moment(incomingUtcValue).format('YYYY/MM/DD');
-        var currentDate = moment(currentUtcValue).format('YYYY/MM/DD');
+        var incomingDay = parseInt(incomingDate[0]);
+        var incomingMonth = map[incomingDate[1]];
+        var incomingYear = parseInt(incomingDate[2]);
 
-        var incomingDay = parseInt(moment(angular.copy(incomingDate)).format('D'));
-        var incomingMonth = parseInt(moment(angular.copy(incomingDate)).format('M'));
-        var incomingYear = parseInt(moment(angular.copy(incomingDate)).format('YYYY'));
+        var today = new Date();
+        var currentDay = today.getDate();
+        var currentMonth = today.getMonth();
+        var currentYear = today.getFullYear();
 
-        var currentDay = parseInt(moment(angular.copy(currentDate)).format('D'));
-        var currentMonth = parseInt(moment(angular.copy(currentDate)).format('M'));
-        var currentYear = parseInt(moment(angular.copy(currentDate)).format('YYYY'));
+        var isToday = ((incomingDay === currentDay) && (incomingMonth === currentMonth) && (incomingYear === currentYear));
 
-        var isToday = ((currentDay === incomingDay) && (currentMonth === incomingMonth) && (currentYear === incomingYear));
         if (isToday) {
           date.active = true;
-        } else {
-          date.active = false;
         }
       });
     }

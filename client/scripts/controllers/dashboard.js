@@ -30,7 +30,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       obj.type = 'onDashboard';
       $scope.user = localStorageService.get('user');
       pubSub.trigger('setUser', $scope.user);
-      pubSub.trigger('toggleNavBar', true);
       animator.run(obj);
       ctrl.renderTable(true);
     }
@@ -214,8 +213,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
         localStorageService.set('user', user);
         localStorageService.set('sessions', sessions);
         pubSub.trigger('setUser', user);
-        pubSub.trigger('toggleNavBar', true);
-        pubSub.trigger('toggleFooter', true);
         ctrl.onFacebookSuccess(user, sessions);
       } else {
         pubSub.trigger('toggleNavBar', null);
@@ -234,12 +231,8 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       localStorageService.set('sessions', sessions);
     }
     if (!$scope.user.username) {
-      pubSub.trigger('toggleNavBar', null);
-      pubSub.trigger('toggleFooter', null);
       ctrl.getUserName();
     } else {
-      pubSub.trigger('toggleNavBar', true);
-      pubSub.trigger('toggleFooter', true);
       animator.run('onDashboard');
       ctrl.renderTable(true);
     }
@@ -272,8 +265,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   ctrl.onUserNameSuccess = function() {
     ngDialog.closeAll();
-    pubSub.trigger('toggleNavBar', true);
-    pubSub.trigger('toggleFooter', true);
     $timeout(function() {
       animator.run('onDashboard');
       ctrl.renderTable(true);

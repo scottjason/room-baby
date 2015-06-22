@@ -250,10 +250,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   };
 
   ctrl.pubCallback = function() {
-    console.log('pubCallback');
     pubSub.trigger('toggleFooter', true);
   }
-  
+
   ctrl.requestPermission = function() {
     var permissionRequestedBy = $scope.user.username;
     ctrl.broadcast('requestPermission', permissionRequestedBy);
@@ -323,6 +322,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   };
 
   ctrl.routeToDashboard = function(opts) {
+    pubSub.trigger('toggleFooter', false);
     $state.go('dashboard', opts);
   };
 
