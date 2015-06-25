@@ -17,6 +17,8 @@ angular.module('RoomBaby')
         validateRegistration(obj, cb);
       } else if (obj.type === 'createRoom:email') {
         validateEmail(obj.guestEmail, cb);
+      } else if (obj.type === 'email') {
+        validateEmail(obj.email, cb);
       }
     }
 

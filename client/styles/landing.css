@@ -1,3 +1,27 @@
+p.have-account {
+  font-size: 14px;
+  font-weight: 300;
+  position: relative;
+  top: 28px;
+  line-height: 1.2;
+  padding: 0 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, .8);
+}
+
+#forgotPassword > input {
+  width: 220px;
+}
+
+p.cancel-forgot-password {
+  color: rgba(255, 255, 255, .8);
+  font-size: 14px;
+  font-weight: 300;
+  top: 4px;
+  position: relative;
+  cursor: pointer;
+}
+
 #need-account,
 #forgot-password,
 #remember-me {
@@ -11,6 +35,13 @@
   line-height: 1.2;
   padding: 0 6px;
   cursor: pointer;
+}
+
+p.forgot-password-copy {
+  color: rgba(255, 255, 255, .8);
+  font-size: 16px;
+  font-weight: 300;
+  margin-bottom: 20px;
 }
 
 .login-subtext-container {

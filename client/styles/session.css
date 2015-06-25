@@ -25,11 +25,11 @@
    left: 10px;
    right: 200px;
    bottom: 0;
-   background-color: #DDD;
+   background-color: #000;
  }
  
  #layout-container > div {
    background-color: #000;
    display: inline-block;
-   border: 1px solid #fff;
+   border: 1px solid #000;
  }

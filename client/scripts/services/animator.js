@@ -21,6 +21,8 @@ angular.module('RoomBaby')
         onOverlayExit();
       } else if (type === 'onFooterOverlay') {
         onFooterOverlay(obj.callback);
+      } else if (type === 'onRenderLoading'){
+        onRenderLoading(obj.props);
       }
     }
 
@@ -87,9 +89,9 @@ angular.module('RoomBaby')
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       var sequence = [
-        { e: dashboardOverlay, p: 'fadeOut', o: { duration: 350, opacity: 0 } }, 
-        { e: dashboardContainer, p: 'fadeIn', o: { duration: 700,  opacity: 1, delay: 100, sequenceQueue: true } },
-        { e: dashboardTable, p: 'fadeIn', o: { duration: 700, opacity: 1, sequenceQueue: false } }
+        { e: dashboardOverlay, p: 'fadeOut', o: { duration: 0, opacity: 0 } }, 
+        { e: dashboardContainer, p: 'fadeIn', o: { duration: 350,  opacity: 1, delay: 100, sequenceQueue: true } },
+        { e: dashboardTable, p: 'fadeIn', o: { duration: 350, opacity: 1, sequenceQueue: false } }
       ];
       $.Velocity.RunSequence(sequence);
     }
@@ -97,13 +99,17 @@ angular.module('RoomBaby')
     function onFooterOverlay(cb) {
       var footerOverlay = angular.element(document.getElementById('footer-overlay'));
       var footerBtnContainer = angular.element(document.getElementById('footer-btn-container'));
-      console.log(footerOverlay)
       var sequence = [
         { e: footerOverlay, p: 'transition.slideUpIn', o: { duration: 800, delay: 200, display: 'block' } },
         { e: footerBtnContainer, p: 'transition.slideUpIn', o: { duration: 800, delay: 10,  display: 'block' } } 
       ];
       $.Velocity.RunSequence(sequence);
       cb();
+    }
+
+    function onRenderLoading(props) {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+      dashboardOverlay.velocity(props);
     }
 
     return ({

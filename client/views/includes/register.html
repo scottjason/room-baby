@@ -1,0 +1,17 @@
+<div class='register-container' ng-hide='showLoadingSpinner'>
+  <div class="register-animation">
+    <p id='register-copy'>please enter a username, email and password</p>
+  </div>
+  <form class='register-form' class="form-inline">
+    <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
+    <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
+    <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
+  </form>
+  <div ng-hide='showErr' class='register-btn-container'>
+    <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
+    <p  ng-click="landingCtrl.selectedOpt('login');" class='have-account'>have an account?</p>
+  </div>
+  <div ng-show='showErr' class='register-btn-container'>
+    <p class='landing-err-message'>{{ errMessage }}</p>
+  </div>
+</div>

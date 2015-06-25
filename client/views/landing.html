@@ -5,7 +5,6 @@
         <div class="cover">
           <a href='' ng-click='landingCtrl.selectedOpt("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
           <hr class="landing-line">
-          <!-- *** Begin Landing Options Container *** -->
           <div class="landing-sub-text-container">
             <p class="text-inverse slogan-text">a room for every occassion</p>
           </div>
@@ -18,43 +17,8 @@
               </div>
             </div>
           </div>
-          <!-- *** End Landing Options Container *** -->
-          <!-- *** Begin Login Container *** -->
-          <div ng-show="showLogin" class='login-container' class='auth-container'>
-            <form id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
-              <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-              <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
-              <button type="submit" class="btn btn-custom-login">Login</button>
-              <br>
-              <div class='login-subtext-container'>
-                <p id='need-account' ng-click="landingCtrl.selectedOpt('register');">need an account?</p>
-                <p id='forgot-password' ng-click="landingCtrl.selectedOpt('forgotPassword');"> forgot password?</p>
-                <p id='remember-me'> remember me <input ng-model="user.rememberMe" type="checkbox"></p>
-              </div>
-            </form>
-            <div ng-show='showErr' class='login-btn-container'>
-              <p class='landing-err-message'>{{ errMessage }}</p>
-            </div>
-          </div>
-          <!-- *** End Login Container ***
-          <!-- *** Begin Register Container *** -->
-          <div ng-show="showRegister" class='register-container' ng-hide='showLoadingSpinner'>
-            <div class="register-animation">
-              <p id='register-copy'>please enter a username, email and password</p>
-            </div>
-            <form class='register-form' class="form-inline">
-              <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
-              <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
-              <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
-            </form>
-            <div ng-hide='showErr' class='register-btn-container'>
-              <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
-            </div>
-            <div ng-show='showErr' class='register-btn-container'>
-              <p class='landing-err-message'>{{ errMessage }}</p>
-            </div>
-          </div>
-          <!-- *** End Register Container *** -->
+          <div ng-show="showLogin" ng-include src="'views/includes/login.html'"></div>
+          <div ng-show="showRegister" ng-include src="'views/includes/register.html'"></div>
         </div>
       </div>
     </div>

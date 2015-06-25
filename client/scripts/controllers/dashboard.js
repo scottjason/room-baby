@@ -26,6 +26,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       localStorageService.clearAll();
       $state.go('landing');
     } else {
+      pubSub.trigger('toggleNavBar', true);
       var obj = {};
       obj.type = 'onDashboard';
       $scope.user = localStorageService.get('user');
@@ -154,13 +155,23 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   /* on invite form complete, create the room, save to mongo */
   ctrl.createRoom = function() {
+    var obj = {};
+    obj.type = 'onRenderLoading';
+    obj.props = {
+      height: "300px"
+    };
+    animator.run(obj);
+    $scope.showLoading = true;
     var payload = angular.copy($scope.room);
     payload.host = angular.copy($scope.user);
     sessionApi.createRoom(payload).then(function(response) {
-      stateService.data['overlay'].isOpen = false;
       var obj = {};
       obj.type = 'onOverlayExit';
       animator.run(obj);
+      $timeout(function() {
+        $scope.showLoading = false;
+        stateService.data['overlay'].isOpen = false;
+      }, 1200);
       ctrl.addRoom(response.data.session);
     }, function(err) {
       console.log(err)

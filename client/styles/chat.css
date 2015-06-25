@@ -60,6 +60,11 @@ p.chat-text {
   border: 1px solid;
 }
 
+div.span2.sidebar.ng-scope > div > div > div > div > div.portlet-heading {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .portlet .portlet-heading {
   padding: 0 15px;
 }
@@ -93,6 +98,7 @@ p.chat-text {
 
 .portlet .portlet-heading .portlet-title h4 {
   margin: 10px 0;
+  font-size: 12px;
 }
 
 .portlet .portlet-heading .portlet-widgets {
@@ -179,15 +185,15 @@ p.chat-text {
   border-color: #34495e;
 }
 
-.portlet-default>.portlet-heading,
-.portlet-dark-blue>.portlet-heading {
-  color: #fff;
-  background-color: #34495e;
-}
-
 .portlet-basic,
 .portlet-basic>.portlet-heading {
   border-color: #333;
+}
+
+.portlet-dark-blue>.portlet-heading,
+.portlet-default>.portlet-heading {
+  color: #fff;
+  background-color: #34495e;
 }
 
 .portlet-basic>.portlet-heading {

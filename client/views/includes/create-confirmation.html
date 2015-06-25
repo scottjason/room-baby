@@ -1,0 +1,22 @@
+<div id='create-room-overlay' class='confirmation-container'>
+  <div ng-show='showLoading'>
+    <h3>Now Creating Your Room</h3>
+    <i class="fa fa-circle-o-notch fa-spin"></i>
+  </div>
+  <div ng-hide='showLoading'>
+    <p class="confirmation-header">Here's The Details of Your Room</p>
+    <p class="confirmation-sub-header">Click create room and we'll send you and your guest a reminder an hour before the session starts.</p>
+    <a ng-click='dashCtrl.onOptSelected($event);' href='' id='on-update-room-submit' class="confirmation-sub-header-update">or click to update</a>
+    <div class='confirmation-copy-container'>
+      <div class='confirmation-line'></div>
+      <p class='confirmation-copy'>Room Name</p>
+      <p class='confirmation-data'> {{ room.name }}</p>
+      <p class='confirmation-copy'>Guest Email</p>
+      <p class='confirmation-data'> {{ room.guestEmail }}</p>
+      <p class='confirmation-copy'>Starts On</p>
+      <p class='confirmation-data'> {{ room.startsAtFormatted }}</p>
+      <div class='confirmation-line'></div>
+      <div ng-click='dashCtrl.onOptSelected($event);' id="on-create-room-confirm" class="btn-custom create-room-confirm-btn">Confirm Room</div>
+    </div>
+  </div>
+</div>

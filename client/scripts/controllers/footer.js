@@ -11,6 +11,13 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
 
   $scope.user = {};
 
+  $scope.$watch('showFeatureDisabled', function() {
+    if ($scope.showFeatureDisabled) {
+      $timeout(function() {
+        $scope.showFeatureDisabled = false;
+      }, 2600);
+    }
+  });
 
   this.registerEvents = function() {
     pubSub.on('toggleFooter', ctrl.toggleFooter);
@@ -26,11 +33,12 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   };
 
   this.options = function(type) {
-    if (!$rootScope.connectionCount || $rootScope.connectionCount < 2) {
-      return;
-    }
+    var isEnabled = ($rootScope.connectionCount > 1)
     if (type === 'disconnect') {
       pubSub.trigger('disconnect');
+    } else if (!isEnabled) {
+      $scope.showFeatureDisabled = true;
+      console.log('feature not yet enabled');
     } else if (type === 'record') {
       pubSub.trigger('requestPermission');
     } else if (type === 'stop') {
@@ -76,8 +84,8 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
       obj.type = 'onFooterOverlay';
       obj.callback = onSuccess;
       animator.run(obj)
+
       function onSuccess() {
-        console.log('onsuccess cb')
         $scope.$apply();
       }
     } else {
@@ -86,7 +94,6 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   };
 
   ctrl.shareFile = function() {
-    console.log('promise', promise);
     pubSub.trigger('shareFile', fileUrl);
     $timeout.cancel(promise);
   };

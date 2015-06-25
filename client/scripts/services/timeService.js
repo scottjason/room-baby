@@ -82,6 +82,12 @@ angular.module('RoomBaby')
       }
     }
 
+    function generateDetails(obj, callback) {
+      var startsAt = obj.startsAtFormatted;
+      obj.details = 'Starts On ' + startsAt;
+      callback(obj);
+    }
+
     function getStatus(sessions, callback) {
 
       var isSessionReady;
@@ -103,7 +109,10 @@ angular.module('RoomBaby')
     }
 
     function generateTable(sessions, callback) {
+
       var arr = [];
+      var _this = this;
+
       sessions.forEach(function(session) {
         var obj = {};
         obj.sessionId = session.sessionId;
@@ -139,10 +148,14 @@ angular.module('RoomBaby')
         } else {
           obj.status = 'scheduled'
           obj.options = 'details';
+          generateDetails(obj, function(object) {
+            obj = object;
+          });
         }
         arr.push(obj);
       });
       var sortedArr = sortByStartsAt(arr);
+      console.log('sortedArr', sortedArr);
       callback(sortedArr);
     }
 
