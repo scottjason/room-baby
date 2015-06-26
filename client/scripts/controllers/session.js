@@ -93,7 +93,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
       payload.connectedAt = moment.utc(new Date());
       payload.sessionId = sessionId;
       socket.emit('userConnected', payload);
-      console.log('connectionCreated');
+      console.debug('connectionCreated');
       $rootScope.connectionCount++
         if (event.connection.creationTime < $scope.session.connection.creationTime) {
           localStorageService.set('connectionObj', event.connection);
@@ -121,14 +121,13 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     $scope.session.on('sessionDisconnected', function(event) {
       $rootScope.connectionCount--;
       console.debug('sessionDisconnected');
-      var opts = {
-        user_id: $scope.user._id
-      }
+      var opts = { user_id: $scope.user._id };
       ctrl.routeToDashboard(opts);
     });
 
     $scope.session.on('connectionDestroyed', function(event) {
       $rootScope.connectionCount--;
+      $scope.session.disconnect();
       console.debug('connection destroyed.');
     });
 
@@ -318,13 +317,26 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   };
 
   ctrl.disconnect = function() {
-    $scope.session.disconnect();
+    var sessionId = localStorageService.get('otSession')._id;
+    var userId = localStorageService.get('user')._id;
+    ctrl.deleteRoom(sessionId, userId);
   };
+
+  ctrl.deleteRoom = function(session_id, user_id) {
+    var sessions;
+    sessionApi.deleteRoom(session_id, user_id).then(function(response){
+      response.data.sessions ? (sessions = response.data.sessions) : (sessions = null);
+      localStorageService.set('sessions', sessions);
+      $scope.session.disconnect();
+    }, function(err){
+      console.error(err);
+    });
+  }
 
   ctrl.routeToDashboard = function(opts) {
     pubSub.trigger('toggleFooter', false);
-    $state.go('dashboard', opts);
-  };
+    $state.go('dashboard', opts, { reload: true });
+  }
 
   ctrl.emit = function(type, message) {
     $scope.session.signal({

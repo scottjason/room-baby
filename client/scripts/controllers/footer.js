@@ -32,18 +32,18 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
     console.log('onRegister', $scope.user);
   };
 
-  this.options = function(type) {
+  this.onOptSelected = function(optSelected) {
     var isEnabled = ($rootScope.connectionCount > 1)
-    if (type === 'disconnect') {
+    if (optSelected === 'disconnect') {
       pubSub.trigger('disconnect');
     } else if (!isEnabled) {
       $scope.showFeatureDisabled = true;
       console.log('feature not yet enabled');
-    } else if (type === 'record') {
+    } else if (optSelected === 'record') {
       pubSub.trigger('requestPermission');
-    } else if (type === 'stop') {
+    } else if (optSelected === 'stop') {
       pubSub.trigger('stopRecording');
-    } else if (type === 'upload') {
+    } else if (optSelected === 'upload') {
       pubSub.trigger('toggleOverlay');
       pubSub.trigger('toggleUpload', true);
     }

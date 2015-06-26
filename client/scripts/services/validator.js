@@ -10,67 +10,67 @@ angular.module('RoomBaby')
     var userNameRegEx = /^([a-zA-Z0-9_-]){3,8}$/;
     var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
-    function validate(obj, cb) {
+    function validate(obj, callback) {
       if (obj.type === 'login') {
-        validateLogin(obj, cb);
+        validateLogin(obj, callback);
       } else if (obj.type === 'register') {
-        validateRegistration(obj, cb);
+        validateRegistration(obj, callback);
       } else if (obj.type === 'createRoom:email') {
-        validateEmail(obj.guestEmail, cb);
+        validateEmail(obj.guestEmail, callback);
       } else if (obj.type === 'email') {
-        validateEmail(obj.email, cb);
+        validateEmail(obj.email, callback);
       }
     }
 
-    function validateEmail(guestEmail, cb) {
+    function validateEmail(guestEmail, callback) {
       var isValidEmail = emailRegEx.test(guestEmail);
-      if (!isValidEmail) return cb(null);
-      cb(true);
+      if (!isValidEmail) return callback(null);
+      callback(true);
     }
 
-    function validateLogin(obj, cb) {
+    function validateLogin(obj, callback) {
       var validEmail = emailRegEx.test(obj.email);
       var validPassword = (obj.password && (obj.password.length >= 3) && (obj.password.length <= 50));
       if (!validEmail) {
-        cb(null, 'email', invalidEmail);
+        callback(null, 'email', invalidEmail);
       } else if (!validPassword) {
-        cb(null, 'password', invalidPassword);
+        callback(null, 'password', invalidPassword);
       } else {
-        cb(true, null, null);
+        callback(true, null, null);
       }
-    };
+    }
 
-    function validateRegistration(obj, cb) {
+    function validateRegistration(obj, callback) {
       var validUserName = userNameRegEx.test(obj.username);
       var validEmail = emailRegEx.test(obj.email);
       var validPassword = (obj.password && (obj.password.length >= 3) && (obj.password.length <= 50));
 
       if (!validUserName) {
-        cb(null, 'username', invalidUserName);
+        callback(null, 'username', invalidUserName);
       } else if (!validEmail) {
-        cb(null, 'email', invalidEmail);
+        callback(null, 'email', invalidEmail);
       } else if (!validPassword) {
-        cb(null, 'password', invalidPassword);
+        callback(null, 'password', invalidPassword);
       } else {
-        cb(true, null, null);
+        callback(true, null, null);
       }
-    };
+    }
 
-    function validateInvite(obj, cb) {
+    function validateInvite(obj, callback) {
       var isValidTitle = ((obj.title.length >= 3) && (obj.title.length <= 26));
       var isValidEmail = emailRegEx.test(obj.guestEmail);
       var isValidDate = (obj.startsAt.length);
 
       if (!isValidTitle) {
-        cb(null, 'title', invalidTitle);
+        callback(null, 'title', invalidTitle);
       } else if (!isValidEmail) {
-        cb(null, 'email', invalidEmail);
+        callback(null, 'email', invalidEmail);
       } else if (!isValidDate) {
-        cb(null, 'date', invalidDate);
+        callback(null, 'date', invalidDate);
       } else {
-        cb(true, null, null);
+        callback(true, null, null);
       }
-    };
+    }
 
     return {
       validate: validate

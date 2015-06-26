@@ -83,7 +83,7 @@ exports.getAll = function(req, res, next) {
       sessionArr.push(session);
     })
     res.json({
-      session: sessionArr
+      sessions: sessionArr
     })
   });
 };
@@ -276,6 +276,7 @@ exports.getActiveUsers = function() {
 };
 
 exports.deleteSession = function(req, res, next) {
+  console.log('deleteing session with params', req.params);
   Session.findOneAndRemove({
     _id: req.params.session_id
   }, function(err, session) {

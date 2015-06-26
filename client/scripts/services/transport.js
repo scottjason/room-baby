@@ -27,7 +27,7 @@ angular.module('RoomBaby')
         default:
           console.error('No case found for ', type);
       }
-    };
+    }
 
     function onConnected(connectedWith, sessionStartedAt, callback) {
       var html = '<div class="row">' +
@@ -44,7 +44,7 @@ angular.module('RoomBaby')
         '<hr>' +
         '</div>';
       callback(html);
-    };
+    }
 
     function chatMessage(userName, userMessage, profileImage, timeSent, callback) {
       var html = '<div class="row">' +
@@ -65,7 +65,7 @@ angular.module('RoomBaby')
         '<hr>' +
         '</div>';
       callback(html);
-    };
+    }
 
     function shareFile(sentBy, fileUrl, timeSent, callback) {
       var downloadLink = "<a class='download-link' href=" + fileUrl + " target='_blank'>Click to Download</a>";
@@ -84,7 +84,7 @@ angular.module('RoomBaby')
         '<hr>' +
         '</div>';
       callback(html);
-    };
+    }
 
     function shareVideo(videoUrl, callback) {
       var downloadLink = "<a class='download-link' href=" + videoUrl + " target='_blank'>Click to Download</a>";
@@ -103,7 +103,7 @@ angular.module('RoomBaby')
         '<hr>' +
         '</div>';
       callback(html);
-    };
+    }
 
     function sendReceipt(receiptType, isGranted, callback) {
       if (receiptType === 'shareFile') {
@@ -149,7 +149,7 @@ angular.module('RoomBaby')
           '</div>';
       }
       callback(html);
-    };
+    }
 
     function requestPermission(requestedBy, callback) {
       var html = '<div class="row">' +
@@ -174,7 +174,7 @@ angular.module('RoomBaby')
         '<hr>' +
         '</div>';
       callback(html);
-    };
+    }
 
     return ({
       generateHtml: generateHtml

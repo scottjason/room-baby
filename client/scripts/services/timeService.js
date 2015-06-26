@@ -4,7 +4,7 @@ angular.module('RoomBaby')
     'use strict'
 
     var oneMinute = 60000;
-    var map = {
+    var monthToIndex = {
       'Jan': 0,
       'Feb': 1,
       'Mar': 2,
@@ -115,6 +115,7 @@ angular.module('RoomBaby')
 
       sessions.forEach(function(session) {
         var obj = {};
+        obj._id = session._id;
         obj.sessionId = session.sessionId;
         obj.key = session.key;
         obj.secret = session.secret;
@@ -186,12 +187,11 @@ angular.module('RoomBaby')
 
     function setStartDate($dates) {
       angular.forEach($dates, function(date, index) {
-
         var incomingDate = moment.parseZone(date.utcDateValue).format('D MMM YYYY');
         incomingDate = incomingDate.split(' ');
 
         var incomingDay = parseInt(incomingDate[0]);
-        var incomingMonth = map[incomingDate[1]];
+        var incomingMonth = monthToIndex[incomingDate[1]];
         var incomingYear = parseInt(incomingDate[2]);
 
         var today = new Date();
@@ -200,10 +200,7 @@ angular.module('RoomBaby')
         var currentYear = today.getFullYear();
 
         var isToday = ((incomingDay === currentDay) && (incomingMonth === currentMonth) && (incomingYear === currentYear));
-
-        if (isToday) {
-          date.active = true;
-        }
+        isToday ? (date.active = true) : (date.active = false);
       });
     }
 
