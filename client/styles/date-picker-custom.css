@@ -29,6 +29,7 @@ i.glyphicon.glyphicon-arrow-right {
   right: 0;
   margin: 0 auto;
   background-color: transparent;
+  font-size: 16px;
 }
 
 #date-picker {

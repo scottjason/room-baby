@@ -82,6 +82,7 @@ exports.getAll = function(req, res, next) {
       session.secret = config.openTok.secret;
       sessionArr.push(session);
     })
+    req.session.otSessions = sessionArr;
     res.json({
       sessions: sessionArr
     })
@@ -137,7 +138,9 @@ exports.createRoom = function(req, res, next) {
       function(guest, session, callback) {
 
         /* Create the otSession and add to the Session Instance */
-        opentok.createSession({ mediaMode: 'routed' }, function(err, otSession) {
+        opentok.createSession({
+          mediaMode: 'routed'
+        }, function(err, otSession) {
 
           session.key = config.openTok.key;
           session.secret = config.openTok.secret;
@@ -173,7 +176,9 @@ exports.createRoom = function(req, res, next) {
     ],
     function(err, otSession) {
       if (err) return next(err);
-      res.json({ session: otSession });
+      res.json({
+        session: otSession
+      });
     }
   )
 };
@@ -277,9 +282,10 @@ exports.getActiveUsers = function() {
 
 exports.deleteSession = function(req, res, next) {
   console.log('deleteing session with params', req.params);
-  Session.findOneAndRemove({
+  Session.find({
     _id: req.params.session_id
-  }, function(err, session) {
+  }).remove(function(err, session) {
+    console.log('############## removed', session);
     if (err) return next(err);
     exports.getAll(req, res, next);
   })

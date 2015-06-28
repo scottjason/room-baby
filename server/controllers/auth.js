@@ -6,11 +6,11 @@
 
 exports.isAuthenticated = function(req, res, callback) {
   if (req.originalMethod === 'GET') {
-    if (!req.session.user) return res.redirect('/');
-    callback();
+    req.session.user ? res.redirect('/') : callback();
   } else {
     if (!req.session || !req.session.user) return res.status(401).end();
     if (req.session.otSessions) {
+      console.log('returning sessions', req.session.otSessions);
       return res.json({
         user: req.session.user,
         sessions: req.session.otSessions

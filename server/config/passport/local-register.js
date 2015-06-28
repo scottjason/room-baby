@@ -10,7 +10,7 @@ var User = require('../../models/user');
 var Session = require('../../models/session');
 var LocalStrategy = require('passport-local').Strategy;
 
-var getAll = function(user, callback) {
+exports.getAll = function(user, callback) {
  var allSessions = [];
   Session.find({ users: { $elemMatch: { _id: user._id } } }, function (err, sessions) {
     if (err) return callback(err, null, null);
@@ -20,6 +20,8 @@ var getAll = function(user, callback) {
       session.secret = config.openTok.secret;
       allSessions.push(session);
     })
+    console.log('on get all user', user)
+    console.log('on get allSessions', allSessions);
     callback(null, user, allSessions);
   });
 };
@@ -32,16 +34,18 @@ module.exports = function(passport) {
     },
     function(req, email, password, callback) {
       User.findOne({ email: email }, function(err, user) {
+        console.log('on user find one', user);
         if (err) return callback(err);
         if (user) return callback(null, null, { message: dialog.emailAlreadyExists });
         var user = new User();
         user.username = req.body.username;
         user.email = email;
         user.password = password;
-        user.save(function(err, user) {
+        user.save(function(err, savedUser) {
           if (err) return callback(err);
           user.password = null;
-          getAll(user, callback);
+          console.log('on saved user', savedUser)
+          exports.getAll(savedUser, callback);
         });
       });
     })

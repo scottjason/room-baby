@@ -13,6 +13,7 @@ angular.module('RoomBaby')
     }
 
     function deleteRoom(session_id, user_id) {
+      console.log('deleteRoom called');
       var request = $http({
         method: 'DELETE',
         url: '/session/' + session_id + '/' + user_id

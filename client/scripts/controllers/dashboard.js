@@ -6,7 +6,6 @@ angular.module('RoomBaby')
 function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, timeService, localStorageService) {
 
   var ctrl = this;
-
   $scope.room = {};
 
   $scope.$watch('invalidDateErr', function() {
@@ -19,6 +18,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
 
   /* Dom Bindings */
   this.initialize = function() {
+
     if (localStorageService.get('isFacebookLogin')) {
       var user_id = $state.params.user_id
       ctrl.onFacebookLogin(user_id);
@@ -30,6 +30,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
       var obj = {};
       obj.type = 'onDashboard';
       $scope.user = localStorageService.get('user');
+      $scope.sessions = localStorageService.get('sessions');
       pubSub.trigger('setUser', $scope.user);
       animator.run(obj);
       ctrl.renderTable(true);
@@ -111,16 +112,14 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   this.isValidInput = function(key) {
     var isValid = stateService.data['createRoom'][key].isValid;
     var isPristine = stateService.data['createRoom'][key].isPristine;
-    if (isPristine || isValid) return true;
-    return false;
+    return (isPristine || isValid);
   };
 
   /* return state of input field for checkmark (field validated) */
   this.markChecked = function(key) {
     var isValid = stateService.data['createRoom'][key].isValid;
     var isPristine = stateService.data['createRoom'][key].isPristine;
-    if (isValid && !isPristine) return true;
-    return false;
+    return (isValid && !isPristine);
   };
 
   /* return the ready state of session status, ability for user to connect */
@@ -190,6 +189,7 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
     $scope.showTable = true;
+    console.log('rendering table in controller');
     var sessions = localStorageService.get('sessions');
 
     if (sessions && sessions.length) {

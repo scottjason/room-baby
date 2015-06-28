@@ -25,7 +25,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         var opts = {
           user_id: user._id
         };
-        ctrl.accessGranted(opts);
+        ctrl.grantAccess(opts);
       } else if (response.status === 200) {
         var user = response.data.user;
         var sessions = response.data.sessions;
@@ -34,7 +34,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         var opts = {
           user_id: user._id
         };
-        ctrl.accessGranted(opts);
+        ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         localStorageService.clearAll()
         ctrl.initialize();
@@ -96,11 +96,30 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
   };
 
   this.onRegister = function() {
+
+    var twoSeconds = 2000;
+    var currentMsUtc = new Date().getTime();
+
+    $scope.lastClick ? ($scope.lastClick = $scope.thisClick) : ($scope.lastClick = currentMsUtc);
+    $scope.thisClick = currentMsUtc;
+
+    var lastClickedAt = ($scope.thisClick - $scope.lastClick);
+    var isInititalAttempt = !lastClickedAt;
+
+    if (!isInititalAttempt) {
+      var isDoubleRegister = (lastClickedAt < twoSeconds);
+      isDoubleRegister ? null : ctrl.validateRegistration();
+    } else {
+      ctrl.validateRegistration();
+    }
+  };
+
+  ctrl.validateRegistration = function() {
     var payload = angular.copy($scope.user);
     payload.type = 'register';
+    console.log('payload', payload);
     validator.validate(payload, function(isValid, badInput, errMessage) {
       if (isValid) {
-        $scope.user = {};
         ctrl.register(payload);
       } else {
         $scope.user[badInput] = '';
@@ -108,8 +127,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         $scope.errMessage = errMessage;
         $timeout(function() {
           $scope.showErr = null;
+          $scope.errMessage = '';
         }, 2000);
-        $scope.$apply();
+        var isApplying = ($scope.$parent.$$phase === '$apply');
+        isApplying ? null : $scope.$apply();
       }
     });
   };
@@ -161,7 +182,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         var opts = {
           user_id: user._id
         };
-        ctrl.accessGranted(opts);
+        ctrl.grantAccess(opts);
       } else if (response.status === 200 && response.data.sessions) {
         var user = response.data.user;
         var sessions = response.data.sessions;
@@ -170,7 +191,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
         var opts = {
           user_id: user._id
         };
-        ctrl.accessGranted(opts);
+        ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         ctrl.renderError(response.data.message)
       } else {
@@ -182,20 +203,28 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
   };
 
   ctrl.register = function(payload) {
+    console.log('hit ctrl register');
+    return;
     userApi.register(payload).then(function(response) {
       if (response.status === 401) {
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
         localStorageService.set('user', user);
-        ctrl.accessGranted(user)
+        ctrl.grantAccess(user);
+      } else {
+        var user = response.data.user;
+        var session = response.data.sessions;
+        localStorageService.set('sessions', sessions);
+        localStorageService.set('user', user);
+        ctrl.grantAccess(user);
       }
     }, function(err) {
       console.log(err);
     });
   };
 
-  ctrl.accessGranted = function(opts) {
+  ctrl.grantAccess = function(opts) {
     $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
@@ -204,8 +233,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     $scope.showErr = true;
     $scope.errMessage = errMessage;
     $timeout(function() {
-      $scope.showErr = false;
       $scope.errMessage = '';
+      $scope.showErr = false;
     }, 2000);
   };
 

@@ -78,8 +78,8 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   };
 
   ctrl.toggleFooter = function(showFooter) {
+    $scope.showFooter = showFooter;
     if (showFooter) {
-      $scope.showFooter = showFooter;
       var obj = {};
       obj.type = 'onFooterOverlay';
       obj.callback = onSuccess;
@@ -88,8 +88,6 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
       function onSuccess() {
         $scope.$apply();
       }
-    } else {
-      $scope.showFooter = showFooter;
     }
   };
 

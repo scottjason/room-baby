@@ -5,6 +5,10 @@
   border-color: #337ab7;
 }
 
+.navbar-toggle {
+  display: none !important;
+}
+
 div.collapse.navbar-collapse > ul > li > a {
   top: 4px;
   right: 6px;

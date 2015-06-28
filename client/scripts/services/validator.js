@@ -15,8 +15,6 @@ angular.module('RoomBaby')
         validateLogin(obj, callback);
       } else if (obj.type === 'register') {
         validateRegistration(obj, callback);
-      } else if (obj.type === 'createRoom:email') {
-        validateEmail(obj.guestEmail, callback);
       } else if (obj.type === 'email') {
         validateEmail(obj.email, callback);
       }

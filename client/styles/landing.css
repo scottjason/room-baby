@@ -23,8 +23,7 @@ p.cancel-forgot-password {
 }
 
 #need-account,
-#forgot-password,
-#remember-me {
+#forgot-password {
   color: rgba(255, 255, 255, .8);
   font-size: 14px;
   font-weight: 300;
@@ -35,6 +34,19 @@ p.cancel-forgot-password {
   line-height: 1.2;
   padding: 0 6px;
   cursor: pointer;
+}
+
+#remember-me {
+  color: rgba(255, 255, 255, .8);
+  font-size: 14px;
+  font-weight: 300;
+  position: relative;
+  display: inline-block;
+  top: 7px;
+  opacity: 0;
+  line-height: 1.2;
+  padding: 0 6px;
+  cursor: default;
 }
 
 p.forgot-password-copy {

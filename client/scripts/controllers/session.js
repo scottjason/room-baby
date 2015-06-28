@@ -126,9 +126,15 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
     });
 
     $scope.session.on('connectionDestroyed', function(event) {
-      $rootScope.connectionCount--;
-      $scope.session.disconnect();
       console.debug('connection destroyed.');
+      var sessions;
+      $rootScope.connectionCount--;
+      var userId = localStorageService.get('user')._id;
+      sessionApi.getAll(userId).then(function(response){
+        (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
+        localStorageService.set('sessions', sessions);
+        $scope.session.disconnect();
+      });
     });
 
     $scope.session.on('signal:onConnected', function(event) {
@@ -234,9 +240,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
         console.error('error connecting: ', err.code, err.message);
       } else {
         var pubElem = document.createElement('div');
-        var publisher = OT.initPublisher(pubElem, {
-          resolution: '1280x720'
-        }, function(err) {
+        var publisher = OT.initPublisher(pubElem, { resolution: '1280x720' }, function(err) {
           if (err) console.error(err);
           $scope.session.publish(publisher);
           layoutContainer.appendChild(pubElem);
@@ -325,7 +329,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   ctrl.deleteRoom = function(session_id, user_id) {
     var sessions;
     sessionApi.deleteRoom(session_id, user_id).then(function(response){
-      response.data.sessions ? (sessions = response.data.sessions) : (sessions = null);
+      (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
       localStorageService.set('sessions', sessions);
       $scope.session.disconnect();
     }, function(err){
@@ -334,8 +338,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, socket, ngDi
   }
 
   ctrl.routeToDashboard = function(opts) {
+    console.log('routeToDashboard');
     pubSub.trigger('toggleFooter', false);
-    $state.go('dashboard', opts, { reload: true });
+    $state.go('dashboard', opts);
   }
 
   ctrl.emit = function(type, message) {

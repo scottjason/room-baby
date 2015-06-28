@@ -26,6 +26,14 @@
   vertical-align: bottom;
 }
 
+#dashboard-table > div > table > tbody > tr > td > button > i {
+  top: 0px;
+  position: relative;
+  font-size: .95em;
+  margin: auto;
+  right: 1px;
+}
+
 .table-striped>tbody>tr:nth-of-type(odd),
 .table-striped>tbody>tr:nth-of-type(even) {
   background-color: rgba(0, 0, 0, .7);
@@ -38,7 +46,7 @@
 }
 
 #dashboard-table > div > table > tbody > tr > td.table-copy-status.connect-option {
-  color: #79DFB6!important;
+  color: #7EB1DC !important;
   position: relative;
   top: 3px;
 }
@@ -199,7 +207,7 @@ p.enter-username {
 }
 
 .fa-spin {
-  color: #79DFB6;
+  color: #79DFB6!important;
   opacity: .8;
 }
 

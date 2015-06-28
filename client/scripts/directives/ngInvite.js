@@ -69,11 +69,11 @@ angular.module('RoomBaby')
             stateService.data['createRoom']['guestEmail'].isPristine = false;
           }
 
-          var obj = {};
-          obj.type = 'createRoom:email';
-          obj.guestEmail = $scope.guestEmail;
+          var opts = {};
+          opts.type = 'email';
+          opts.email = $scope.guestEmail;
 
-          validator.validate(obj, function(isValid) {
+          validator.validate(opts, function(isValid) {
             if (isValid) {
               var isValidDate = stateService.data['createRoom']['startDate'].isValid
               var isValidName = stateService.data['createRoom']['name'].isValid;
