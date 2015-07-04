@@ -3,19 +3,19 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, stateService, userApi, pubSub, animator, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
 
   this.registerEvents = function() {
-    pubSub.on('enterBtn:onLogin', ctrl.onLogin);
-    pubSub.on('enterBtn:onRegister', ctrl.onRegister);
-    pubSub.trigger('toggleNavBar', false);
-    pubSub.trigger('toggleFooter', false);
+    PubSub.on('enterBtn:onLogin', ctrl.onLogin);
+    PubSub.on('enterBtn:onRegister', ctrl.onRegister);
+    PubSub.trigger('toggleNavBar', false);
+    PubSub.trigger('toggleFooter', false);
   };
 
   this.isAuthenticated = function() {
-    userApi.isAuthenticated().then(function(response) {
+    UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
@@ -51,7 +51,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
       $scope.showLogin = true;
       if (!$scope.hasAnimatedLogin) {
         obj.type = 'onLogin';
-        animator.run(obj);
+        Animator.run(obj);
         $scope.hasAnimatedLogin = true;
       }
     } else if (optSelected === 'register') {
@@ -59,7 +59,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
       $scope.showRegister = true;
       if (!$scope.hasAnimatedRegister) {
         obj.type = 'onRegister';
-        animator.run(obj);
+        Animator.run(obj);
         $scope.hasAnimatedRegister = true;
       }
     } else if (optSelected === 'facebook') {
@@ -77,7 +77,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
   this.onLogin = function() {
     var payload = angular.copy($scope.user);
     payload.type = 'login';
-    validator.validate(payload, function(isValid, badInput, errMessage) {
+    Validator.validate(payload, function(isValid, badInput, errMessage) {
       if (isValid) {
         ctrl.login(payload);
       } else {
@@ -115,7 +115,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
     var payload = angular.copy($scope.user);
     payload.type = 'register';
     console.log('payload', payload);
-    validator.validate(payload, function(isValid, badInput, errMessage) {
+    Validator.validate(payload, function(isValid, badInput, errMessage) {
       if (isValid) {
         ctrl.register(payload);
       } else {
@@ -137,11 +137,11 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
       var obj = {};
       obj.type = 'email';
       obj.email = $scope.user.email;
-      validator.validate(obj, function(isValid) {
+      Validator.validate(obj, function(isValid) {
         if (!isValid) {
           ctrl.renderError('please enter a valid email');
         } else {
-          userApi.resetPassword($scope.user).then(function(response) {
+          UserApi.resetPassword($scope.user).then(function(response) {
             console.log('response', response);
           });
         }
@@ -156,23 +156,23 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
     $scope.showRegister = false;
     $scope.showLogin = false;
     $scope.showLanding = true;
-    var runLanding = stateService.data['animation'].runLanding;
+    var runLanding = StateService.data['animation'].runLanding;
     if (!runLanding) {
       var obj = {};
       obj.type = 'onLanding';
       obj.hasAnimated = true;
-      animator.run(obj);
+      Animator.run(obj);
     } else {
       var obj = {};
       obj.type = 'onLanding';
       obj.hasAnimated = false;
-      animator.run(obj);
-      stateService.data['animation'].runLanding = false;
+      Animator.run(obj);
+      StateService.data['animation'].runLanding = false;
     }
   };
 
   ctrl.login = function(payload) {
-    userApi.login(payload).then(function(response) {
+    UserApi.login(payload).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
         localStorageService.set('user', user);
@@ -202,7 +202,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
   ctrl.register = function(payload) {
     console.log('hit ctrl register');
     return;
-    userApi.register(payload).then(function(response) {
+    UserApi.register(payload).then(function(response) {
       if (response.status === 401) {
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
@@ -235,5 +235,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, s
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'validator', 'stateService', 'userApi', 'pubSub', 'animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
 };

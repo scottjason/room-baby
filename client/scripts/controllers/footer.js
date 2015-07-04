@@ -3,13 +3,9 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, localStorageService) {
+function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, localStorageService) {
 
   var ctrl = this;
-  var promise;
-  var fileUrl;
-
-  $scope.user = {};
 
   $scope.$watch('showFeatureDisabled', function() {
     if ($scope.showFeatureDisabled) {
@@ -20,14 +16,14 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, 
   });
 
   this.registerEvents = function() {
-    pubSub.on('toggleFooter', ctrl.toggleFooter);
-    pubSub.on('setUser', ctrl.setUser);
-    pubSub.on('isRecording', ctrl.isRecording);
-    pubSub.on('featureDisabled', ctrl.featureDisabled);
+    PubSub.on('toggleFooter', ctrl.toggleFooter);
+    PubSub.on('setUser', ctrl.setUser);
+    PubSub.on('isRecording', ctrl.isRecording);
+    PubSub.on('featureDisabled', ctrl.featureDisabled);
   };
 
   this.onUserName = function() {
-    pubSub.trigger('setUserName', $scope.user.username);
+    PubSub.trigger('setUserName', $scope.user.username);
   };
 
   this.onRegister = function() {
@@ -37,19 +33,19 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, 
   this.onOptSelected = function(optSelected) {
     var isEnabled = ($rootScope.connectionCount > 1)
     if (optSelected === 'disconnect') {
-      pubSub.trigger('disconnect');
+      PubSub.trigger('disconnect');
     } else if (!isEnabled) {
       $scope.showFeatureDisabled = true;
       console.log('feature not yet enabled');
     } else if (optSelected === 'record') {
-      pubSub.trigger('requestPermission');
+      PubSub.trigger('requestPermission');
     } else if (optSelected === 'stop') {
-      pubSub.trigger('stopRecording');
+      PubSub.trigger('stopRecording');
     } else if (optSelected === 'upload') {
-      pubSub.trigger('toggleOverlay');
-      pubSub.trigger('toggleUpload', true);
+      PubSub.trigger('toggleOverlay');
+      PubSub.trigger('toggleUpload', true);
     } else if (optSelected === 'stop') {
-      pubSub.trigger('stopRecording');
+      PubSub.trigger('stopRecording');
     }
   };
 
@@ -66,14 +62,14 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, 
       var userId = $scope.user._id;
 
       /* Verify again on server along with file type */
-      sessionApi.upload($scope.fileUpload, $scope.user._id, sessionId).then(function(response) {
+      SessionApi.upload($scope.fileUpload, $scope.user._id, sessionId).then(function(response) {
         console.log('response', response);
         if (response.status === 200) {
-          fileUrl = response.data;
+          $scope.fileUrl = response.data;
           $scope.showLoadingSpinner = false;
-          pubSub.trigger('toggleOverlay');
-          pubSub.trigger('toggleUpload', null);
-          promise = $timeout(ctrl.shareFile, 700);
+          PubSub.trigger('toggleOverlay');
+          PubSub.trigger('toggleUpload', null);
+          $timeout(ctrl.shareFile, 700);
         } else if (response.status === 401) {
           console.error(401, response)
         }
@@ -93,10 +89,11 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, 
       var obj = {};
       obj.type = 'onFooterOverlay';
       obj.callback = onSuccess;
-      animator.run(obj)
-
+      Animator.run(obj)
       function onSuccess() {
-        $scope.$apply();
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
       }
     }
   };
@@ -106,13 +103,12 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, 
   };
 
   ctrl.shareFile = function() {
-    pubSub.trigger('shareFile', fileUrl);
-    $timeout.cancel(promise);
+    PubSub.trigger('shareFile', $scope.fileUrl);
   };
 
   ctrl.featureDisabled = function() {
     $scope.showFeatureDisabled = true;
-  }
+  };
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi', 'animator', 'localStorageService'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'localStorageService'];
 }

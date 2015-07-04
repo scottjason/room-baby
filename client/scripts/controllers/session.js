@@ -3,65 +3,66 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService, ngDialog, userApi, sessionApi, pubSub, transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantService, TimeService, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
 
   var ctrl = this;
   var now = moment(new Date()).calendar();
-  var promise;
 
   $rootScope.connectionCount = 0;
 
   var chatbox = angular.element(document.getElementById('chatbox'));
   var layoutContainer = document.getElementById('layout-container');
-  var layoutOpts = { animator: { duration: 500, easing: 'swing' }, bigFixedRatio: false };
+  var layoutOpts = ConstantService.generateOpts('layout');
+
   var layout = TB.initLayoutContainer(layoutContainer, layoutOpts).layout;
 
   $window.onresize = function() {
     var resizeCams = function() {
       layout();
-      $timeout.cancel(promise);
     }
-    promise = $timeout(resizeCams, 20);
+    $timeout(resizeCams, 20);
   };
 
-  /* DOM Event Listeners */
-  this.initialize = function() {
-    $rootScope.isDissconected = false;
-
-    $scope.user = localStorageService.get('user');
-    $scope.otSession = localStorageService.get('otSession');
-
-    pubSub.on('shareFile', ctrl.shareFile);
-    pubSub.on('requestPermission', ctrl.requestPermission);
-    pubSub.on('stopRecording', ctrl.stopRecording);
-    pubSub.on('disconnect', ctrl.disconnect);
-    pubSub.on('toggleUpload', ctrl.toggleUpload);
-    pubSub.trigger('toggleNavBar', true);
-    pubSub.trigger('setUser', $scope.user);
-
-    var expiresAtMsUtc = $scope.otSession.expiresAtMsUtc;
-    ctrl.isExpired(expiresAtMsUtc);
-    ctrl.createSession($scope.otSession);
+  this.isAuthenticated = function() {
+    UserApi.isAuthenticated().then(function(response) {
+      if (response.status === 200) {
+        ctrl.initialize();
+      } else if (response.status === 401) {
+        localStorageService.clearAll();
+        $state.go('landing');
+      } else {
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      }
+    }, function(err) {
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+    });
   };
 
   this.sendMessage = function() {
     if ($rootScope.connectionCount < 2) {
       $scope.user.message = '';
-      pubSub.trigger('featureDisabled');
+      PubSub.trigger('featureDisabled');
     } else {
-      var obj = {};
-      obj.sentBy = $scope.user.username;
-      obj.message = $scope.user.message;
-      $scope.user.message = '';
-      var timeSent = angular.copy(now);
-      timeSent = timeSent.split(' ');
-      timeSent.splice(0, 2);
-      timeSent = timeSent.join(' ');
-      obj.timeSent = timeSent;
-      obj.profileImage = $scope.user.profileImage;
-      var chatMessage = JSON.stringify(obj);
-      ctrl.broadcast('chatMessage', chatMessage);
+      Transport.generateMessage($scope.user, function(chatMessage) {
+        $scope.user.message = '';
+        ctrl.broadcast('chatMessage', chatMessage);
+      });
     }
+  };
+
+  ctrl.initialize = function() {
+    $rootScope.isDissconected = false;
+    $scope.user = localStorageService.get('user');
+    $scope.otSession = localStorageService.get('otSession');
+    PubSub.on('shareFile', ctrl.shareFile);
+    PubSub.on('requestPermission', ctrl.requestPermission);
+    PubSub.on('stopRecording', ctrl.stopRecording);
+    PubSub.on('disconnect', ctrl.disconnect);
+    PubSub.on('toggleUpload', ctrl.toggleUpload);
+    PubSub.trigger('toggleNavBar', true);
+    PubSub.trigger('setUser', $scope.user);
+    ctrl.isExpired($scope.otSession.expiresAtMsUtc);
+    ctrl.createSession($scope.otSession);
   };
 
   ctrl.isExpired = function(expiresAtMsUtc) {
@@ -69,7 +70,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
     $scope.expiresAtMsUtc = $scope.expiresAtMsUtc ? $scope.expiresAtMsUtc : expiresAtMsUtc;
 
     function getStatus() {
-      timeService.isExpired($scope.expiresAtMsUtc, function(isExpired, msLeft) {
+      TimeService.isExpired($scope.expiresAtMsUtc, function(isExpired, msLeft) {
         isExpired ? ctrl.disconnect() : ctrl.renderCountDown(msLeft);
       });
     }
@@ -82,13 +83,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       var minutesLeft = (secondsLeft / 60);
       secondsLeft = secondsLeft % 60;
       var timeLeft = Math.floor(minutesLeft) + ' minutes and ' + Math.floor(secondsLeft) + ' seconds left';
-      pubSub.trigger('timeLeft', timeLeft);
+      PubSub.trigger('timeLeft', timeLeft);
       $timeout(ctrl.isExpired, 1000);
     }
   }
 
-
-  /* Controller Methods */
   ctrl.createSession = function(otSession) {
     if (OT.checkSystemRequirements() === 0) {
       console.error('The client does not support WebRTC.');
@@ -100,19 +99,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
 
   ctrl.registerEvents = function(otSession) {
     $scope.session.on('connectionCreated', function(event) {
-      var payload = {};
-      var sessionId = localStorageService.get('otSession').sessionId;
-      var user = localStorageService.get('user', user);
-      payload.userId = user._id;
-      payload.username = user.username;
-      payload.connectedAt = moment.utc(new Date());
-      payload.sessionId = sessionId;
       console.debug('connectionCreated');
       $rootScope.connectionCount++
         if (event.connection.creationTime < $scope.session.connection.creationTime) {
           localStorageService.set('connectionObj', event.connection);
           $scope.connectionObj = event.connection;
-          console.debug('on connectionCreated condition one');
         }
       if (event.connection.creationTime > $scope.session.connection.creationTime) {
         $scope.connectionObj = event.connection;
@@ -148,39 +139,26 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       var sessions;
       $rootScope.connectionCount--;
       var userId = localStorageService.get('user')._id;
-      sessionApi.getAll(userId).then(function(response) {
-        (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
+      SessionApi.getAll(userId).then(function(response) {
+        var sessions = (response.data && response.data.sessions) ? response.data.sessions : null;
         localStorageService.set('sessions', sessions);
         $scope.session.disconnect();
       });
     });
 
     $scope.session.on('signal:onConnected', function(event) {
-      var obj = {};
-      var connectedWith = event.data;
-      var sessionStartedAt = angular.copy(now);
-      obj.type = 'onConnected';
-      obj.connectedWith = connectedWith;
-      obj.sessionStartedAt = sessionStartedAt;
-      localStorageService.set('connectedWith', connectedWith);
-      localStorageService.set('sessionStartedAt', sessionStartedAt);
-      transport.generateHtml(obj, function(html) {
+      var opts = Transport.generateOpts('onConnected', event.data);
+      Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
-        transport.scroll('down');
+        Transport.scroll('down');
       });
     });
 
     $scope.session.on('signal:chatMessage', function(event) {
-      var obj = {};
-      var data = JSON.parse(event.data);
-      obj.type = 'chatMessage';
-      obj.sentBy = data.sentBy;
-      obj.message = data.message;
-      obj.profileImage = data.profileImage;
-      obj.timeSent = data.timeSent;
-      transport.generateHtml(obj, function(html) {
+      var opts = Transport.generateOpts('chatMessage', event.data);
+      Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
-        transport.scroll('down');
+        Transport.scroll('down');
       });
     });
 
@@ -191,9 +169,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       if (obj.requestedBy === $scope.user.username) {
         return false;
       }
-      transport.generateHtml(obj, function(html) {
+      Transport.generateHtml(obj, function(html) {
         chatbox.append(html);
-        transport.scroll('down');
+        Transport.scroll('down');
         $timeout(bindListeners, 100);
 
         function bindListeners() {
@@ -208,9 +186,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       obj.type = 'sendReceipt';
       obj.receiptType = 'permissionResponse';
       obj.isGranted = (event.data).indexOf('granted') !== -1;
-      transport.generateHtml(obj, function(html) {
+      Transport.generateHtml(obj, function(html) {
         chatbox.append(html);
-        transport.scroll('down');
+        Transport.scroll('down');
       });
     });
 
@@ -225,9 +203,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       var obj = {};
       obj.type = 'shareVideo';
       obj.videoUrl = event.data;
-      transport.generateHtml(obj, function(html) {
+      Transport.generateHtml(obj, function(html) {
         chatbox.append(html);
-        transport.scroll('down');
+        Transport.scroll('down');
       });
     });
 
@@ -240,17 +218,17 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
         obj.sentBy = sentBy;
         obj.fileUrl = data.fileUrl;
         obj.timeSent = data.timeSent;
-        transport.generateHtml(obj, function(html) {
+        Transport.generateHtml(obj, function(html) {
           chatbox.append(html);
-          transport.scroll('down');
+          Transport.scroll('down');
 
         });
       } else {
         obj.type = 'sendReceipt';
         obj.receiptType = 'shareFile';
-        transport.generateHtml(obj, function(html) {
+        Transport.generateHtml(obj, function(html) {
           chatbox.append(html);
-          transport.scroll('down');
+          Transport.scroll('down');
         });
       }
     });
@@ -278,7 +256,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
   };
 
   ctrl.pubCallback = function() {
-    pubSub.trigger('toggleFooter', true);
+    PubSub.trigger('toggleFooter', true);
   }
 
   ctrl.requestPermission = function() {
@@ -297,8 +275,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
   };
 
   ctrl.startRecording = function(otSessionId) {
-    sessionApi.startRecording(otSessionId).then(function(response) {
-      pubSub.trigger('isRecording', true);
+    SessionApi.startRecording(otSessionId).then(function(response) {
+      PubSub.trigger('isRecording', true);
       localStorageService.set('archive', response.data);
       var archiveMessage = JSON.stringify(response.data);
       ctrl.emit('archive', archiveMessage);
@@ -310,7 +288,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
   ctrl.stopRecording = function() {
     var archive = localStorageService.get('archive');
     var archiveId = archive.id;
-    sessionApi.stopRecording(archiveId).then(function(response) {
+    SessionApi.stopRecording(archiveId).then(function(response) {
       console.log('onStopRecording response', response);
       var archiveResponse = response.data;
       localStorageService.set('archiveResponse', archiveResponse);
@@ -320,7 +298,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
 
   ctrl.getVideoStatus = function(archiveId) {
     $scope.archiveId = archiveId ? archiveId : $scope.archiveId
-    sessionApi.getVideoStatus($scope.archiveId).then(function(response){
+    SessionApi.getVideoStatus($scope.archiveId).then(function(response) {
       var isReady = response.data.isReady;
       if (isReady) {
         var videoUrl = response.data.video.url;
@@ -328,7 +306,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
       } else {
         $timeout(ctrl.getVideoStatus, 300);
       }
-    }, function(err){
+    }, function(err) {
       console.error(err);
     });
   };
@@ -366,7 +344,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
 
   ctrl.deleteRoom = function(session_id, user_id) {
     var sessions;
-    sessionApi.deleteRoom(session_id, user_id).then(function(response) {
+    SessionApi.deleteRoom(session_id, user_id).then(function(response) {
       (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
       localStorageService.set('sessions', sessions);
       $scope.session.disconnect();
@@ -376,7 +354,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
   }
 
   ctrl.routeToDashboard = function(opts) {
-    pubSub.trigger('toggleFooter', false);
+    PubSub.trigger('toggleFooter', false);
     $state.go('dashboard', opts);
   }
 
@@ -399,5 +377,5 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, timeService,
     });
   };
 
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'timeService', 'ngDialog', 'userApi', 'sessionApi', 'pubSub', 'transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
 }

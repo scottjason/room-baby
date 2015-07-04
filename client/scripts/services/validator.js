@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('validator', function() {
+  .factory('Validator', function() {
 
     var invalidUserName = 'please enter a valid username, minimum three characters';
     var invalidEmail = 'please enter a valid email';

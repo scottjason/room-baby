@@ -18,9 +18,12 @@
     <ul ng-show='showFeatureDisabled'>
       <li>Feature Disabled Until Your Party Connects</li>
     </ul>
-    <ul ng-show='isRecording'>
+    <ul ng-show='isRecording' class='is-recording-container'>
       <li>
-        <div id='share-file' ng-click='footerCtrl.onOptSelected("stop")' class="btn-custom share-file">stop</div>
+        <p> Recording In Progress </p>
+        <span>
+        <button ng-click='footerCtrl.onOptSelected("stop")' class='stop-recording'>stop</button>
+        </span>
       </li>
     </ul>
   </div>

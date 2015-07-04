@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('sessionApi', function($http) {
+  .factory('SessionApi', function($http) {
 
     'use strict'
 
@@ -87,5 +87,5 @@ angular.module('RoomBaby')
       stopRecording: stopRecording,
       getVideoStatus: getVideoStatus
     });
-    sessionApi.$inject('$http');
+    SessionApi.$inject('$http');
   });

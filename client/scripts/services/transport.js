@@ -1,7 +1,9 @@
 angular.module('RoomBaby')
-  .factory('transport', function() {
+  .factory('Transport', function(localStorageService) {
 
     'use strict'
+
+    var now = moment(new Date()).calendar();
 
     function generateHtml(obj, callback) {
       var type = obj.type;
@@ -176,15 +178,53 @@ angular.module('RoomBaby')
       callback(html);
     }
 
+    function generateMessage(user, callback) {
+      var obj = {};
+      obj.sentBy = user.username;
+      obj.message = user.message;
+      obj.profileImage = user.profileImage;
+      var timeSent = angular.copy(now);
+      timeSent = timeSent.split(' ');
+      timeSent.splice(0, 2);
+      timeSent = timeSent.join(' ');
+      obj.timeSent = timeSent;
+      var chatMessage = JSON.stringify(obj);
+      callback(chatMessage);
+    }
+
+    function generateOpts(type, data) {
+      var opts = {};
+      if (type === 'onConnected') {
+        var connectedWith = data;
+        var sessionStartedAt = angular.copy(now);
+        opts.type = type;
+        opts.connectedWith = connectedWith;
+        opts.sessionStartedAt = sessionStartedAt;
+        localStorageService.set('connectedWith', connectedWith);
+        localStorageService.set('sessionStartedAt', sessionStartedAt);
+      } else if (type === 'chatMessage') {
+        var data = JSON.parse(data);
+        opts.type = type;
+        opts.sentBy = data.sentBy;
+        opts.message = data.message;
+        opts.profileImage = data.profileImage;
+        opts.timeSent = data.timeSent;
+      }
+      return opts;
+    }
+
     function scroll(direction) {
       if (direction === 'down') {
-        var container = document.getElementById('transport-container');
+        var container = document.getElementById('Transport-container');
         container.scrollTop = container.scrollHeight;
       }
     }
 
     return ({
       generateHtml: generateHtml,
+      generateMessage: generateMessage,
+      generateOpts: generateOpts,
       scroll: scroll
     });
+    Transport.$inject('localStorageService');
   });

@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('animator', function() {
+  .factory('Animator', function() {
 
     'use strict'
 

@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .directive('ngOverlay', function(animator, validator, stateService) {
+  .directive('ngOverlay', function(Animator, Validator, StateService) {
     return function(scope, element, attrs) {
       element.bind('click', function(event) {
 
@@ -8,18 +8,18 @@ angular.module('RoomBaby')
         var isCreateBtn = (event.target.id === 'create-room-btn');
         var isSubmitBtn = (event.target.id === 'on-create-room-submit');
         var isExitBtn = (event.target.id === 'dash-overlay-exit-btn');
-        var isOpen = stateService.data['overlay'].isOpen;
+        var isOpen = StateService.data['overlay'].isOpen;
 
         if (!isOpen && isCreateBtn) {
           obj.type = 'onCreateRoom';
-          stateService.data['overlay'].isOpen = true;
-          animator.run(obj);
+          StateService.data['overlay'].isOpen = true;
+          Animator.run(obj);
         } else if (isOpen && isExitBtn && !isSubmitBtn) {
-          stateService.data['overlay'].isOpen = false;
+          StateService.data['overlay'].isOpen = false;
           obj.type = 'onOverlayExit';
-          animator.run(obj);
+          Animator.run(obj);
         }
       });
     };
-    ngOverlay.$inject('animator, validator, stateService');
+    ngOverlay.$inject('Animator, Validator, StateService');
   });

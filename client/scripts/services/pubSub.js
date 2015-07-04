@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('pubSub', function() {
+  .factory('PubSub', function() {
 
     'use strict'
 

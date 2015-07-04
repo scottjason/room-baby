@@ -1,4 +1,4 @@
-<div ng-overlay ng-init='dashCtrl.initialize(); dashCtrl.registerEvents();'>
+<div ng-overlay ng-init='dashCtrl.isAuthenticated(); dashCtrl.registerEvents();'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
     <div ng-hide="showConfirmation" ng-include src="'views/includes/create-room.html'"></div>

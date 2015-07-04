@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('geoLocator', function() {
+  .factory('GeoLocator', function() {
 
     'use strict'
 

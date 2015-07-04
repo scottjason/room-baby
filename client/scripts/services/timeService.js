@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .service('timeService', function() {
+  .service('TimeService', function() {
 
     'use strict'
 
@@ -168,7 +168,7 @@ angular.module('RoomBaby')
       return formattedUpDate;
     }
 
-    function validate(obj, cb) {
+    function isValid(obj, cb) {
       var currentMsUtc = new Date().getTime();
       if (obj.isStartTime) {
         var startsAtMsUtc = obj.startsAt;
@@ -204,20 +204,25 @@ angular.module('RoomBaby')
     }
 
     function addMinutes(incomingMsUtc, minsToAdd) {
-
       var oneMinute = 60000;
       var msToAdd = (oneMinute * minsToAdd);
       var resultInMs = (incomingMsUtc + msToAdd);
-
       return resultInMs;
     }
 
+    function generateOpts(startsAtMsUtc) {
+      var opts = {};
+      opts.isStartTime = true;
+      opts.startsAt = startsAtMsUtc;
+      return opts;
+    }
 
     return ({
       generateTable: generateTable,
+      generateOpts: generateOpts,
       getStatus: getStatus,
       formatUpDate: formatUpDate,
-      validate: validate,
+      isValid: isValid,
       setStartDate: setStartDate,
       addMinutes: addMinutes,
       isExpired: isExpired

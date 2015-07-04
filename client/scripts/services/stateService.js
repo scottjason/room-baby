@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .factory('stateService', function() {
+  .factory('StateService', function() {
 
     'use strict'
 
