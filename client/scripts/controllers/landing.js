@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, UserApi, PubSub, Animator, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
 
@@ -15,6 +15,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   this.isAuthenticated = function() {
+    var isMobile = DeviceService.isMobile();
+    console.log(isMobile);
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
         var user = response.data.user;
@@ -235,5 +237,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
 };

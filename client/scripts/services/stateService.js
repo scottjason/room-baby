@@ -31,7 +31,7 @@ angular.module('RoomBaby')
           'localUtc': {},
           'localFormatted': {}
         },
-        'form': {
+        'formData': {
           'isValid': false
         },
         'isOnload': true

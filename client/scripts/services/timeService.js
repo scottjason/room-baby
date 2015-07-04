@@ -1,5 +1,5 @@
 angular.module('RoomBaby')
-  .service('TimeService', function() {
+  .service('TimeService', function($state, $timeout, SessionApi, PubSub, localStorageService) {
 
     'use strict'
 
@@ -18,6 +18,45 @@ angular.module('RoomBaby')
       'Nov': 10,
       'Dec': 11
     };
+
+    function checkExpiration() {
+      var sessions = localStorageService.get('sessions');
+      var user = localStorageService.get('user');
+      var foundExpiredSession = null;
+      if (sessions && sessions.length) {
+        for (var i = 0; i < sessions.length; i++) {
+          var isLastIndex = (i === sessions.length - 1) ? true : null;
+          var currentMsUtc = new Date().getTime();
+          var expiresAtMsUtc = sessions[i].expiresAt;
+          var isExpired = (expiresAtMsUtc - currentMsUtc <= 0);
+          if (isExpired) {
+            foundExpiredSession = true;
+            deleteSession(sessions[i]._id, user._id);
+            break;
+          }
+        }
+        if (!foundExpiredSession) {
+          $timeout(checkExpiration, 500);
+        }
+      } else {
+        $timeout(checkExpiration, 500);
+      }
+    }
+
+    function deleteSession(sessionId, userId) {
+      var sessions;
+      SessionApi.deleteRoom(sessionId, userId).then(function(response) {
+        console.log('response', response);
+        (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
+        localStorageService.set('sessions', sessions);
+        if ($state.current.name === 'dashboard') {
+          PubSub.trigger('renderTable');
+        }
+        checkExpiration();
+      }, function(err) {
+        console.error(err);
+      });
+    }
 
     function getReadyStatus(startTimeMsUtc) {
       var currentMsUtc = new Date().getTime();
@@ -132,9 +171,8 @@ angular.module('RoomBaby')
         obj.startsAtFormatted = moment(angular.copy(obj.startsAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
         obj.expiresAtFormatted = moment(angular.copy(obj.expiresAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
 
-        var lastIndex = session.users.length - 1;
         session.users.forEach(function(invitedUser, index) {
-          if (index === lastIndex) {
+          if (index === (session.users.length - 1)) {
             obj.members = (obj.members || '') + invitedUser.email;
           } else {
             obj.members = (obj.members || '') + invitedUser.email + ', ';
@@ -157,6 +195,14 @@ angular.module('RoomBaby')
       });
       var sortedArr = sortByStartsAt(arr);
       callback(sortedArr);
+    }
+
+    function generateTimeLeft(msLeft) {
+      var secondsLeft = (msLeft / 1000);
+      var minutesLeft = (secondsLeft / 60);
+      secondsLeft = secondsLeft % 60;
+      var timeLeft = Math.floor(minutesLeft) + ' minutes and ' + Math.floor(secondsLeft) + ' seconds left';
+      return timeLeft;
     }
 
     function formatUpDate(upDate) {
@@ -220,11 +266,14 @@ angular.module('RoomBaby')
     return ({
       generateTable: generateTable,
       generateOpts: generateOpts,
+      generateTimeLeft: generateTimeLeft,
       getStatus: getStatus,
       formatUpDate: formatUpDate,
       isValid: isValid,
       setStartDate: setStartDate,
       addMinutes: addMinutes,
-      isExpired: isExpired
+      isExpired: isExpired,
+      checkExpiration: checkExpiration
     });
+    TimeService.$inject('$state', '$timeout', 'SessionApi', 'PubSub', 'localStorageService')
   });

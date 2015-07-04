@@ -54,12 +54,14 @@ var sessionSchema = new mongoose.Schema({
 });
 
 sessionSchema.pre('save', function(callback) {
-  if (!this.createdAt) this.createdAt = new Date();
+  this.createdAt = this.createdAt ? this.createdAt : new Date();
   callback();
 });
 
-sessionSchema.methods.addMinutes = function(date, minutes) {
-  return new Date(date.getTime() + minutes * 60000);
+sessionSchema.methods.addMinutes = function(startingMs, minsToAdd) {
+  var msPerMin = 60000;
+  var msToAdd = (minsToAdd  * msPerMin);
+  return startingMs + msToAdd
 };
 
 module.exports = mongoose.model('Session', sessionSchema);

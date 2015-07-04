@@ -13,7 +13,7 @@ angular.module('RoomBaby')
       link: function(scope, element, attrs) {
         element.bind('click', function($event){
           var isSubmitBtn = ($event.target.id === 'on-create-room-submit');
-          var isValid = StateService.data['createRoom']['form'].isValid;
+          var isValid = StateService.data['createRoom']['formData'].isValid;
           if (isSubmitBtn && isValid) {
             PubSub.trigger('createRoom:renderConfirmation');
           } else if (isSubmitBtn && !isValid)  {
@@ -29,10 +29,10 @@ angular.module('RoomBaby')
             var isValidName = StateService.data['createRoom']['name'].isValid;
             var isValidEmail = StateService.data['createRoom']['guestEmail'].isValid;
             if (isValidName && isValidEmail) {
-              StateService.data['createRoom']['form'].isValid = true;
+              StateService.data['createRoom']['formData'].isValid = true;
             }
           } else {
-            StateService.data['createRoom']['form'].isValid = false;
+            StateService.data['createRoom']['formData'].isValid = false;
           }
         });
 
@@ -40,7 +40,7 @@ angular.module('RoomBaby')
           var isPristine = !$scope.name;
           if (isPristine) {
             StateService.data['createRoom']['name'].isPristine = true;
-            StateService.data['createRoom']['form'].isValid = false;
+            StateService.data['createRoom']['formData'].isValid = false;
           } else {
             StateService.data['createRoom']['name'].isPristine = false;
           }
@@ -52,11 +52,11 @@ angular.module('RoomBaby')
             var isValidDate = StateService.data['createRoom']['startDate'].isValid
             var isValidEmail = StateService.data['createRoom']['guestEmail'].isValid;
             if (isValidDate && isValidEmail) {
-              StateService.data['createRoom']['form'].isValid = true;
+              StateService.data['createRoom']['formData'].isValid = true;
             }
           } else {
             StateService.data['createRoom']['name'].isValid = false;
-            StateService.data['createRoom']['form'].isValid = false;
+            StateService.data['createRoom']['formData'].isValid = false;
           }
         });
 
@@ -64,7 +64,7 @@ angular.module('RoomBaby')
           var isPristine = !$scope.guestEmail;
           if (isPristine) {
             StateService.data['createRoom']['guestEmail'].isPristine = true;
-            StateService.data['createRoom']['form'].isValid = false;
+            StateService.data['createRoom']['formData'].isValid = false;
           } else {
             StateService.data['createRoom']['guestEmail'].isPristine = false;
           }
@@ -80,11 +80,11 @@ angular.module('RoomBaby')
               StateService.data['createRoom']['guestEmail'].text = $scope.name;
               StateService.data['createRoom']['guestEmail'].isValid = true;
               if (isValidDate && isValidName) {
-                StateService.data['createRoom']['form'].isValid = true;
+                StateService.data['createRoom']['formData'].isValid = true;
               }
             } else {
               StateService.data['createRoom']['guestEmail'].isValid = false;
-              StateService.data['createRoom']['form'].isValid = false;
+              StateService.data['createRoom']['formData'].isValid = false;
             }
           });
         });

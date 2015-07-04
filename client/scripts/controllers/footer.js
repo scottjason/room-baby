@@ -20,6 +20,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     PubSub.on('setUser', ctrl.setUser);
     PubSub.on('isRecording', ctrl.isRecording);
     PubSub.on('featureDisabled', ctrl.featureDisabled);
+    PubSub.on('generatingVideo', ctrl.onGeneratingVideo);
   };
 
   this.onUserName = function() {
@@ -36,7 +37,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
       PubSub.trigger('disconnect');
     } else if (!isEnabled) {
       $scope.showFeatureDisabled = true;
-      console.log('feature not yet enabled');
     } else if (optSelected === 'record') {
       PubSub.trigger('requestPermission');
     } else if (optSelected === 'stop') {
@@ -59,10 +59,10 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
       $scope.showLoadingSpinner = true;
 
       var sessionId = localStorageService.get('otSession').sessionId;
-      var userId = $scope.user._id;
+      var userId = localStorageService.get('user')._id;
 
       /* Verify again on server along with file type */
-      SessionApi.upload($scope.fileUpload, $scope.user._id, sessionId).then(function(response) {
+      SessionApi.upload($scope.fileUpload, userId, sessionId).then(function(response) {
         console.log('response', response);
         if (response.status === 200) {
           $scope.fileUrl = response.data;
@@ -109,6 +109,10 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   ctrl.featureDisabled = function() {
     $scope.showFeatureDisabled = true;
   };
+
+  ctrl.onGeneratingVideo = function(_bool) {
+    $scope.showGeneratingVideo = _bool;
+  }
 
   FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'localStorageService'];
 }

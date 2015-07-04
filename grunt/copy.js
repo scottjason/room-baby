@@ -24,12 +24,6 @@ module.exports = {
     dest: 'client/scripts/vendor',
     expand: true
   },
-  vendor_styles: {
-    cwd: 'client/styles/lib',
-    src: '**/*',
-    dest: 'dist/styles/lib',
-    expand: true
-  },
   build: {
     cwd: 'client/build/',
     src: ['*.min.js', '*.min.css'],

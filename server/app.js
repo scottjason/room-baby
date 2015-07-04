@@ -1,28 +1,24 @@
 /**
- * Server Init
+ * App Init
  */
 
 'use strict'
 
 var fs = require('fs');
-var util = require('util');
 var express = require('express');
 var config = require('./config');
 var passport = require('passport');
-var sessionCtrl = require('./controllers/session');
-var userCtrl = require('./controllers/user');
+var worker = require('./config/utils/worker');
 
 var app = express();
 
-/* Bootstrap Models */
+/* Bootstrap models */
 fs.readdirSync(config.root + '/server/models').forEach(function(file) {
   if (~file.indexOf('.js')) require(config.root + '/server/models/' + file);
 });
 
-/* Invoked the database and pass the host */
-require('./config/database').connect();
 
-/* Invoke The Database, Config Passport, Express, Routes, Error Handler */
+/* Config passport, express, routes, error handler */
 require('./config/passport/local-init')(passport);
 require('./config/express')(app, passport);
 require('./routes/user')(app, passport);
@@ -31,11 +27,15 @@ require('./routes/session')(app);
 require('./routes/index')(app, passport);
 require('./routes/error')(app);
 
-/* Start Server */
-var server = app.listen(app.get('port'), function() {
-  console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
+/* Connect to the database, then start server and worker */
+require('./config/database').connect(function() {
+  /* Start server */
+  app.listen(app.get('port'), function() {
+    console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
+    /* Start worker */
+    worker.initialize();
+  });
 });
-
 
 
 module.exports = app;

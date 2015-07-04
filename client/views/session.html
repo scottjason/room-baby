@@ -28,15 +28,17 @@
               </div>
             </div>
             <div class="portlet-footer">
-              <form role="form">
-                <div class="form-group">
-                  <textarea ng-model='user.message' class="form-control" placeholder="Enter message..."></textarea>
-                </div>
-                <div class="form-group">
-                  <div ng-click='sessionCtrl.sendMessage()' class="btn-custom-send pull-right">Send</div>
-                  <div class="clearfix"></div>
-                </div>
-              </form>
+              <ng-enter>
+                <form role="form">
+                  <div class="form-group">
+                    <textarea id='transport-input' ng-model='user.message' class="form-control" placeholder="Enter message..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <div ng-click='sessionCtrl.sendMessage()' class="btn-custom-send pull-right">Send</div>
+                    <div class="clearfix"></div>
+                  </div>
+                </form>
+              </ng-enter>
             </div>
           </div>
         </div>

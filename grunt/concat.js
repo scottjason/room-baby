@@ -42,7 +42,7 @@ module.exports = {
     dest: 'client/build/dev.css'
   },
   vendor_styles: {
-    src: ['client/bower_components/bootstrap/dist/css/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css', 'client/bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'],
+    src: ['client/styles/lib/bootstrap.css', 'client/bower_components/ngDialog/css/ngDialog.css', 'client/bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'],
     dest: 'client/build/vendor.css'
   },
 };

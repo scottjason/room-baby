@@ -36,7 +36,6 @@ angular.module('RoomBaby')
     }
 
     function onDashboard() {
-      console.log('onDashboard');
       var optsContainer = angular.element(document.getElementById('opts-container'));
       var createRoomBtn = angular.element(document.getElementById('create-room-btn'));
       var createBroadcastBtn = angular.element(document.getElementById('create-broadcast-btn'));
@@ -77,9 +76,9 @@ angular.module('RoomBaby')
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       var sequence = [
-        { e: dashboardContainer, p: 'fadeOut', o: { duration: 350, opacity: 0 } }, 
-        { e: dashboardTable, p: 'fadeOut', o: { duration: 350,  opacity: 0, sequenceQueue: false } },
-        { e: dashboardOverlay, p: 'fadeIn', o: { duration: 700, delay: 100,  opacity: 1, sequenceQueue: true } }
+        { e: dashboardContainer, p: 'fadeOut', o: { duration: 200, opacity: 0 } }, 
+        { e: dashboardTable, p: 'fadeOut', o: { duration: 200,  opacity: 0, sequenceQueue: false } },
+        { e: dashboardOverlay, p: 'fadeIn', o: { duration: 350, delay: 100,  opacity: 1, sequenceQueue: true } }
       ];
       $.Velocity.RunSequence(sequence);
     }
@@ -91,7 +90,7 @@ angular.module('RoomBaby')
       var sequence = [
         { e: dashboardOverlay, p: 'fadeOut', o: { duration: 0, opacity: 0 } }, 
         { e: dashboardContainer, p: 'fadeIn', o: { duration: 350,  opacity: 1, delay: 100, sequenceQueue: true } },
-        { e: dashboardTable, p: 'fadeIn', o: { duration: 350, opacity: 1, sequenceQueue: false } }
+        { e: dashboardTable, p: 'fadeIn', o: { duration: 100, opacity: 1, sequenceQueue: false } }
       ];
       $.Velocity.RunSequence(sequence);
     }

@@ -194,28 +194,32 @@ angular.module('RoomBaby')
 
     function generateOpts(type, data) {
       var opts = {};
+      opts.type = type;
       if (type === 'onConnected') {
-        var connectedWith = data;
-        var sessionStartedAt = angular.copy(now);
-        opts.type = type;
-        opts.connectedWith = connectedWith;
-        opts.sessionStartedAt = sessionStartedAt;
-        localStorageService.set('connectedWith', connectedWith);
-        localStorageService.set('sessionStartedAt', sessionStartedAt);
+        opts.connectedWith = data;
+        opts.sessionStartedAt = angular.copy(now);
+        localStorageService.set('connectedWith', opts.connectedWith);
+        localStorageService.set('sessionStartedAt', opts.sessionStartedAt);
       } else if (type === 'chatMessage') {
         var data = JSON.parse(data);
-        opts.type = type;
         opts.sentBy = data.sentBy;
         opts.message = data.message;
         opts.profileImage = data.profileImage;
         opts.timeSent = data.timeSent;
+      } else if (type === 'sendReceipt') {
+        opts.receiptType = 'permissionResponse';
+        opts.isGranted = data.indexOf('granted') !== -1;
+      } else if (type === 'requestPermission') {
+        opts.requestedBy = data;
+      } else if (type === 'shareVideo') {
+        opts.videoUrl = data;
       }
       return opts;
     }
 
     function scroll(direction) {
       if (direction === 'down') {
-        var container = document.getElementById('Transport-container');
+        var container = document.getElementById('transport-container');
         container.scrollTop = container.scrollHeight;
       }
     }

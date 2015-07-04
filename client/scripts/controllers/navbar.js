@@ -6,7 +6,6 @@ angular.module('RoomBaby')
 function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageService) {
 
   var ctrl = this;
-  $scope.user = {};
 
   this.registerEvents = function() {
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
@@ -26,7 +25,7 @@ function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageSer
   };
 
   this.setTimeLeft = function(timeLeft) {
-    $rootScope.isDissconected ? ($scope.timeLeft = '') : ($scope.timeLeft = timeLeft);
+    $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
   };
 
   this.getTimeLeft = function() {

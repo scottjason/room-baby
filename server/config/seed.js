@@ -137,8 +137,8 @@ var createSessionTwo = function createSessionTwo(arr) {
     });
     session.name = 'Document Overview';
     var currentMsUtc = dateTime.getMsUtc();
-    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 1);
-    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
+    var startsAtMsUtc = currentMsUtc;
+    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 1);
     session.startsAt = startsAtMsUtc;
     session.expiresAt = expiresAtMsUtc;
     session.sessionId = otSession.sessionId;

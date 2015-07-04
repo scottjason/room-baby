@@ -260,7 +260,6 @@ exports.getActiveUsers = function() {
 };
 
 exports.deleteSession = function(req, res, next) {
-  console.log('deleteing session with params', req.params);
   Session.find({
     _id: req.params.session_id
   }).remove(function(err, session) {

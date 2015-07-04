@@ -31,9 +31,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
         localStorageService.clearAll();
         $state.go('landing');
       } else {
+        localStorageService.clearAll();
         $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
+      localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
@@ -59,6 +61,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     PubSub.on('stopRecording', ctrl.stopRecording);
     PubSub.on('disconnect', ctrl.disconnect);
     PubSub.on('toggleUpload', ctrl.toggleUpload);
+    PubSub.on('enterBtn:onChatMessage', this.sendMessage);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('setUser', $scope.user);
     ctrl.isExpired($scope.otSession.expiresAtMsUtc);
@@ -71,18 +74,15 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
 
     function getStatus() {
       TimeService.isExpired($scope.expiresAtMsUtc, function(isExpired, msLeft) {
-        isExpired ? ctrl.disconnect() : ctrl.renderCountDown(msLeft);
+        isExpired ? ctrl.disconnect() : ctrl.renderCountDown(isExpired, msLeft);
       });
     }
     getStatus();
   };
 
-  ctrl.renderCountDown = function(msLeft, isStopped) {
-    if (!isStopped) {
-      var secondsLeft = (msLeft / 1000);
-      var minutesLeft = (secondsLeft / 60);
-      secondsLeft = secondsLeft % 60;
-      var timeLeft = Math.floor(minutesLeft) + ' minutes and ' + Math.floor(secondsLeft) + ' seconds left';
+  ctrl.renderCountDown = function(isExpired, msLeft) {
+    if (!isExpired) {
+      var timeLeft = TimeService.generateTimeLeft(msLeft);
       PubSub.trigger('timeLeft', timeLeft);
       $timeout(ctrl.isExpired, 1000);
     }
@@ -163,47 +163,48 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     });
 
     $scope.session.on('signal:requestPermission', function(event) {
-      var obj = {};
-      obj.type = 'requestPermission';
-      obj.requestedBy = event.data;
-      if (obj.requestedBy === $scope.user.username) {
-        return false;
-      }
-      Transport.generateHtml(obj, function(html) {
-        chatbox.append(html);
-        Transport.scroll('down');
-        $timeout(bindListeners, 100);
+      var isSelf = (event.data === $scope.user.username)
+      if (!isSelf) {
+        var opts = Transport.generateOpts('requestPermission', event.data);
+        Transport.generateHtml(opts, function(html) {
+          chatbox.append(html);
+          Transport.scroll('down');
+          $timeout(bindListeners, 100);
 
-        function bindListeners() {
-          document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
-          document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
-        };
-      });
+          function bindListeners() {
+            document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
+            document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
+          };
+        });
+      }
     });
 
     $scope.session.on('signal:permissionResponse', function(event) {
-      var obj = {};
-      obj.type = 'sendReceipt';
-      obj.receiptType = 'permissionResponse';
-      obj.isGranted = (event.data).indexOf('granted') !== -1;
-      Transport.generateHtml(obj, function(html) {
+      var opts = Transport.generateOpts('sendReceipt', event.data);
+      Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
       });
+    });
+
+    $scope.session.on('signal:startRecording', function() {
+      PubSub.trigger('isRecording', true);
+    });
+
+    $scope.session.on('signal:stopRecording', function() {
+      PubSub.trigger('isRecording', false);
+      PubSub.trigger('generatingVideo', true);
     });
 
     $scope.session.on('signal:archive', function(event) {
       var archive = JSON.parse(event.data);
       localStorageService.set('archive', archive);
-      console.log('archive saved');
     });
 
     $scope.session.on('signal:shareVideo', function(event) {
-      console.log('onShareVideo', event);
-      var obj = {};
-      obj.type = 'shareVideo';
-      obj.videoUrl = event.data;
-      Transport.generateHtml(obj, function(html) {
+      PubSub.trigger('generatingVideo', false);
+      var opts = Transport.generateOpts('shareVideo', event.data);
+      Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
       });
@@ -221,7 +222,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
         Transport.generateHtml(obj, function(html) {
           chatbox.append(html);
           Transport.scroll('down');
-
         });
       } else {
         obj.type = 'sendReceipt';
@@ -257,7 +257,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
 
   ctrl.pubCallback = function() {
     PubSub.trigger('toggleFooter', true);
-  }
+  };
 
   ctrl.requestPermission = function() {
     var permissionRequestedBy = $scope.user.username;
@@ -276,7 +276,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
 
   ctrl.startRecording = function(otSessionId) {
     SessionApi.startRecording(otSessionId).then(function(response) {
-      PubSub.trigger('isRecording', true);
+      ctrl.broadcast('startRecording', '');
       localStorageService.set('archive', response.data);
       var archiveMessage = JSON.stringify(response.data);
       ctrl.emit('archive', archiveMessage);
@@ -286,10 +286,10 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
   };
 
   ctrl.stopRecording = function() {
+    ctrl.broadcast('stopRecording ', '');
     var archive = localStorageService.get('archive');
     var archiveId = archive.id;
     SessionApi.stopRecording(archiveId).then(function(response) {
-      console.log('onStopRecording response', response);
       var archiveResponse = response.data;
       localStorageService.set('archiveResponse', archiveResponse);
       ctrl.getVideoStatus(archiveId);
