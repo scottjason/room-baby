@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('DashCtrl', DashCtrl);
 
-function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialog, stateService, pubSub, userApi, sessionApi, animator, timeService, localStorageService) {
+function DashCtrl($scope, $rootScope, $state, $timeout, $window, ngDialog, stateService, pubSub, userApi, sessionApi, animator, timeService, localStorageService) {
 
   var ctrl = this;
   $scope.room = {};
@@ -189,7 +189,6 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
     $scope.showTable = true;
-    console.log('rendering table in controller');
     var sessions = localStorageService.get('sessions');
 
     if (sessions && sessions.length) {
@@ -290,5 +289,5 @@ function DashCtrl($scope, $rootScope, $state, $timeout, $window, socket, ngDialo
     $state.go('session', opts);
   };
 
-  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'socket', 'ngDialog', 'stateService', 'pubSub', 'userApi', 'sessionApi', 'animator', 'timeService', 'localStorageService'];
+  DashCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'ngDialog', 'stateService', 'pubSub', 'userApi', 'sessionApi', 'animator', 'timeService', 'localStorageService'];
 }

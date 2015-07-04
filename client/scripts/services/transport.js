@@ -163,7 +163,7 @@ angular.module('RoomBaby')
         '<p class="recording-permission">Is this ok?' +
         '</p>' +
         '<ul class="permision-copy-container">' +
-        '<li id="permission-granted">OK!' +
+        '<li id="permission-granted">Yes!' +
         '</li>' +
         '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
         '</li>' +
@@ -176,7 +176,15 @@ angular.module('RoomBaby')
       callback(html);
     }
 
+    function scroll(direction) {
+      if (direction === 'down') {
+        var container = document.getElementById('transport-container');
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
     return ({
-      generateHtml: generateHtml
+      generateHtml: generateHtml,
+      scroll: scroll
     });
   });

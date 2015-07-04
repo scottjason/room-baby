@@ -108,7 +108,7 @@ var createSessionOne = function createSession(arr, arrTwo) {
     });
     session.name = 'Monday Meeting';
     var currentMsUtc = dateTime.getMsUtc();
-    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 1);
+    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 2);
     var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
     session.startsAt = startsAtMsUtc;
     session.expiresAt = expiresAtMsUtc;
@@ -137,7 +137,7 @@ var createSessionTwo = function createSessionTwo(arr) {
     });
     session.name = 'Document Overview';
     var currentMsUtc = dateTime.getMsUtc();
-    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 2);
+    var startsAtMsUtc = dateTime.addMinutes(currentMsUtc, 1);
     var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 10);
     session.startsAt = startsAtMsUtc;
     session.expiresAt = expiresAtMsUtc;

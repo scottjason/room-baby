@@ -1,7 +1,7 @@
 <div ng-controller='FooterCtrl as footerCtrl'>
   <div ng-show='showFooter' id='footer-overlay'></div>
   <div ng-show='showFooter' ng-init='footerCtrl.registerEvents();' id='footer-btn-container' class="navbar navbar-default navbar-fixed-bottom text-center">
-    <ul ng-hide='showFeatureDisabled' id="footer-btns">
+    <ul ng-hide='showFeatureDisabled || isRecording' id="footer-btns">
       <li>
         <div id='share-file' ng-click='footerCtrl.onOptSelected("location")' class="btn-custom share-file">share location</div>
       </li>
@@ -17,6 +17,11 @@
     </ul>
     <ul ng-show='showFeatureDisabled'>
       <li>Feature Disabled Until Your Party Connects</li>
+    </ul>
+    <ul ng-show='isRecording'>
+      <li>
+        <div id='share-file' ng-click='footerCtrl.onOptSelected("stop")' class="btn-custom share-file">stop</div>
+      </li>
     </ul>
   </div>
 </div>

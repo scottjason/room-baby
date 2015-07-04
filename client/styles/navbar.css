@@ -1,3 +1,15 @@
+span.time-left {
+  position: absolute;
+  width: 300px;
+  display: inline-block;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #79DFB6;
+  margin: auto;
+  text-align: center;
+}
+
 .nav .open>a,
 .nav .open>a:focus,
 .nav .open>a:hover {

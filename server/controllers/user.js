@@ -15,13 +15,6 @@ var utils = require('../config/utils');
 
 var transporter = mailer.transporter();
 
-exports.bindSocket = function(io) {
-  io.on('connection', function(socket) {
-    console.log('Socket.io Connected In User Ctrl');
-    exports.socket = socket;
-  });
-};
-
 exports.connectAccts = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
     console.log('user', user);

@@ -26,40 +26,19 @@ var s3Bucket = new AWS.S3();
 var opentok = new OpenTok(config.openTok.key, config.openTok.secret);
 var transporter = mailer.transporter();
 
-exports.bindSocket = function(io) {
-  io.on('connection', function(socket) {
-    console.log('Socket.io Connected In Session Ctrl');
-    exports.socket = socket;
-  });
-};
+exports.getVideoStatus = function(req, res, next) {
 
-exports.onUserConnected = function(payload) {
-  console.log(payload);
-  Session.findOne({
-    sessionId: payload.sessionId
-  }, function(err, session) {
-    if (err) return exports.socket.emit('onError', err);
-    session.activeUsers.push(payload);
-    session.save(function(err, savedSession) {
-      exports.socket.emit('activateUser', savedSession);
-    });
-  });
-};
+  var obj = {};
 
-exports.onUserDisconnected = function() {
-  console.log('onUserDisconnected');
-};
-
-exports.getVideoStatus = function(archiveId) {
-  Video.findOne({
-    archiveId: archiveId
-  }, function(err, video) {
+  Video.findOne({ archiveId: req.params.archive_id }, function(err, video) {
     if (err) return next(err);
-    if (video) console.log('found video', video);
-    if (!video || !video.status || video.status !== 'uploaded') {
-      exports.socket.emit('videoStatus', null, null);
+    if (!video || video.status !== 'uploaded') {
+      obj.isReady = false;
+      res.status(200).send(obj);
     } else {
-      exports.socket.emit('videoStatus', true, video);
+      obj.isReady = true;
+      obj.video = video;
+      res.status(200).send(obj);
     }
   });
 };

@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) {
+function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator, localStorageService) {
 
   var ctrl = this;
   var promise;
@@ -22,6 +22,8 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
   this.registerEvents = function() {
     pubSub.on('toggleFooter', ctrl.toggleFooter);
     pubSub.on('setUser', ctrl.setUser);
+    pubSub.on('isRecording', ctrl.isRecording);
+    pubSub.on('featureDisabled', ctrl.featureDisabled);
   };
 
   this.onUserName = function() {
@@ -46,18 +48,26 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
     } else if (optSelected === 'upload') {
       pubSub.trigger('toggleOverlay');
       pubSub.trigger('toggleUpload', true);
+    } else if (optSelected === 'stop') {
+      pubSub.trigger('stopRecording');
     }
   };
 
   this.collectUpload = function() {
+
     if (!$scope.fileUpload) {
       console.error('!$scope.fileUpload');
     } else if ($scope.fileUpload.size > 5e+6) { /* 5e+6 bytes === 5mb */
       console.error('maxSizeExceeded');
     } else {
       $scope.showLoadingSpinner = true;
+
+      var sessionId = localStorageService.get('otSession').sessionId;
+      var userId = $scope.user._id;
+
       /* Verify again on server along with file type */
-      sessionApi.upload($scope.fileUpload, $scope.user._id, $scope.user._id).then(function(response) {
+      sessionApi.upload($scope.fileUpload, $scope.user._id, sessionId).then(function(response) {
+        console.log('response', response);
         if (response.status === 200) {
           fileUrl = response.data;
           $scope.showLoadingSpinner = false;
@@ -91,10 +101,18 @@ function FooterCtrl($scope, $rootScope, $timeout, pubSub, sessionApi, animator) 
     }
   };
 
+  ctrl.isRecording = function(isRecording) {
+    $scope.isRecording = isRecording;
+  };
+
   ctrl.shareFile = function() {
     pubSub.trigger('shareFile', fileUrl);
     $timeout.cancel(promise);
   };
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi', 'animator'];
+  ctrl.featureDisabled = function() {
+    $scope.showFeatureDisabled = true;
+  }
+
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'pubSub', 'sessionApi', 'animator', 'localStorageService'];
 }

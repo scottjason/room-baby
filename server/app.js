@@ -9,8 +9,6 @@ var util = require('util');
 var express = require('express');
 var config = require('./config');
 var passport = require('passport');
-var io = require('socket.io');
-var socketCtrl = require('./controllers/socket');
 var sessionCtrl = require('./controllers/session');
 var userCtrl = require('./controllers/user');
 
@@ -22,7 +20,7 @@ fs.readdirSync(config.root + '/server/models').forEach(function(file) {
 });
 
 /* Invoked the database and pass the host */
-require('./config/database').connect()
+require('./config/database').connect();
 
 /* Invoke The Database, Config Passport, Express, Routes, Error Handler */
 require('./config/passport/local-init')(passport);
@@ -38,11 +36,6 @@ var server = app.listen(app.get('port'), function() {
   console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
 });
 
-io = io.listen(server);
 
-/* Bind The IO Instance */
-socketCtrl.bindSocket(io);
-sessionCtrl.bindSocket(io);
-userCtrl.bindSocket(io);
 
 module.exports = app;

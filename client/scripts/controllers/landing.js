@@ -3,12 +3,9 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, validator, stateService, userApi, pubSub, animator, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, validator, stateService, userApi, pubSub, animator, localStorageService) {
 
   var ctrl = this;
-
-  socket.on('connected', function() {});
-
 
   this.registerEvents = function() {
     pubSub.on('enterBtn:onLogin', ctrl.onLogin);
@@ -238,5 +235,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, socket, vali
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'socket', 'validator', 'stateService', 'userApi', 'pubSub', 'animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'validator', 'stateService', 'userApi', 'pubSub', 'animator', 'localStorageService'];
 };

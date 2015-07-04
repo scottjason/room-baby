@@ -1,35 +1,35 @@
- p.recording-permission {
-   font-size: 14px;
-   margin-top: -7px;
-   color: rgba(0, 0, 0, .7);
- }
- 
- a.download-link {
-   text-decoration: none;
-   color: #16a085;
-   font-size: 13px;
-   margin-top: -8px;
- }
- 
- p.file-text {
-   font-size: 13px;
-   color: rgba(0, 0, 0, .7);
-   text-align: left;
- }
+p.recording-permission {
+  font-size: 14px;
+  margin-top: -7px;
+  color: rgba(0, 0, 0, .7);
+}
 
- #layout-container {
-   position: absolute;
-   top: 85px;
-   height: 80%;
-   width: 70%;
-   left: 10px;
-   right: 200px;
-   bottom: 0;
-   background-color: #000;
- }
- 
- #layout-container > div {
-   background-color: #000;
-   display: inline-block;
-   border: 1px solid #000;
- }
+a.download-link {
+  text-decoration: none;
+  color: #16a085;
+  font-size: 13px;
+  margin-top: -8px;
+}
+
+p.file-text {
+  font-size: 13px;
+  color: rgba(0, 0, 0, .7);
+  text-align: left;
+}
+
+#layout-container {
+  position: absolute;
+  top: 85px;
+  height: 80%;
+  width: 70%;
+  left: 10px;
+  right: 200px;
+  bottom: 0;
+  background-color: #000;
+}
+
+#layout-container > div {
+  background-color: #000;
+  display: inline-block;
+  border: 1px solid #000;
+}

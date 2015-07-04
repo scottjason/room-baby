@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, userApi, pubSub, localStorageService) {
 
   var ctrl = this;
   $scope.user = {};
@@ -12,6 +12,7 @@ function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
     pubSub.on('toggleNavBar', ctrl.toggleNavBar);
     pubSub.on('toggleOverlay', ctrl.toggleOverlay);
     pubSub.on('setUser', ctrl.setUser);
+    pubSub.on('timeLeft', ctrl.setTimeLeft);
   };
 
   this.createRoom = function() {
@@ -24,6 +25,14 @@ function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
     }
   };
 
+  this.setTimeLeft = function(timeLeft) {
+    $rootScope.isDissconected ? ($scope.timeLeft = '') : ($scope.timeLeft = timeLeft);
+  };
+
+  this.getTimeLeft = function() {
+    return $scope.timeLeft || '';
+  }
+
   ctrl.toggleOverlay = function() {
     $scope.showOverlay = !$scope.showOverlay;
   };
@@ -32,8 +41,8 @@ function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
     $scope.showNavBar = _bool;
   };
 
-  ctrl.setUser = function (user) {
-   $scope.user = user;
+  ctrl.setUser = function(user) {
+    $scope.user = user;
   };
 
   ctrl.logout = function(user_id) {
@@ -43,5 +52,5 @@ function NavBarCtrl($scope, $state, userApi, pubSub, localStorageService) {
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$state', 'userApi', 'pubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', 'userApi', 'pubSub', 'localStorageService'];
 }

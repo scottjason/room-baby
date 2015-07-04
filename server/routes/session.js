@@ -14,6 +14,7 @@ module.exports = function(app) {
   router.get('/stop/:archive_id', sessionCtrl.stopRecording);
   router.get('/get/:archive_id', sessionCtrl.getRecording);
   router.get('/delete-recording/:archive_id', sessionCtrl.deleteRecording);
+  router.get('/video-status/:archive_id', sessionCtrl.getVideoStatus);
   router.get('/:archive_id/:partner_id', sessionCtrl.generateVideoEmbed);
   router.post('/create-room', sessionCtrl.createRoom);
   router.post('/upload', sessionCtrl.upload);

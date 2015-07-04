@@ -1,9 +1,9 @@
 angular.module('RoomBaby')
-  .service('timeService', function(socket) {
+  .service('timeService', function() {
 
     'use strict'
 
-    var oneMinute = 60000;
+    var oneMinuteInMs = 60000;
     var monthToIndex = {
       'Jan': 0,
       'Feb': 1,
@@ -17,20 +17,20 @@ angular.module('RoomBaby')
       'Oct': 9,
       'Nov': 10,
       'Dec': 11
-    }
+    };
 
     function getReadyStatus(startTimeMsUtc) {
       var currentMsUtc = new Date().getTime();
-      var diff = (startTimeMsUtc - currentMsUtc);
-      var isReady = (diff <= oneMinute);
+      var diffInMs = (startTimeMsUtc - currentMsUtc);
+      var isReady = (diffInMs <= oneMinuteInMs);
       return isReady;
     }
 
-    function isExpired(expiresAtMsUtc) {
+    function isExpired(expiresAtMsUtc, callback) {
       var currentMsUtc = new Date().getTime();
-      var diff = (expiresAtMsUtc - currentMsUtc);
-      var isExpired = (diff <= oneMinute);
-      return isExpired;
+      var msLeft = (expiresAtMsUtc - currentMsUtc);
+      var isExpired = (msLeft <= 0);
+      callback(isExpired, msLeft);
     }
 
     function sortByStartsAt(arr) {
@@ -156,7 +156,6 @@ angular.module('RoomBaby')
         arr.push(obj);
       });
       var sortedArr = sortByStartsAt(arr);
-      console.log('sortedArr', sortedArr);
       callback(sortedArr);
     }
 
@@ -220,7 +219,7 @@ angular.module('RoomBaby')
       formatUpDate: formatUpDate,
       validate: validate,
       setStartDate: setStartDate,
-      addMinutes: addMinutes
+      addMinutes: addMinutes,
+      isExpired: isExpired
     });
-    timeService.$inject('socket');
   });
