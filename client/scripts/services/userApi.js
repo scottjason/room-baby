@@ -80,6 +80,16 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function postToFacebook(params) {
+      console.log('posting to facebook');
+      var request = $http({
+        method: 'POST',
+        url: '/user/facebook-post',
+        data: params
+      })
+      return (request.then(successHandler, errorHandler));
+    }
+
     function generateOpts(user) {
       var userId = user._id;
       var opts = {
@@ -106,6 +116,7 @@ angular.module('RoomBaby')
       saveUserName: saveUserName,
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated,
+      postToFacebook: postToFacebook,
       generateOpts: generateOpts
     });
     UserApi.$inject('$http');

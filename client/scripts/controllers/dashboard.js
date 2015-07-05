@@ -8,6 +8,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var ctrl = this;
   $scope.room = {};
 
+  var data = {};
+  data.message = 'hello';
+
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -19,6 +22,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
+
         if (localStorageService.get('user')) {
           $scope.user = localStorageService.get('user');
         }
@@ -26,14 +30,13 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
           $scope.sessions = localStorageService.get('sessions');
         }
         ctrl.initialize();
-      } else if (response.status === 401) {
-        localStorageService.clearAll()
-        $state.go('landing');
       } else {
-        console.error('unknown authentication status');
+        localStorageService.clearAll()
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
-      console.error(err);
+      localStorageService.clearAll()
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
@@ -48,9 +51,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   ctrl.initialize = function() {
     if (localStorageService.get('isFacebookLogin')) {
       ctrl.onFacebookLogin($state.params.user_id);
-    } else if (!localStorageService.get('user')) {
-      localStorageService.clearAll();
-      $state.go('landing');
     } else {
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('setUser', $scope.user);
@@ -191,7 +191,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
-    console.debug('render table dashboard');
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
 
@@ -205,6 +204,31 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         if (isOnLoad) {
           getStatus();
         }
+        // FB.api(
+        //   "/{page-id}/videos",
+        //   "POST", {
+        //   'file_url': 'https://s3-us-west-2.amazonaws.com/rtc-videos/45238782/e42810ef-7639-4fcd-aeb5-25c8833667c4/archive.mp4'
+
+        //     // "source": "{video-data}"
+        //   },
+        //   function(response) {
+        //     console.log(response);
+        //     if (response && !response.error) {
+        //       /* handle the result */
+        //     }
+        //   }
+        // );
+        // FB.ui({
+        //   method: 'feed',
+        //   name: 'Room Baby Video',
+        //   link: 'http://www.facebook.com',
+        //   picture: 'http://img.youtube.com/vi/1CE6W5BubQo/0.jpg',
+        //   caption: 'My caption',
+        //   description: 'My description',
+        //   source: 'https://s3-us-west-2.amazonaws.com/rtc-videos/45238782/e42810ef-7639-4fcd-aeb5-25c8833667c4/archive.mp4'
+        // }, function(res) {
+        //   console.log('res', res);
+        // });
       });
     };
   };
@@ -243,7 +267,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.onFacebookSuccess = function(user, sessions) {
-    $scope.user = user
+    $scope.user = user;
+
     if (sessions) {
       localStorageService.set('sessions', sessions);
     }

@@ -3,9 +3,10 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
+function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
+
 
   this.registerEvents = function() {
     PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
@@ -58,7 +59,7 @@ function LandingCtrl($scope, $window, $timeout, Validator, StateService, Constan
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       localStorageService.clearAll();
-      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      $state.go($state.current, {}, {reload: true});
     }
   };
 
@@ -200,5 +201,5 @@ function LandingCtrl($scope, $window, $timeout, Validator, StateService, Constan
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$window', '$timeout', 'Validator', 'StateService', 'ConstantService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'ConstantService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
 };

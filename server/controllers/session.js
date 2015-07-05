@@ -243,15 +243,21 @@ exports.deleteRecording = function(req, res, next) {
 };
 
 exports.generateVideoEmbed = function(req, res, next) {
-  var url = 'https://video-ready-api.herokuapp.com/' + req.params.archive_id + '/' + req.params.partner_id;
-  request(url, function(error, response, body) {
-    if (!error && response.statusCode == 200) {
+    console.log('generateVideoEmbed', req.body);
+    var partnerId = req.body.partnerId;
+    var archiveId = req.body.archiveId;
+    var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+    console.log('url', url);
+    request(url, function(error, response, body) {
+      console.log("response", response);
       console.log('body', body);
-      console.log('');
-      console.log('----------------');
-      console.log('');
-      console.log('response', response);
-    }
+    // if (!error && response.statusCode == 200) {
+    //   console.log('body', body);
+    //   console.log('');
+    //   console.log('----------------');
+    //   console.log('');
+      // console.log('response', response);
+    // }
   });
 };
 

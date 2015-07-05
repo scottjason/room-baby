@@ -73,17 +73,17 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     $scope.expiresAtMsUtc = $scope.expiresAtMsUtc ? $scope.expiresAtMsUtc : expiresAtMsUtc;
 
     function getStatus() {
-      TimeService.isExpired($scope.expiresAtMsUtc, function(isExpired, msLeft) {
-        isExpired ? ctrl.disconnect() : ctrl.renderCountDown(isExpired, msLeft);
+      TimeService.isExpired($scope.expiresAtMsUtc, function(isExpired, msLeft, thirtySecondsLeft, twentySecondsLeft) {
+        isExpired ? ctrl.disconnect() : ctrl.renderCountDown(isExpired, msLeft, thirtySecondsLeft, twentySecondsLeft);
       });
     }
     getStatus();
   };
 
-  ctrl.renderCountDown = function(isExpired, msLeft) {
+  ctrl.renderCountDown = function(isExpired, msLeft, thirtySecondsLeft, twentySecondsLeft) {
     if (!isExpired) {
       var timeLeft = TimeService.generateTimeLeft(msLeft);
-      PubSub.trigger('timeLeft', timeLeft);
+      PubSub.trigger('timeLeft', timeLeft, thirtySecondsLeft, twentySecondsLeft);
       $timeout(ctrl.isExpired, 1000);
     }
   }
@@ -207,6 +207,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
       Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
+        ctrl.generateVideoEmbed();
       });
     });
 
@@ -286,19 +287,20 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
   };
 
   ctrl.stopRecording = function() {
-    ctrl.broadcast('stopRecording ', '');
+    ctrl.broadcast('stopRecording', '');
     var archive = localStorageService.get('archive');
     var archiveId = archive.id;
     SessionApi.stopRecording(archiveId).then(function(response) {
-      var archiveResponse = response.data;
-      localStorageService.set('archiveResponse', archiveResponse);
+      localStorageService.set('archiveResponse', response.data);
       ctrl.getVideoStatus(archiveId);
     });
   };
 
   ctrl.getVideoStatus = function(archiveId) {
+    console.log('getVideoStatus called', archiveId || $scope.archiveId)
     $scope.archiveId = archiveId ? archiveId : $scope.archiveId
     SessionApi.getVideoStatus($scope.archiveId).then(function(response) {
+      console.log('response.data', response.data);
       var isReady = response.data.isReady;
       if (isReady) {
         var videoUrl = response.data.video.url;
@@ -309,6 +311,13 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     }, function(err) {
       console.error(err);
     });
+  };
+
+  ctrl.generateVideoEmbed = function() {
+    var partnerId = localStorageService.get('archive').partnerId;
+    var archiveId = localStorageService.get('archive').id;
+    var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+    console.log('url', url);
   };
 
   ctrl.toggleUpload = function(isClosed) {
@@ -369,6 +378,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
   };
 
   ctrl.broadcast = function(type, message) {
+    console.log('type', type);
     $scope.session.signal({
       type: type,
       data: message,

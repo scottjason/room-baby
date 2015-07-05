@@ -70,6 +70,15 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function generateVideoEmbed(params) {
+      var request = $http({
+        method: 'POST',
+        url: '/session/embed',
+        data: params
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function successHandler(response) {
       return (response);
     }
@@ -85,7 +94,8 @@ angular.module('RoomBaby')
       upload: upload,
       startRecording: startRecording,
       stopRecording: stopRecording,
-      getVideoStatus: getVideoStatus
+      getVideoStatus: getVideoStatus,
+      generateVideoEmbed: generateVideoEmbed
     });
     SessionApi.$inject('$http');
   });

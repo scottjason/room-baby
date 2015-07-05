@@ -6,6 +6,7 @@
 
 var User = require('../models/user');
 var Session = require('../models/session');
+var FB = require('fb');
 var async = require('async');
 var crypto = require('crypto');
 var mailer = require('../config/utils/mailer');
@@ -14,6 +15,10 @@ var config = require('../config');
 var utils = require('../config/utils');
 
 var transporter = mailer.transporter();
+
+exports.postToFacebook = function(req, res, next) {
+
+};
 
 exports.connectAccts = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {

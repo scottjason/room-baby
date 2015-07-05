@@ -20,22 +20,31 @@
   <!--[if lt IE 9]>
         <script src="/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
-  <script type="text/javascript">
-  // IE and Chrome
-  // if (String(window.location.hash).substring(0, 1) == "#") {
-  //   window.location.hash = "";
-  //   window.location.href = window.location.href.slice(0, -1);
-  // }
-  // // Firefox
-  // if (String(location.hash).substring(0, 1) == "#") {
-  //   location.hash = "";
-  //   location.href = location.href.substring(0, location.href.length - 3);
-  // }
+  <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '921064881267563',
+      xfbml: true,
+      version: 'v2.3'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
   </script>
 </head>
 
 <body ng-app="RoomBaby">
   <div ng-include src="'views/includes/navbar.html'"></div>
+  <div id="fb-root"></div>
   <div ui-view></div>
   <div ng-include src="'views/includes/footer.html'"></div>
   <!-- Grunt Build Vendor & Dev Scripts -->

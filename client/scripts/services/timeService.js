@@ -25,7 +25,6 @@ angular.module('RoomBaby')
       var foundExpiredSession = null;
       if (sessions && sessions.length) {
         for (var i = 0; i < sessions.length; i++) {
-          var isLastIndex = (i === sessions.length - 1) ? true : null;
           var currentMsUtc = new Date().getTime();
           var expiresAtMsUtc = sessions[i].expiresAt;
           var isExpired = (expiresAtMsUtc - currentMsUtc <= 0);
@@ -69,7 +68,10 @@ angular.module('RoomBaby')
       var currentMsUtc = new Date().getTime();
       var msLeft = (expiresAtMsUtc - currentMsUtc);
       var isExpired = (msLeft <= 0);
-      callback(isExpired, msLeft);
+      var secondsLeft = (msLeft / 1000);
+      var thirtySecondsLeft = (secondsLeft <= 30);
+      var twentySecondsLeft = (secondsLeft <= 20);
+      callback(isExpired, msLeft, thirtySecondsLeft, twentySecondsLeft);
     }
 
     function sortByStartsAt(arr) {

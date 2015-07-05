@@ -23,6 +23,7 @@ module.exports = function(app, passport) {
   router.get('/logout/:user_id', userCtrl.logout);
   router.get('/get-one/:user_id', userCtrl.getOne);
   router.get('/get-all/:user_id', userCtrl.getAll);
+  router.post('/facebook-post', userCtrl.postToFacebook);
 
   router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, data) {

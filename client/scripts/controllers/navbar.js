@@ -24,8 +24,26 @@ function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageSer
     }
   };
 
-  this.setTimeLeft = function(timeLeft) {
+  this.setTimeLeft = function(timeLeft, thirtySecondsLeft, twentySecondsLeft) {
     $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
+    $scope.thirtySecondsLeft = thirtySecondsLeft;
+    $scope.twentySecondsLeft = twentySecondsLeft;
+  };
+
+  this.isThirtySecondsLeft = function() {
+    if ($rootScope.isDissconected || $scope.twentySecondsLeft) {
+      return false;
+    } else {
+      return $scope.thirtySecondsLeft;
+    }
+  };
+
+  this.isTwentySecondsLeft = function() {
+    if ($rootScope.isDissconected) {
+      return false;
+    } else {
+      return $scope.twentySecondsLeft;
+    }
   };
 
   this.getTimeLeft = function() {

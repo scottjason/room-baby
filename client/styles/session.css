@@ -1,3 +1,16 @@
+.thirty-left {
+  position: absolute;
+  width: 100%;
+  color: white;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  top: 9px;
+  font-size: 13px;
+  color: orange;
+}
+
 p.recording-permission {
   font-size: 14px;
   margin-top: -7px;
