@@ -24,6 +24,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   };
 
   this.onUserName = function() {
+    console.log('onset username in footer.js');
     PubSub.trigger('setUserName', $scope.user.username);
   };
 

@@ -111,7 +111,21 @@ angular.module('RoomBaby')
       dashboardOverlay.velocity(props);
     }
 
+    function generateOpts(type, hasAnimated) {
+      var opts = {};
+      opts.type = type;
+      if (type === 'onRenderLoading') {
+        opts.props = {
+          height: "300px"
+        }
+      } else if (type === 'onLanding') {
+        opts.hasAnimated = hasAnimated;
+      }
+      return opts;
+    }
+
     return ({
-      run: run
+      run: run,
+      generateOpts: generateOpts
     });
   });

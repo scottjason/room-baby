@@ -8,8 +8,8 @@
     <input id="register-input" class="input-small" ng-model="user.password" name="password" type="text" placeholder="password">
   </form>
   <div ng-hide='showErr' class='register-btn-container'>
-    <a id='login' ng-click="landingCtrl.onRegister();" class="btn btn-md btn-custom-back">Register</a>
-    <p  ng-click="landingCtrl.selectedOpt('login');" class='have-account'>have an account?</p>
+    <a id='login' ng-click="landingCtrl.validateRegistration();" class="btn btn-md btn-custom-back">Register</a>
+    <p  ng-click="landingCtrl.onOptSelected('login');" class='have-account'>have an account?</p>
   </div>
   <div ng-show='showErr' class='register-btn-container'>
     <p class='landing-err-message'>{{ errMessage }}</p>

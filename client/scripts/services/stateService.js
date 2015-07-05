@@ -4,8 +4,16 @@ angular.module('RoomBaby')
     'use strict'
 
     var stateData = {
-      'animation': {
-        'runLanding': true
+      'Animator': {
+        'landing': {
+          'hasAnimated': false
+        },
+        'login': {
+          'hasAnimated': false
+        },
+        'register': {
+          'hasAnimated': false
+        }
       },
       'landing': {
         'members': {

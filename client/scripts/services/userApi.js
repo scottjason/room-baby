@@ -80,6 +80,14 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function generateOpts(user) {
+      var userId = user._id;
+      var opts = {
+        user_id: userId
+      };
+      return opts;
+    }
+
     function successHandler(response) {
       return (response);
     };
@@ -97,7 +105,8 @@ angular.module('RoomBaby')
       getAll: getAll,
       saveUserName: saveUserName,
       resetPassword: resetPassword,
-      isAuthenticated: isAuthenticated
+      isAuthenticated: isAuthenticated,
+      generateOpts: generateOpts
     });
     UserApi.$inject('$http');
   });

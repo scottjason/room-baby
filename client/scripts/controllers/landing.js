@@ -3,85 +3,70 @@
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
+function LandingCtrl($scope, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
 
   this.registerEvents = function() {
-    PubSub.on('enterBtn:onLogin', ctrl.onLogin);
-    PubSub.on('enterBtn:onRegister', ctrl.onRegister);
+    PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
+    PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
     PubSub.trigger('toggleNavBar', false);
     PubSub.trigger('toggleFooter', false);
   };
 
   this.isAuthenticated = function() {
-    var isMobile = DeviceService.isMobile();
-    console.log(isMobile);
     UserApi.isAuthenticated().then(function(response) {
-      if (response.status === 200 && !response.data.sessions) {
-        var user = response.data.user;
-        localStorageService.set('user', user);
-        var opts = {
-          user_id: user._id
-        };
-        ctrl.grantAccess(opts);
-      } else if (response.status === 200) {
-        var user = response.data.user;
-        var sessions = response.data.sessions;
-        localStorageService.set('user', user);
-        localStorageService.set('sessions', sessions);
-        var opts = {
-          user_id: user._id
-        };
+      if (response.status === 200) {
+        var opts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         localStorageService.clearAll()
         ctrl.initialize();
       } else {
-        console.error('unknown authentication status');
+        localStorageService.clearAll()
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
       console.error(err);
     });
   };
 
-  this.selectedOpt = function(optSelected) {
+  this.onOptSelected = function(optSelected) {
     $scope.user = {};
-    var obj = {};
     if (optSelected === 'login') {
       $scope.showRegister = false;
       $scope.showLogin = true;
-      if (!$scope.hasAnimatedLogin) {
-        obj.type = 'onLogin';
-        Animator.run(obj);
-        $scope.hasAnimatedLogin = true;
+      var hasAnimated = StateService.data['Animator']['login'].hasAnimated;
+      if (!hasAnimated) {
+        StateService.data['Animator']['login'].hasAnimated = true;
+        var opts = Animator.generateOpts('onLogin');
+        Animator.run(opts);
       }
     } else if (optSelected === 'register') {
       $scope.showLogin = false;
       $scope.showRegister = true;
-      if (!$scope.hasAnimatedRegister) {
-        obj.type = 'onRegister';
-        Animator.run(obj);
-        $scope.hasAnimatedRegister = true;
+      var hasAnimated = StateService.data['Animator']['register'].hasAnimated;
+      if (!hasAnimated) {
+        StateService.data['Animator']['register'].hasAnimated = true;
+        var opts = Animator.generateOpts('onRegister');
+        Animator.run(opts);
       }
     } else if (optSelected === 'facebook') {
       localStorageService.set('isFacebookLogin', true);
-      $window.location = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
+      $window.location.href = $window.location.protocol + '//' + $window.location.host + $window.location.pathname + 'auth/facebook';
     } else if (optSelected === 'forgotPassword') {
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
-      $state.go($state.current, {}, {
-        reload: true
-      });
+      localStorageService.clearAll();
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
     }
   };
 
-  this.onLogin = function() {
-    var payload = angular.copy($scope.user);
-    payload.type = 'login';
-    Validator.validate(payload, function(isValid, badInput, errMessage) {
+  this.validateLogin = function() {
+    var opts = Validator.generateOpts('login', $scope.user);
+    Validator.validate(opts, function(isValid, badInput, errMessage) {
       if (isValid) {
-        ctrl.login(payload);
+        ctrl.login(opts);
       } else {
         $scope.user[badInput] = '';
         $scope.showErr = true;
@@ -94,54 +79,45 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     });
   };
 
-  this.onRegister = function() {
+  this.validateRegistration = function() {
 
     var twoSeconds = 2000;
     var currentMsUtc = new Date().getTime();
 
-    $scope.lastClick ? ($scope.lastClick = $scope.thisClick) : ($scope.lastClick = currentMsUtc);
+    $scope.lastClick = $scope.lastClick ? $scope.thisClick : currentMsUtc;
     $scope.thisClick = currentMsUtc;
 
     var lastClickedAt = ($scope.thisClick - $scope.lastClick);
     var isInititalAttempt = !lastClickedAt;
+    var isDoubleRegister = (lastClickedAt < twoSeconds);
 
-    if (!isInititalAttempt) {
-      var isDoubleRegister = (lastClickedAt < twoSeconds);
-      isDoubleRegister ? null : ctrl.validateRegistration();
-    } else {
-      ctrl.validateRegistration();
+    if (isInititalAttempt || (!isInititalAttempt && !isDoubleRegister)) {
+      var opts = Validator.generateOpts('register', $scope.user);
+      Validator.validate(opts, function(isValid, badInput, errMessage) {
+        if (isValid) {
+          ctrl.register(opts);
+        } else {
+          $scope.user[badInput] = '';
+          $scope.showErr = true;
+          $scope.errMessage = errMessage;
+          $timeout(function() {
+            $scope.showErr = null;
+            $scope.errMessage = '';
+          }, 2000);
+          var isApplying = ($scope.$parent.$$phase === '$apply');
+          isApplying ? null : $scope.$apply();
+        }
+      });
     }
-  };
-
-  ctrl.validateRegistration = function() {
-    var payload = angular.copy($scope.user);
-    payload.type = 'register';
-    console.log('payload', payload);
-    Validator.validate(payload, function(isValid, badInput, errMessage) {
-      if (isValid) {
-        ctrl.register(payload);
-      } else {
-        $scope.user[badInput] = '';
-        $scope.showErr = true;
-        $scope.errMessage = errMessage;
-        $timeout(function() {
-          $scope.showErr = null;
-          $scope.errMessage = '';
-        }, 2000);
-        var isApplying = ($scope.$parent.$$phase === '$apply');
-        isApplying ? null : $scope.$apply();
-      }
-    });
   };
 
   this.onForgotPassword = function(isCanceled) {
     if (!isCanceled) {
-      var obj = {};
-      obj.type = 'email';
-      obj.email = $scope.user.email;
-      Validator.validate(obj, function(isValid) {
+      var opts = Validator.generateOpts('email', $scope.user.email);
+      Validator.validate(opts, function(isValid) {
         if (!isValid) {
-          ctrl.renderError('please enter a valid email');
+          var errMessage = ConstantService.generateError('invalidEmail');
+          ctrl.renderError(errMessage);
         } else {
           UserApi.resetPassword($scope.user).then(function(response) {
             console.log('response', response);
@@ -152,59 +128,46 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       $scope.showForgotPassword = false;
       ctrl.initialize();
     }
-  }
+  };
 
   ctrl.initialize = function() {
     $scope.showRegister = false;
     $scope.showLogin = false;
     $scope.showLanding = true;
-    var runLanding = StateService.data['animation'].runLanding;
-    if (!runLanding) {
-      var obj = {};
-      obj.type = 'onLanding';
-      obj.hasAnimated = true;
-      Animator.run(obj);
+    var hasAnimated = StateService.data['Animator']['landing'].hasAnimated;
+    if (hasAnimated) {
+      var opts = Animator.generateOpts('onLanding', true);
+      Animator.run(opts);
     } else {
-      var obj = {};
-      obj.type = 'onLanding';
-      obj.hasAnimated = false;
-      Animator.run(obj);
-      StateService.data['animation'].runLanding = false;
+      StateService.data['Animator']['landing'].hasAnimated = true;
+      var opts = Animator.generateOpts('onLanding', null);
+      Animator.run(opts);
     }
   };
 
-  ctrl.login = function(payload) {
-    UserApi.login(payload).then(function(response) {
+  ctrl.login = function(opts) {
+    UserApi.login(opts).then(function(response) {
       if (response.status === 200 && !response.data.sessions) {
-        var user = response.data.user;
-        localStorageService.set('user', user);
-        var opts = {
-          user_id: user._id
-        };
+        localStorageService.set('user', response.data.user);
+        var opts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(opts);
       } else if (response.status === 200 && response.data.sessions) {
-        var user = response.data.user;
-        var sessions = response.data.sessions;
-        localStorageService.set('user', user);
-        localStorageService.set('sessions', sessions);
-        var opts = {
-          user_id: user._id
-        };
+        localStorageService.set('user', response.data.user);
+        localStorageService.set('sessions', response.data.sessions);
+        var opts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         ctrl.renderError(response.data.message)
       } else {
-        ctrl.renderError('unknown response on login');
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
       console.log(err);
     });
   };
 
-  ctrl.register = function(payload) {
-    console.log('hit ctrl register');
-    return;
-    UserApi.register(payload).then(function(response) {
+  ctrl.register = function(opts) {
+    UserApi.register(opts).then(function(response) {
       if (response.status === 401) {
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
@@ -237,5 +200,5 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     }, 2000);
   };
 
-  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$window', '$timeout', 'Validator', 'StateService', 'ConstantService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
 };

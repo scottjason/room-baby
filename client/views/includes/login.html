@@ -1,12 +1,12 @@
 <div class='login-container' class='auth-container'>
-  <form ng-hide='showForgotPassword' id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.onLogin();">
+  <form ng-hide='showForgotPassword' id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.validateLogin();">
     <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
     <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
     <button type="submit" class="btn btn-custom-login">Login</button>
     <br>
     <div class='login-subtext-container'>
-      <p id='need-account' ng-click="landingCtrl.selectedOpt('register');">need an account?</p>
-      <p id='forgot-password' ng-click="landingCtrl.selectedOpt('forgotPassword');"> forgot password?</p>
+      <p id='need-account' ng-click="landingCtrl.onOptSelected('register');">need an account?</p>
+      <p id='forgot-password' ng-click="landingCtrl.onOptSelected('forgotPassword');"> forgot password?</p>
       <p id='remember-me'> remember me
         <input ng-model="user.rememberMe" type="checkbox">
       </p>

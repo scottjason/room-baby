@@ -8,7 +8,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var ctrl = this;
   $scope.room = {};
 
-
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -19,16 +18,14 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
-      if (response.status === 200 && !response.data.sessions) {
-        $scope.user = response.data.user;
-        localStorageService.set('user', $scope.user);
-        ctrl.initialize(null);
-      } else if (response.status === 200) {
-        $scope.user = response.data.user;
-        $scope.sessions = response.data.sessions;
-        localStorageService.set('user', $scope.user);
-        localStorageService.set('sessions', $scope.sessions);
-        ctrl.initialize(true);
+      if (response.status === 200) {
+        if (localStorageService.get('user')) {
+          $scope.user = localStorageService.get('user');
+        }
+        if (localStorageService.get('sessions')) {
+          $scope.sessions = localStorageService.get('sessions');
+        }
+        ctrl.initialize();
       } else if (response.status === 401) {
         localStorageService.clearAll()
         $state.go('landing');
@@ -48,19 +45,17 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
 
-  ctrl.initialize = function(hasSessions) {
+  ctrl.initialize = function() {
     if (localStorageService.get('isFacebookLogin')) {
-      var user_id = $state.params.user_id
-      ctrl.onFacebookLogin(user_id);
+      ctrl.onFacebookLogin($state.params.user_id);
     } else if (!localStorageService.get('user')) {
       localStorageService.clearAll();
       $state.go('landing');
     } else {
       PubSub.trigger('toggleNavBar', true);
-      var obj = {};
-      obj.type = 'onDashboard';
       PubSub.trigger('setUser', $scope.user);
-      Animator.run(obj);
+      var opts = Animator.generateOpts('onDashboard');
+      Animator.run(opts);
       ctrl.renderTable(true);
     }
   };
@@ -82,7 +77,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
-    (otSession.status === 'ready') ? ctrl.connect(otSession) : ctrl.showOverlay(otSession.status);
+    (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
   };
 
   /* date timepicker config */
@@ -166,12 +161,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on invite form complete, create the room, save to mongo */
   ctrl.createRoom = function() {
-    var obj = {};
-    obj.type = 'onRenderLoading';
-    obj.props = {
-      height: "300px"
-    };
-    Animator.run(obj);
+    var opts = Animator.generateOpts('onRenderLoading');
+    Animator.run(opts);
     $scope.showLoading = true;
     var payload = angular.copy($scope.room);
     payload.host = angular.copy($scope.user);
@@ -200,6 +191,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
+    console.debug('render table dashboard');
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
 
@@ -207,7 +199,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       TimeService.generateTable(sessions, function(table) {
         StateService.data['Session'].table = table;
         $scope.table = table;
-        if(!$scope.$$phase) {
+        if (!$scope.$$phase) {
           $scope.$apply();
         }
         if (isOnLoad) {
@@ -258,7 +250,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     if (!$scope.user.username) {
       ctrl.getUserName();
     } else {
-      Animator.run('onDashboard');
+      PubSub.trigger('toggleNavBar', true);
+      var obj = {};
+      obj.type = 'onDashboard';
+      Animator.run(obj);
       ctrl.renderTable(true);
     }
   };
@@ -291,7 +286,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   ctrl.onUserNameSuccess = function() {
     ngDialog.closeAll();
     $timeout(function() {
-      Animator.run('onDashboard');
+      PubSub.trigger('toggleNavBar', true);
+      var obj = {};
+      obj.type = 'onDashboard';
+      Animator.run(obj);
       ctrl.renderTable(true);
     }, 350);
   };

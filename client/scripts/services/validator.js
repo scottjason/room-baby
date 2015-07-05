@@ -70,8 +70,21 @@ angular.module('RoomBaby')
       }
     }
 
+    function generateOpts(type, data) {
+      var opts = {};
+      if (type === 'email') {
+        opts.type = type;
+        opts.email = data;
+      } else if (type === 'register' || type === 'login') {
+        opts = data;
+        opts.type = type;
+      }
+      return opts;
+    }
+
     return {
-      validate: validate
+      validate: validate,
+      generateOpts: generateOpts
     };
     Validator.$inject('ConstantService');
   });
