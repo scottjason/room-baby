@@ -19,13 +19,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
-
-        if (localStorageService.get('user')) {
-          $scope.user = localStorageService.get('user');
-        }
-        if (localStorageService.get('sessions')) {
-          $scope.sessions = localStorageService.get('sessions');
-        }
+        $scope.user = localStorageService.get('user');
+        $scope.sessions = localStorageService.get('sessions');
+        $scope.archives = localStorageService.get('archives');
         ctrl.initialize();
       } else {
         localStorageService.clearAll()
@@ -54,6 +50,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
       ctrl.renderTable(true);
+      console.log('$scope.archives', $scope.archives);
     }
   };
 

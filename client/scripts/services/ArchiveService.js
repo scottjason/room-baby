@@ -9,6 +9,7 @@ angular.module('RoomBaby')
 
       opts.name = localStorageService.get('otSession').name;
       opts.sessionId = localStorageService.get('otSession')._id;
+      opts.sessionStart = localStorageService.get('otSession').startsAtMsUtc;
       opts.longUrl = localStorageService.get('videoUrl');
 
       var sessions = localStorageService.get('sessions');

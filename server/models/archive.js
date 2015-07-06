@@ -18,20 +18,19 @@ var archiveSchema = new mongoose.Schema({
   sessionId: {
     type: String
   },
+  sessionStart: {
+    type: Number
+  },
   users: {
     type: Array
   },
   createdAt: {
     type: Number
-  },
-  updatedAt: {
-    type: Number
   }
 });
 
 archiveSchema.pre('save', function(cb) {
-  if (!this.createdAt) this.createdAt = new Date().getTime();
-  this.updatedAt = new Date().getTime();
+  this.createdAt ? this.createdAt : new Date().getTime();
   cb();
 });
 

@@ -41,7 +41,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   this.sendMessage = function() {
-    if ($rootScope.connectionCount < 1) {
+    if ($rootScope.connectionCount < 2) {
       $scope.user.message = '';
       PubSub.trigger('featureDisabled');
     } else {
@@ -53,6 +53,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.initialize = function() {
+
     $rootScope.isDissconected = false;
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
@@ -88,7 +89,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       PubSub.trigger('timeLeft', timeLeft, thirtySecondsLeft, twentySecondsLeft);
       $timeout(ctrl.isExpired, 1000);
     }
-  }
+  };
 
   ctrl.createSession = function(otSession) {
     if (OT.checkSystemRequirements() === 0) {
@@ -138,7 +139,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
     $scope.session.on('connectionDestroyed', function(event) {
       console.debug('connection destroyed.');
-      var sessions;
       $rootScope.connectionCount--;
       var userId = localStorageService.get('user')._id;
       SessionApi.getAll(userId).then(function(response) {
@@ -172,7 +172,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
           chatbox.append(html);
           Transport.scroll('down');
           $timeout(bindListeners, 100);
-
           function bindListeners() {
             document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
             document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
@@ -375,12 +374,12 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     }, function(err) {
       console.error(err);
     });
-  }
+  };
 
   ctrl.routeToDashboard = function(opts) {
     PubSub.trigger('toggleFooter', false);
     $state.go('dashboard', opts);
-  }
+  };
 
   ctrl.emit = function(type, message) {
     $scope.session.signal({

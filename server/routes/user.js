@@ -26,11 +26,10 @@ module.exports = function(app, passport) {
   router.post('/facebook-post', userCtrl.postToFacebook);
 
   router.post('/login', function(req, res, next) {
-    passport.authenticate('local-login', function(err, user, data) {
-      if (err) return next(err);
-      if (!user) return res.status(401).json(data);
+    passport.authenticate('local-login', function(err, user, obj) {
 
-      var otSessions = data;
+      if (err) return next(err);
+      if (!user) return res.status(401).json(obj);
 
       req.logIn(user, function(err) {
         if (err) return next(err)
@@ -41,12 +40,16 @@ module.exports = function(app, passport) {
 
         req.session.user = user;
 
-        if (otSessions) {
-          req.session.otSessions = otSessions;
+        if (obj.otSessions) {
+          req.session.otSessions = obj.otSessions;
+        }
+        if (obj.archives) {
+          req.session.archives = obj.archives;
         }
         return res.json({
           user: user,
-          sessions: otSessions
+          sessions: obj.otSessions,
+          archives: obj.archives
         });
       });
     })(req, res, next);
