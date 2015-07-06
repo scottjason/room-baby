@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookService, StateService, ConstantService, TimeService, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookService, StateService, ArchiveService, ConstantService, TimeService, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
 
   var ctrl = this;
   var now = moment(new Date()).calendar();
@@ -41,7 +41,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   this.sendMessage = function() {
-    if ($rootScope.connectionCount < 2) {
+    if ($rootScope.connectionCount < 1) {
       $scope.user.message = '';
       PubSub.trigger('featureDisabled');
     } else {
@@ -56,8 +56,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     $rootScope.isDissconected = false;
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
-
-    StateService.data['Auth'].isFacebook = ($scope.user.facebook && $scope.user.facebook.token) ? true : false;
 
     PubSub.on('shareFile', ctrl.shareFile);
     PubSub.on('requestPermission', ctrl.requestPermission);
@@ -207,10 +205,12 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
     $scope.session.on('signal:shareVideo', function(event) {
       PubSub.trigger('generatingVideo', false);
+      localStorageService.set('videoUrl', event.data);
       var opts = Transport.generateOpts('shareVideo', event.data);
       Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
+        ctrl.createArchive();
         var isFacebookLogin = StateService.data['Auth'].isFacebook;
         if (isFacebookLogin) {
           ctrl.openShareDialog();
@@ -297,9 +297,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
   ctrl.stopRecording = function() {
     ctrl.broadcast('stopRecording', '');
-    var archive = localStorageService.get('archive');
-    var archiveId = archive.id;
+    var archiveId = localStorageService.get('archive').id;
     SessionApi.stopRecording(archiveId).then(function(response) {
+      console.log('archiveResponse', response.data);
       localStorageService.set('archiveResponse', response.data);
       ctrl.getVideoStatus(archiveId);
     });
@@ -308,7 +308,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   ctrl.getVideoStatus = function(archiveId) {
     $scope.archiveId = archiveId ? archiveId : $scope.archiveId
     SessionApi.getVideoStatus($scope.archiveId).then(function(response) {
-      console.log('response.data', response.data);
       var isReady = response.data.isReady;
       if (isReady) {
         var videoUrl = response.data.video.url;
@@ -321,11 +320,19 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
   };
 
+  ctrl.createArchive = function() {
+    ArchiveService.generateOpts(function(opts) {
+      ArchiveService.createArchive(opts).then(function(response) {
+        console.log('On Create Archive Response', response);
+      }, function(err) {
+        console.error(err);
+      })
+    });
+  };
+
   ctrl.openShareDialog = function() {
-    var partnerId = localStorageService.get('archive').partnerId;
-    var archiveId = localStorageService.get('archive').id;
-    var url = FacebookService.generateUrl(partnerId, archiveId);
-    FacebookService.openShareDialog(url);
+    var href = FacebookService.generateHref();
+    FacebookService.openShareDialog(href);
   };
 
   ctrl.toggleUpload = function(isClosed) {
@@ -395,5 +402,5 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
   };
 
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'FacebookService', 'StateService', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'FacebookService', 'StateService', 'ArchiveService', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
 }

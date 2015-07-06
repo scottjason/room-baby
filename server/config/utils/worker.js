@@ -1,7 +1,7 @@
 var CronJob = require('cron').CronJob;
 var Session = require('../../models/session');
 
-exports.initialize = function() {
+exports.start = function() {
 
   new CronJob('*/30 * * * * *', function() {
     Session.find({}, function(err, sessions) {

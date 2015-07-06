@@ -24,7 +24,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   };
 
   this.onUserName = function() {
-    console.log('onset username in footer.js');
     PubSub.trigger('setUserName', $scope.user.username);
   };
 
@@ -33,7 +32,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   };
 
   this.onOptSelected = function(optSelected) {
-    var isEnabled = ($rootScope.connectionCount > 1)
+    var isEnabled = ($rootScope.connectionCount > 1);
     if (optSelected === 'disconnect') {
       PubSub.trigger('disconnect');
     } else if (!isEnabled) {

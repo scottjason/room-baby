@@ -8,9 +8,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var ctrl = this;
   $scope.room = {};
 
-  var data = {};
-  data.message = 'hello';
-
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -47,9 +44,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     PubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
 
-
   ctrl.initialize = function() {
     if (localStorageService.get('isFacebookLogin')) {
+      StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
       PubSub.trigger('toggleNavBar', true);
@@ -274,7 +271,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.saveUserName = function(payload) {
     UserApi.saveUserName(payload).then(function(response) {
-      localStorageService.remove('isFacebookLogin')
+      localStorageService.remove('isFacebookLogin');
       var user = response.data.user;
       PubSub.trigger('setUser', user);
       $scope.user = user;

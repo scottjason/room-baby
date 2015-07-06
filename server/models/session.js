@@ -14,7 +14,6 @@ var sessionSchema = new mongoose.Schema({
       type: String
     }
   }],
-  activeUsers: [],
   name: {
     type: String
   },
@@ -30,9 +29,6 @@ var sessionSchema = new mongoose.Schema({
   secret: {
     type: String
   },
-  activeUsers: {
-    type: Array
-  },
   createdBy: {
     username: {
       type: String
@@ -43,7 +39,10 @@ var sessionSchema = new mongoose.Schema({
     }
   },
   createdAt: {
-    type: Date
+    type: Number
+  },
+  updatedAt: {
+    type: Number
   },
   startsAt: {
     type: Number
@@ -54,7 +53,8 @@ var sessionSchema = new mongoose.Schema({
 });
 
 sessionSchema.pre('save', function(callback) {
-  this.createdAt = this.createdAt ? this.createdAt : new Date();
+  this.createdAt = this.createdAt ? this.createdAt : new Date().getTime();
+  this.updatedAt = new Date().getTime();
   callback();
 });
 

@@ -78,7 +78,7 @@ angular.module('RoomBaby')
       });
       return (request.then(successHandler, errorHandler));
     }
-
+    
     function successHandler(response) {
       return (response);
     }

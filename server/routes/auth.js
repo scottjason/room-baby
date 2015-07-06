@@ -1,5 +1,5 @@
 /**
- * Auth Router
+ * auth Router
  */
 
 'use strict';
