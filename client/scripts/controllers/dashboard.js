@@ -130,6 +130,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* recursive method to get statuses of room */
   function getStatus() {
+    console.log('getting statuses')
     var table = StateService.data['Session'].table
     TimeService.getStatus(table, function(isSessionReady, table) {
       if (!isSessionReady) {
@@ -195,10 +196,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-        if (isOnLoad) {
-          getStatus();
-        }
       });
+      if (isOnLoad && sessions.length) {
+        getStatus();
+      }
     };
   };
 
