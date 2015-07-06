@@ -51,6 +51,9 @@ angular.module('RoomBaby')
         'options': {
           'connect': false
         }
+      },
+      'Auth': {
+        'isFacebook': false
       }
     };
 

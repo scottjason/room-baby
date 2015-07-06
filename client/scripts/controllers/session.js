@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('SessionCtrl', SessionCtrl);
 
-function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantService, TimeService, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
+function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookService, StateService, ConstantService, TimeService, ngDialog, UserApi, SessionApi, PubSub, Transport, localStorageService) {
 
   var ctrl = this;
   var now = moment(new Date()).calendar();
@@ -56,6 +56,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     $rootScope.isDissconected = false;
     $scope.user = localStorageService.get('user');
     $scope.otSession = localStorageService.get('otSession');
+
+    StateService.data['Auth'].isFacebook = ($scope.user.facebook && $scope.user.facebook.token) ? true : false;
+
     PubSub.on('shareFile', ctrl.shareFile);
     PubSub.on('requestPermission', ctrl.requestPermission);
     PubSub.on('stopRecording', ctrl.stopRecording);
@@ -64,6 +67,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     PubSub.on('enterBtn:onChatMessage', this.sendMessage);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('setUser', $scope.user);
+
     ctrl.isExpired($scope.otSession.expiresAtMsUtc);
     ctrl.createSession($scope.otSession);
   };
@@ -207,7 +211,12 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
       Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
-        ctrl.generateVideoEmbed();
+        var isFacebookLogin = StateService.data['Auth'].isFacebook;
+        if (isFacebookLogin) {
+          ctrl.openShareDialog();
+        } else {
+          console.log('user not logged in through facebook');
+        }
       });
     });
 
@@ -297,7 +306,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
   };
 
   ctrl.getVideoStatus = function(archiveId) {
-    console.log('getVideoStatus called', archiveId || $scope.archiveId)
     $scope.archiveId = archiveId ? archiveId : $scope.archiveId
     SessionApi.getVideoStatus($scope.archiveId).then(function(response) {
       console.log('response.data', response.data);
@@ -313,11 +321,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     });
   };
 
-  ctrl.generateVideoEmbed = function() {
+  ctrl.openShareDialog = function() {
     var partnerId = localStorageService.get('archive').partnerId;
     var archiveId = localStorageService.get('archive').id;
-    var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
-    console.log('url', url);
+    var url = FacebookService.generateUrl(partnerId, archiveId);
+    FacebookService.openShareDialog(url);
   };
 
   ctrl.toggleUpload = function(isClosed) {
@@ -387,5 +395,5 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, ConstantServ
     });
   };
 
-  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
+  SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'FacebookService', 'StateService', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
 }

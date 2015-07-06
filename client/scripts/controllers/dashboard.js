@@ -204,31 +204,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         if (isOnLoad) {
           getStatus();
         }
-        // FB.api(
-        //   "/{page-id}/videos",
-        //   "POST", {
-        //   'file_url': 'https://s3-us-west-2.amazonaws.com/rtc-videos/45238782/e42810ef-7639-4fcd-aeb5-25c8833667c4/archive.mp4'
-
-        //     // "source": "{video-data}"
-        //   },
-        //   function(response) {
-        //     console.log(response);
-        //     if (response && !response.error) {
-        //       /* handle the result */
-        //     }
-        //   }
-        // );
-        // FB.ui({
-        //   method: 'feed',
-        //   name: 'Room Baby Video',
-        //   link: 'http://www.facebook.com',
-        //   picture: 'http://img.youtube.com/vi/1CE6W5BubQo/0.jpg',
-        //   caption: 'My caption',
-        //   description: 'My description',
-        //   source: 'https://s3-us-west-2.amazonaws.com/rtc-videos/45238782/e42810ef-7639-4fcd-aeb5-25c8833667c4/archive.mp4'
-        // }, function(res) {
-        //   console.log('res', res);
-        // });
       });
     };
   };
