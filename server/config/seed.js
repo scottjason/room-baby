@@ -6,6 +6,7 @@
 
 var User = require('../models/user');
 var Session = require('../models/session');
+var Archive = require('../models/archive');
 var OpenTok = require('opentok');
 var async = require('async');
 var moment = require('moment');
@@ -149,6 +150,7 @@ var createSessionTwo = function createSessionTwo(arr) {
     if (session.users[1].username) session.createdBy.username = session.users[1].username;
     session.save(function(err, savedSession) {
       if (err) return console.log(err);
+      createArchiveOne(savedSession);
     });
   });
 }
@@ -182,7 +184,39 @@ var createSessionThree = function createSessionThree(arr) {
       if (err) return console.log(err);
     });
   });
-}
+};
+
+
+var createArchiveOne = function createArchiveOne(session) {
+  var archive = new Archive();
+  archive.sessionId = session._id;
+  archive.sessionStart = session.startsAt;
+  archive.users = session.users;
+  archive.name = session.name;
+  archive.shortUrl = 'http://wwww.google.com/';
+  archive.longUrl = 'http://wwww.github.com/';
+  archive.save(function(err, savedArchive){
+    console.log(savedArchive)
+    if (err) console.log('err', err);
+    createArchiveTwo(savedArchive)
+  });
+};
+
+var createArchiveTwo = function createArchiveTwo(savedArchive) {
+  var tenMinutes = 600000;
+  var archive = new Archive();
+  archive.sessionId = '0101010101010101';
+  archive.sessionStart = (savedArchive.sessionStart - tenMinutes);
+  archive.users = savedArchive.users;
+  archive.name = 'JS Review';
+  archive.shortUrl = 'http://wwww.amazon.com/';
+  archive.longUrl = 'http://wwww.netflix.com/';
+  archive.save(function(err, archiveTwo){
+    if (err) console.log('err', err);
+    console.log('saved archive two', archiveTwo);
+  });
+};
+
 exports.init = function() {
   clearDb();
 };

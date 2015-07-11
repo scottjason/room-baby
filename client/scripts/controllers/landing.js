@@ -21,7 +21,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         var opts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(opts);
       } else if (response.status === 401) {
-        localStorageService.clearAll()
+        localStorageService.clearAll();
         ctrl.initialize();
       } else {
         localStorageService.clearAll()
@@ -59,7 +59,9 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       localStorageService.clearAll();
-      $state.go($state.current, {}, {reload: true});
+      $state.go($state.current, {}, {
+        reload: true
+      });
     }
   };
 
@@ -148,14 +150,14 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 
   ctrl.login = function(opts) {
     UserApi.login(opts).then(function(response) {
-      if (response.status === 200 && !response.data.sessions) {
-        localStorageService.set('user', response.data.user);
-        var opts = UserApi.generateOpts(response.data.user);
-        ctrl.grantAccess(opts);
-      } else if (response.status === 200 && response.data.sessions) {
-        localStorageService.set('user', response.data.user);
-        localStorageService.set('sessions', response.data.sessions);
-        var opts = UserApi.generateOpts(response.data.user);
+      if (response.status == 200) {
+        var user = response.data.user;
+        var sessions = response.data.sessions ? response.data.sessions : null;
+        var archives = response.data.archives ? response.data.archives : null;
+        localStorageService.set('user', user);
+        localStorageService.set('sessions', sessions);
+        localStorageService.set('archives', archives);
+        var opts = UserApi.generateOpts(user);
         ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         ctrl.renderError(response.data.message)

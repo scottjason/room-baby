@@ -1,12 +1,10 @@
-var Session = require('./session');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var moment = require('moment');
 var uuid = require('node-uuid');
 
-var toLower = function toLower(v) {
-  return v.toLowerCase();
-}
+var toLower = function toLower(str) {
+  return str.toLowerCase();
+};
 
 var userSchema = new mongoose.Schema({
   username: {
@@ -26,13 +24,14 @@ var userSchema = new mongoose.Schema({
     name: String,
   },
   profileImage: {
-    type: String, default: 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg'
+    type: String,
+    default: 'https://raw.githubusercontent.com/scottjason/room-baby/master/client/assets/img/image-default-one.jpg'
   },
   createdAt: {
-    type: Date
+    type: Number
   },
   updatedAt: {
-    type: Date
+    type: Number
   },
   utils: {
     resetPassToken: {
@@ -45,8 +44,8 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', function(callback) {
-  if (!this.createdAt) this.createdAt = new Date();
-  this.updatedAt = new Date();
+  if (!this.createdAt) this.createdAt = new Date().getTime();
+  this.updatedAt = new Date().getTime();
 
   if (this.password) {
     var _this = this;

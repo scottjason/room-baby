@@ -100,11 +100,11 @@ angular.module('RoomBaby')
 
     function successHandler(response) {
       return (response);
-    };
+    }
 
     function errorHandler(response) {
       return (response);
-    };
+    }
 
     return ({
       login: login,

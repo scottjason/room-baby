@@ -8,9 +8,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var ctrl = this;
   $scope.room = {};
 
-  var data = {};
-  data.message = 'hello';
-
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -22,13 +19,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
-
-        if (localStorageService.get('user')) {
-          $scope.user = localStorageService.get('user');
-        }
-        if (localStorageService.get('sessions')) {
-          $scope.sessions = localStorageService.get('sessions');
-        }
+        $scope.user = localStorageService.get('user');
+        $scope.sessions = localStorageService.get('sessions');
+        $scope.archives = localStorageService.get('archives');
         ctrl.initialize();
       } else {
         localStorageService.clearAll()
@@ -47,9 +40,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     PubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
 
-
   ctrl.initialize = function() {
     if (localStorageService.get('isFacebookLogin')) {
+      StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
       PubSub.trigger('toggleNavBar', true);
@@ -57,6 +50,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
       ctrl.renderTable(true);
+      console.log('$scope.archives', $scope.archives);
     }
   };
 
@@ -136,6 +130,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* recursive method to get statuses of room */
   function getStatus() {
+    console.log('getting statuses')
     var table = StateService.data['Session'].table
     TimeService.getStatus(table, function(isSessionReady, table) {
       if (!isSessionReady) {
@@ -201,10 +196,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         if (!$scope.$$phase) {
           $scope.$apply();
         }
-        if (isOnLoad) {
-          getStatus();
-        }
       });
+      if (isOnLoad && sessions.length) {
+        getStatus();
+      }
     };
   };
 
@@ -274,7 +269,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.saveUserName = function(payload) {
     UserApi.saveUserName(payload).then(function(response) {
-      localStorageService.remove('isFacebookLogin')
+      localStorageService.remove('isFacebookLogin');
       var user = response.data.user;
       PubSub.trigger('setUser', user);
       $scope.user = user;
