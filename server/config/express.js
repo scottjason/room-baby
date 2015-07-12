@@ -11,7 +11,6 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var multer  = require('multer')
 var methodOverride = require('method-override');
-var favicon = require('serve-favicon');
 var session = require('express-session');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
@@ -29,8 +28,6 @@ module.exports = function(app, passport){
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
-
-  app.use(favicon(path.join(config.root, 'client/assets/img/rb-favicon.ico')));
 
   app.use(compression({ threshold: 512 }));
 
