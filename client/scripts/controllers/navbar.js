@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, localStorageService) {
 
   var ctrl = this;
 
@@ -12,6 +12,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localS
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('setUser', ctrl.setUser);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
+    StateService.data['Controllers'].Navbar.isReady = true;
   };
 
   this.createRoom = function() {
@@ -74,5 +75,5 @@ function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localS
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'localStorageService'];
 }

@@ -417,7 +417,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, localStorageService) {
+function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
 
   var ctrl = this;
 
@@ -435,6 +435,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     PubSub.on('isRecording', ctrl.isRecording);
     PubSub.on('featureDisabled', ctrl.featureDisabled);
     PubSub.on('generatingVideo', ctrl.onGeneratingVideo);
+    StateService.data['Controllers'].Footer.isReady = true;
   };
 
   this.onUserName = function() {
@@ -528,7 +529,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     $scope.showGeneratingVideo = _bool;
   }
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'localStorageService'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
 }
 
 
@@ -543,10 +544,10 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 
 
   this.registerEvents = function() {
+
     PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
     PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
-    PubSub.trigger('toggleNavBar', false);
-    PubSub.trigger('toggleFooter', false);
+    StateService.data['Controllers'].Landing.isReady = true;
   };
 
   this.isAuthenticated = function() {
@@ -564,6 +565,22 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
     }, function(err) {
       console.error(err);
     });
+  };
+
+  this.getState = function() {
+    function getState() {
+      var isFooterReady = StateService.data['Controllers'].Footer.isReady;
+      var isNavReady = StateService.data['Controllers'].Navbar.isReady;
+      if (isFooterReady && isNavReady) {
+        console.log('is ready');
+        PubSub.trigger('toggleNavBar', false);
+        PubSub.trigger('toggleFooter', false);
+      } else {
+        console.log('else block')
+        $timeout(getState, 200);
+      }
+    }
+    getState();
   };
 
   this.onOptSelected = function(optSelected) {
@@ -709,14 +726,16 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
+        var opts = { user_id: user._id }
         localStorageService.set('user', user);
-        ctrl.grantAccess(user);
+        ctrl.grantAccess(opts);
       } else {
         var user = response.data.user;
         var session = response.data.sessions;
+        var opts = { user_id: user._id }
         localStorageService.set('sessions', sessions);
         localStorageService.set('user', user);
-        ctrl.grantAccess(user);
+        ctrl.grantAccess(opts);
       }
     }, function(err) {
       console.log(err);
@@ -746,7 +765,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, localStorageService) {
 
   var ctrl = this;
 
@@ -755,6 +774,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localS
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('setUser', ctrl.setUser);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
+    StateService.data['Controllers'].Navbar.isReady = true;
   };
 
   this.createRoom = function() {
@@ -817,7 +837,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localS
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'localStorageService'];
 }
 
 
@@ -1764,6 +1784,23 @@ angular.module('RoomBaby')
       'Facebook': {
         'shareDialog': {
           'isOpen': false
+        }
+      },
+      'Controllers': {
+        'Footer': {
+          'isReady': false
+        },
+        'Landing': {
+          'isReady': false
+        },
+        'Dashboard': {
+          'isReady': false
+        },
+        'Session': {
+          'isReady': false
+        },
+        'Navbar': {
+          'isReady': false
         }
       }
     };

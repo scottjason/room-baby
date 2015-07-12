@@ -59,6 +59,23 @@ angular.module('RoomBaby')
         'shareDialog': {
           'isOpen': false
         }
+      },
+      'Controllers': {
+        'Footer': {
+          'isReady': false
+        },
+        'Landing': {
+          'isReady': false
+        },
+        'Dashboard': {
+          'isReady': false
+        },
+        'Session': {
+          'isReady': false
+        },
+        'Navbar': {
+          'isReady': false
+        }
       }
     };
 

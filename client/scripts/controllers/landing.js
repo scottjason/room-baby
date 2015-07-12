@@ -9,10 +9,10 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 
 
   this.registerEvents = function() {
+
     PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
     PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
-    PubSub.trigger('toggleNavBar', false);
-    PubSub.trigger('toggleFooter', false);
+    StateService.data['Controllers'].Landing.isReady = true;
   };
 
   this.isAuthenticated = function() {
@@ -30,6 +30,22 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
     }, function(err) {
       console.error(err);
     });
+  };
+
+  this.getState = function() {
+    function getState() {
+      var isFooterReady = StateService.data['Controllers'].Footer.isReady;
+      var isNavReady = StateService.data['Controllers'].Navbar.isReady;
+      if (isFooterReady && isNavReady) {
+        console.log('is ready');
+        PubSub.trigger('toggleNavBar', false);
+        PubSub.trigger('toggleFooter', false);
+      } else {
+        console.log('else block')
+        $timeout(getState, 200);
+      }
+    }
+    getState();
   };
 
   this.onOptSelected = function(optSelected) {
@@ -175,14 +191,16 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
+        var opts = { user_id: user._id }
         localStorageService.set('user', user);
-        ctrl.grantAccess(user);
+        ctrl.grantAccess(opts);
       } else {
         var user = response.data.user;
         var session = response.data.sessions;
+        var opts = { user_id: user._id }
         localStorageService.set('sessions', sessions);
         localStorageService.set('user', user);
-        ctrl.grantAccess(user);
+        ctrl.grantAccess(opts);
       }
     }, function(err) {
       console.log(err);

@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, localStorageService) {
+function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
 
   var ctrl = this;
 
@@ -21,6 +21,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     PubSub.on('isRecording', ctrl.isRecording);
     PubSub.on('featureDisabled', ctrl.featureDisabled);
     PubSub.on('generatingVideo', ctrl.onGeneratingVideo);
+    StateService.data['Controllers'].Footer.isReady = true;
   };
 
   this.onUserName = function() {
@@ -114,5 +115,5 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     $scope.showGeneratingVideo = _bool;
   }
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'localStorageService'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
 }
