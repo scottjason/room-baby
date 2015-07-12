@@ -1,5 +1,4 @@
 dist/
-client/build/
 client/bower_components/
 server/uploads/
 node_modules/
