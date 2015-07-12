@@ -7,7 +7,7 @@
 var env = {};
 var path = require('path');
 
-if (process.env.HOME === '/Users/scottjason') {
+if (!process.NODE_ENV) {
   env = require('../../env.js');
 }
 
