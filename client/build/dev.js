@@ -783,7 +783,8 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
 
   this.dropdown = function(opt) {
     if (opt === 'logout') {
-      ctrl.logout($scope.user._id);
+      var userId = localStorageService.get('user')._id;
+      ctrl.logout(userId);
     }
   };
 
