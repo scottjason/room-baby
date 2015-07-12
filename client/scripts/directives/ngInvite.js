@@ -11,13 +11,17 @@ angular.module('RoomBaby')
         onTimeSet: '=',
       },
       link: function(scope, element, attrs) {
-        element.bind('click', function($event){
-          console.log('event', $event);
+        element.bind('click', function($event) {
+          var isCreateRoomNowBtn = ($event.target.id === 'on-create-room-now');
+          var isCreateRoomLaterBtn = ($event.target.id === 'on-create-room-later');
+          if (isCreateRoomNowBtn || isCreateRoomLaterBtn) {
+            isCreateRoomNowBtn ? PubSub.trigger('createRoomOpt', true) : PubSub.trigger('createRoomOpt', null);
+          }
           var isSubmitBtn = ($event.target.id === 'on-create-room-submit');
           var isValid = StateService.data['createRoom']['formData'].isValid;
           if (isSubmitBtn && isValid) {
             PubSub.trigger('createRoom:renderConfirmation');
-          } else if (isSubmitBtn && !isValid)  {
+          } else if (isSubmitBtn && !isValid) {
             PubSub.trigger('createRoom:renderMessage', 'createRoomErr', 'please complete all fields');
           }
         });

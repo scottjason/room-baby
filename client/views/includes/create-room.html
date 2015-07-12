@@ -12,6 +12,14 @@
           </span>
     </p>
     <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
+
+    <div ng-hide='showCalendar'>
+    <div id="on-create-room-now" class="btn-custom create-room-now-btn">Connect Now</div>
+    <p class='or-create-room'>or</p>
+    <div id="on-create-room-later" class="btn-custom create-room-later-btn">Schedule For Later</div>
+    </div>
+
+    <div ng-show='showCalendar'>
     <p ng-hide='dashCtrl.isValidInput("startDate")' class='create-room-start-copy' ng-class='{ "error-color" : ( invalidDateErr ) }'>{{ invalidDateErr || 'and a start date and start time for the session' }}</p>
     <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time
       <span>
@@ -24,7 +32,10 @@
       <datetimepicker id="date-picker" data-ng-model="date.dates" data-before-render="dashCtrl.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" data-datetimepicker-config="dashCtrl.configDateTimePicker()" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)">
       </datetimepicker>
     </div>
+  </div>
   </form>
+  <div ng-show='showCalendar'>
   <div ng-hide='createRoomErr' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
   <p class='create-room-err'>{{ createRoomErr }}</p>
+  </div>
 </div ng-invite>

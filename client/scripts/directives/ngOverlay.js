@@ -16,6 +16,12 @@ angular.module('RoomBaby')
           Animator.run(obj);
         } else if (isOpen && isExitBtn && !isSubmitBtn) {
           StateService.data['overlay'].isOpen = false;
+          if (scope.showCalendar) {
+            scope.showCalendar = false;
+            if (!scope.$$phase) {
+              scope.$apply();
+            }
+          }
           obj.type = 'onOverlayExit';
           Animator.run(obj);
         }

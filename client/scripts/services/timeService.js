@@ -224,7 +224,7 @@ angular.module('RoomBaby')
         if (isValid) {
           var obj = {};
           obj.localFormatted = moment(new Date(startsAtMsUtc)).format("dddd, MMMM Do YYYY, h:mm a");
-          obj.expiresAtMsUtc = addMinutes(startsAtMsUtc, 10);
+          obj.expiresAtMsUtc = addMinutes(startsAtMsUtc, 5);
           cb(isValid, obj);
         } else {
           cb(isValid, null);

@@ -324,6 +324,74 @@ button#details.btn.btn-md.members {
   transition: all 1s ease;
 }
 
+.btn-custom.create-room-now-btn,
+.btn-custom.create-room-now-btn:hover,
+.btn-custom.create-room-now-btn:active,
+.btn-custom.create-room-now-btn:focus {
+  border: 1px solid #7EB1DC;
+  width: 200px;
+  position: relative;
+  font-weight: 300;
+  text-decoration: none;
+  padding: 9px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, .9);
+  top: 165px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  background: 0 0;
+  z-index: 5;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+  font-size: 12px;
+  height: 39px;
+}
+
+.btn-custom.create-room-later-btn,
+.btn-custom.create-room-later-btn:hover,
+.btn-custom.create-room-later-btn:active,
+.btn-custom.create-room-later-btn:focus {
+  border: 1px solid #7EB1DC;
+  width: 200px;
+  position: relative;
+  font-weight: 300;
+  text-decoration: none;
+  padding: 9px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  color: rgba(255,255,255,.9);
+  top: 200px;
+  margin: auto;
+  left: 0;
+  right: 0;
+  background: 0 0;
+  z-index: 5;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+  font-size: 12px;
+  height: 39px;
+}
+
+p.or-create-room {
+  color: white;
+  position: absolute;
+  top: 210px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 14px;
+}
+
 .btn-custom.create-room-confirm-btn,
 .btn-custom.create-room-confirm-btn:hover,
 .btn-custom.create-room-confirm-btn:active,
