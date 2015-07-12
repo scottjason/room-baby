@@ -4,7 +4,7 @@
 
 'use strict';
 
-var env;
+var env = {};
 var path = require('path');
 
 if (process.env.HOME === '/Users/scottjason') {
