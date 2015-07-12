@@ -7,6 +7,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   var ctrl = this;
   $scope.room = {};
+  StateService.data['Facebook'].shareDialog.isOpen = false;
 
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
@@ -45,12 +46,33 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
+      ctrl.getSessions();
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('setUser', $scope.user);
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
       ctrl.renderTable(true);
-      console.log('$scope.archives', $scope.archives);
+    }
+  };
+
+  ctrl.getSessions = function() {
+    var startingLen;
+    if (localStorageService.get('sessions')) {
+      startingLen = localStorageService.get('sessions').length;
+    };
+    SessionApi.getAll($scope.user._id).then(function(response) {
+      if (startingLen && response.data.sessions && response.data.sessions.length > startingLen) {
+        console.log('add new session');
+        localStorageService.set('sessions', response.data.sessions);
+        ctrl.renderTable(null);
+      } else if (!startingLen && response.data.sessions) {
+        console.log('one new session from zero');
+        localStorageService.set('sessions', response.data.sessions);
+        ctrl.renderTable(null);
+      }
+    });
+    if ($state.current.name === 'dashboard') {
+      $timeout(ctrl.getSessions, 1500);
     }
   };
 
@@ -60,6 +82,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on dashboard option selected */
   this.onOptSelected = function($event, otSession) {
+    console.log($event)
     if ($event.currentTarget.name === 'connect') {
       ctrl.connect(otSession);
     } else if ($event.currentTarget.id === 'on-create-room-confirm') {
@@ -169,19 +192,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.showLoading = false;
         StateService.data['overlay'].isOpen = false;
       }, 1200);
-      ctrl.addRoom(response.data.session);
     }, function(err) {
       console.log(err)
     });
-  };
-
-  /* then on success, add the new room to client-side storage and re-render table */
-  ctrl.addRoom = function(newRoom) {
-    var sessions = localStorageService.get('sessions');
-    sessions.push(newRoom);
-    localStorageService.set('sessions', sessions);
-    $scope.showLoading = false;
-    ctrl.renderTable(null);
   };
 
   /* render table (or re-render after save room) */
@@ -204,8 +217,16 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.renderMessage = function(binding, message) {
+    console.log('in dashboard ctrl render message');
+    console.log('binding', binding);
+    console.log('message', message);
     $scope[binding] = message;
-    $scope.$apply();
+    console.log($scope);
+    if (!$scope.$$phase) {
+      $timeout(function() {
+        $scope.$apply();
+      });
+    }
     $timeout(function() {
       $scope[binding] = '';
     }, 1600);
@@ -238,13 +259,13 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.onFacebookSuccess = function(user, sessions) {
     $scope.user = user;
-
     if (sessions) {
       localStorageService.set('sessions', sessions);
     }
     if (!$scope.user.username) {
       ctrl.getUserName();
     } else {
+      ctrl.getSessions();
       PubSub.trigger('toggleNavBar', true);
       var obj = {};
       obj.type = 'onDashboard';
@@ -279,6 +300,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.onUserNameSuccess = function() {
+    ctrl.getSessions();
     ngDialog.closeAll();
     $timeout(function() {
       PubSub.trigger('toggleNavBar', true);

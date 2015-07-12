@@ -41,8 +41,12 @@ function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageSer
   this.isTwentySecondsLeft = function() {
     if ($rootScope.isDissconected) {
       return false;
-    } else {
-      return $scope.twentySecondsLeft;
+    } else if($rootScope.isRecording && $scope.twentySecondsLeft) {
+      $rootScope.isRecording = false;
+      PubSub.trigger('stopRecording');
+      return true;
+    } else if ($scope.twentySecondsLeft) {
+      return true;
     }
   };
 

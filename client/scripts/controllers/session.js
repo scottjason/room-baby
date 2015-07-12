@@ -172,6 +172,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
           chatbox.append(html);
           Transport.scroll('down');
           $timeout(bindListeners, 100);
+
           function bindListeners() {
             document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
             document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
@@ -189,6 +190,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
 
     $scope.session.on('signal:startRecording', function() {
+      $rootScope.isRecording = true;
       PubSub.trigger('isRecording', true);
     });
 
@@ -211,7 +213,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
         Transport.scroll('down');
         ctrl.createArchive();
         var isFacebookLogin = StateService.data['Auth'].isFacebook;
-        if (isFacebookLogin) {
+        var isOpen = StateService.data['Facebook'].shareDialog.isOpen;
+        if (isFacebookLogin && !isOpen) {
           ctrl.openShareDialog();
         } else {
           console.log('user not logged in through facebook');
@@ -330,7 +333,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.openShareDialog = function() {
+    StateService.data['Facebook'].shareDialog.isOpen = true;
     var href = FacebookService.generateHref();
+    localStorageService.set('href', href);
     FacebookService.openShareDialog(href);
   };
 
@@ -378,7 +383,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
   ctrl.routeToDashboard = function(opts) {
     PubSub.trigger('toggleFooter', false);
-    $state.go('dashboard', opts);
+    $window.location.href = $window.location.protocol + '//' + $window.location.host + $window.location.pathname;
   };
 
   ctrl.emit = function(type, message) {
@@ -392,7 +397,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.broadcast = function(type, message) {
-    console.log('type', type);
     $scope.session.signal({
       type: type,
       data: message,

@@ -12,6 +12,7 @@ angular.module('RoomBaby')
       },
       link: function(scope, element, attrs) {
         element.bind('click', function($event){
+          console.log('event', $event);
           var isSubmitBtn = ($event.target.id === 'on-create-room-submit');
           var isValid = StateService.data['createRoom']['formData'].isValid;
           if (isSubmitBtn && isValid) {

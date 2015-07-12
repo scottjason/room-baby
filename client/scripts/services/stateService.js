@@ -54,6 +54,11 @@ angular.module('RoomBaby')
       },
       'Auth': {
         'isFacebook': false
+      },
+      'Facebook': {
+        'shareDialog': {
+          'isOpen': false
+        }
       }
     };
 

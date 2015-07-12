@@ -27,6 +27,7 @@ module.exports = {
       'client/bower_components/angular-route/angular-route.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
       'client/bower_components/angular-sanitize/angular-sanitize.js',
+      'client/bower_components/async/lib/async.js',
       'client/bower_components/underscore/underscore.js',
       'client/bower_components/angular-smart-table/dist/smart-table.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
