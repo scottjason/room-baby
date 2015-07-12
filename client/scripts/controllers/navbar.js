@@ -7,6 +7,8 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
 
   var ctrl = this;
 
+  $scope.user = localStorageService.get('user');
+
   this.registerEvents = function() {
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
