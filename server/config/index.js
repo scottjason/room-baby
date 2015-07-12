@@ -4,12 +4,16 @@
 
 'use strict';
 
+var env;
 var path = require('path');
-var env = require('../../env.js');
+
+if (process.env.HOME === '/Users/scottjason') {
+  env = require('../../env.js');
+}
 
 module.exports = {
   db: {
-    uri:process.env.MONGOLAB_URI || env.MONGOLAB_URI_DEV,
+    uri: process.env.MONGOLAB_URI || env.MONGOLAB_URI_DEV,
     opts: {
       server: {
         socketOptions: {
@@ -25,19 +29,19 @@ module.exports = {
   sessionOpts: {
     saveUninitialized: true,
     resave: true,
-    secret: env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || env.SESSION_SECRET,
     cookie: {
       maxAge: new Date(Date.now() + 1209600000),
       expires: new Date(Date.now() + 1209600000)
     }
   },
   transport: {
-    email: env.EMAIL,
-    password: env.PASSWORD
+    email: process.env.EMAIL || env.EMAIL,
+    password: process.env.PASSWORD || env.PASSWORD
   },
   openTok: {
-    key: env.OT_KEY,
-    secret: env.OT_SECRET
+    key: process.env.OT_KEY || env.OT_KEY,
+    secret: process.env.OT_SECRET || env.OT_SECRET
   },
   seed: {
     userOne: {
@@ -64,27 +68,27 @@ module.exports = {
   },
   aws: {
     credens: {
-      accessKeyId: env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-      region: env.AWS_REGION
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION || env.AWS_REGION
     },
-    bucket: env.S3_BUCKET,
-    acl: env.S3_ACL,
-    base: env.S3_BASE
+    bucket: process.env.S3_BUCKET || env.S3_BUCKET,
+    acl: process.env.S3_ACL || env.S3_ACL,
+    base: process.env.S3_BASE || env.S3_BASE
   },
   bitly: {
-    username: env.BITLY_LOGIN,
-    key: env.BITLY_KEY
+    username: process.env.BITLY_LOGIN || env.BITLY_LOGIN,
+    key: process.env.BITLY_KEY || env.BITLY_KEY
   },
 
   facebook: {
-    clientID: env.FACEBOOK_ID,
-    clientSecret: env.FACEBOOK_SECRET,
-    callbackURL: env.FACEBOOK_CB
+    clientID: process.env.FACEBOOK_ID || env.FACEBOOK_ID,
+    clientSecret: process.env.FACEBOOK_SECRET || env.FACEBOOK_SECRET,
+    callbackURL: process.env.FACEBOOK_CB || env.FACEBOOK_CB
   },
   apis: {
-    activeUsers: env.ACTIVE_USERS_API,
-    activeUsersApiKey: env.ACTIVE_USERS_API_KEY,
-    videoStatus : env.VIDEO_STATUS_API
+    activeUsers: process.env.ACTIVE_USERS_API || env.ACTIVE_USERS_API,
+    activeUsersApiKey: process.env.ACTIVE_USERS_API_KEY || env.ACTIVE_USERS_API_KEY,
+    videoStatus: process.env.VIDEO_STATUS_API || env.VIDEO_STATUS_API
   },
 }

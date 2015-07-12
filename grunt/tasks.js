@@ -5,6 +5,6 @@ exports.get = function(type) {
     return ['clean:all', 'concurrent:concat', 'concurrent:minify', 'copy:bower_fonts', 'concurrent:watch'];
   }
   if (type === 'deploy') {
-    return ['clean:all', 'concurrent:concat', 'concurrent:minify', 'copy:bower_fonts', 'concurrent:copy'];
+    return ['clean:all', 'concurrent:concat', 'concurrent:minify', 'copy:bower_fonts'];
   }
 };

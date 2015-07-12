@@ -31,14 +31,11 @@ module.exports = function(app, passport){
 
   app.use(compression({ threshold: 512 }));
 
+  app.use(express.static(path.join(config.root, 'client')));
+
   if ('development' === app.get('env')) {
-    app.use(express.static(path.join(config.root, 'client')));
     app.use(logger('dev'));
     seedDb.init();
-  }
-
-  if ('development' !== app.get('env')) {
-    app.use(express.static(path.join(config.root, 'dist')));
   }
 
   app.use(bodyParser.json());
