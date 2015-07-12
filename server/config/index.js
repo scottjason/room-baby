@@ -7,7 +7,7 @@
 var env = {};
 var path = require('path');
 
-if (!process.NODE_ENV) {
+if (process.NODE_ENV !== 'production') {
   env = require('../../env.js');
 }
 
