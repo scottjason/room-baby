@@ -137,12 +137,17 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
       ctrl.getSessions();
+      ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('setUser', $scope.user);
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
       ctrl.renderTable(true);
     }
+  };
+
+  ctrl.isExpired = function() {
+    TimeService.checkExpiration();
   };
 
   ctrl.getSessions = function() {
@@ -170,7 +175,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   ctrl.renderConfirmation = function() {
     $scope.showConfirmation = true;
   };
- 
+
   ctrl.onCreateRoomOpt = function(isNow) {
     if (isNow) {
       var isValidName = StateService.data['createRoom']['name'].isValid;
@@ -291,6 +296,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.getUserName();
     } else {
       ctrl.getSessions();
+      ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
       var obj = {};
       obj.type = 'onDashboard';
@@ -326,6 +332,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.onUserNameSuccess = function() {
     ctrl.getSessions();
+    ctrl.isExpired();
     ngDialog.closeAll();
     $timeout(function() {
       PubSub.trigger('toggleNavBar', true);

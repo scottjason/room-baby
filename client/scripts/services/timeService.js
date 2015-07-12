@@ -34,10 +34,10 @@ angular.module('RoomBaby')
             break;
           }
         }
-        if (!foundExpiredSession) {
+        if (!foundExpiredSession && $state.current.name === 'dashboard') {
           $timeout(checkExpiration, 500);
         }
-      } else {
+      } else if ($state.current.name === 'dashboard') {
         $timeout(checkExpiration, 500);
       }
     }

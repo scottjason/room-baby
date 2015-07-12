@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $window, UserApi, PubSub, localStorageService) {
 
   var ctrl = this;
 
@@ -41,7 +41,7 @@ function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageSer
   this.isTwentySecondsLeft = function() {
     if ($rootScope.isDissconected) {
       return false;
-    } else if($rootScope.isRecording && $scope.twentySecondsLeft) {
+    } else if ($rootScope.isRecording && $scope.twentySecondsLeft) {
       $rootScope.isRecording = false;
       PubSub.trigger('stopRecording');
       return true;
@@ -67,11 +67,12 @@ function NavBarCtrl($scope, $rootScope, $state, UserApi, PubSub, localStorageSer
   };
 
   ctrl.logout = function(user_id) {
+
     localStorageService.clearAll();
     UserApi.logout(user_id).then(function(response) {
-      $state.go('landing');
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'UserApi', 'PubSub', 'localStorageService'];
 }
