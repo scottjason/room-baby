@@ -231,7 +231,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.renderConfirmation = function() {
-    $scope.showConfirmation = true;
+    var opts = {
+      type: 'onRenderConfirmation'
+    };
+    Animator.run(opts, function() {
+      $scope.showConfirmation = true;
+    });
   };
 
   ctrl.onCreateRoomOpt = function(isNow) {
@@ -1290,6 +1295,8 @@ angular.module('RoomBaby')
         onRenderLoading(obj.props);
       } else if (type === 'onShowCalendar') {
         onShowCalendar(cb);
+      } else if (type === 'onRenderConfirmation') {
+        onRenderConfirmation(cb);
       }
     }
 
@@ -1380,6 +1387,12 @@ angular.module('RoomBaby')
     }
 
     function onShowCalendar(cb) {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+      dashboardOverlay.velocity({ height: 619 })
+      cb();
+    }
+
+    function onRenderConfirmation(cb) {
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       dashboardOverlay.velocity({ height: 619 })
       cb();

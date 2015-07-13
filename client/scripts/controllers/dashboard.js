@@ -174,7 +174,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.renderConfirmation = function() {
-    $scope.showConfirmation = true;
+    var opts = {
+      type: 'onRenderConfirmation'
+    };
+    Animator.run(opts, function() {
+      $scope.showConfirmation = true;
+    });
   };
 
   ctrl.onCreateRoomOpt = function(isNow) {
