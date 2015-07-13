@@ -64,6 +64,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   var ctrl = this;
   $scope.room = {};
+
   var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
 
@@ -247,10 +248,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         ctrl.renderConfirmation();
       }
     } else {
-      $scope.showCalendar = true;
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+      var opts = {
+        type: 'onShowCalendar'
+      };
+      Animator.run(opts, function() {
+        $scope.showCalendar = true;
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      });
     }
   };
 
@@ -478,7 +484,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
 
       /* Verify again on server along with file type */
       SessionApi.upload($scope.fileUpload, userId, sessionId).then(function(response) {
-        console.log('response', response);
         if (response.status === 200) {
           $scope.fileUrl = response.data;
           $scope.showLoadingSpinner = false;
@@ -542,9 +547,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 
   var ctrl = this;
 
-
   this.registerEvents = function() {
-
     PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
     PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
     StateService.data['Controllers'].Landing.isReady = true;
@@ -572,11 +575,9 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       var isFooterReady = StateService.data['Controllers'].Footer.isReady;
       var isNavReady = StateService.data['Controllers'].Navbar.isReady;
       if (isFooterReady && isNavReady) {
-        console.log('is ready');
         PubSub.trigger('toggleNavBar', false);
         PubSub.trigger('toggleFooter', false);
       } else {
-        console.log('else block')
         $timeout(getState, 200);
       }
     }
@@ -610,9 +611,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       localStorageService.clearAll();
-      $state.go($state.current, {}, {
-        reload: true
-      });
+      $state.go($state.current, {}, { reload: true });
     }
   };
 
@@ -658,8 +657,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
             $scope.showErr = null;
             $scope.errMessage = '';
           }, 2000);
-          var isApplying = ($scope.$parent.$$phase === '$apply');
-          isApplying ? null : $scope.$apply();
+          ($scope.$parent.$$phase === '$apply') ? null : $scope.$apply();
         }
       });
     }
@@ -726,13 +724,17 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
-        var opts = { user_id: user._id }
+        var opts = {
+          user_id: user._id
+        }
         localStorageService.set('user', user);
         ctrl.grantAccess(opts);
       } else {
         var user = response.data.user;
         var session = response.data.sessions;
-        var opts = { user_id: user._id }
+        var opts = {
+          user_id: user._id
+        }
         localStorageService.set('sessions', sessions);
         localStorageService.set('user', user);
         ctrl.grantAccess(opts);
@@ -743,7 +745,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
   };
 
   ctrl.grantAccess = function(opts) {
-    $scope.showLanding = false;
+    // $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
 
@@ -818,7 +820,13 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
 
   this.getTimeLeft = function() {
     return $scope.timeLeft || '';
-  }
+  };
+
+  this.getProfileImg = function() {
+    if (localStorageService.get('user')) {
+      return localStorageService.get('user').profileImage;
+    }
+  };
 
   ctrl.toggleOverlay = function() {
     $scope.showOverlay = !$scope.showOverlay;
@@ -1260,7 +1268,7 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function run(obj) {
+    function run(obj, cb) {
       var type = obj.type;
       if (type === 'onLanding') {
         onLanding(obj.hasAnimated);
@@ -1280,6 +1288,8 @@ angular.module('RoomBaby')
         onFooterOverlay(obj.callback);
       } else if (type === 'onRenderLoading'){
         onRenderLoading(obj.props);
+      } else if (type === 'onShowCalendar') {
+        onShowCalendar(cb);
       }
     }
 
@@ -1329,9 +1339,10 @@ angular.module('RoomBaby')
     }
 
     function onCreateRoom() {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+          dashboardOverlay.velocity({ height: 344 })
       var dashboardContainer = angular.element(document.getElementById('dashboard-container'));
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
-      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       var sequence = [
         { e: dashboardContainer, p: 'fadeOut', o: { duration: 200, opacity: 0 } }, 
         { e: dashboardTable, p: 'fadeOut', o: { duration: 200,  opacity: 0, sequenceQueue: false } },
@@ -1366,6 +1377,12 @@ angular.module('RoomBaby')
     function onRenderLoading(props) {
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       dashboardOverlay.velocity(props);
+    }
+
+    function onShowCalendar(cb) {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+      dashboardOverlay.velocity({ height: 619 })
+      cb();
     }
 
     function generateOpts(type, hasAnimated) {

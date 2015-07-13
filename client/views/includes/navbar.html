@@ -17,7 +17,7 @@
       <p class='welcome-username'>Welcome {{ user.username | capitalize }}!</p>
       <li class="dropdown-toggle menu col-sm-pull-2">
         <a class="dropdown-toggle" data-toggle="dropdown">
-          <img class="media-object img-circle-navbar" ng-src="{{user.profileImage | trusted}}">
+          <img class="media-object img-circle-navbar" ng-src="{{ navBarCtrl.getProfileImg() | trusted}}">
         </a>
         <ul class="dropdown-menu">
           <li><a href="">Settings</a></li>

@@ -3,7 +3,7 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function run(obj) {
+    function run(obj, cb) {
       var type = obj.type;
       if (type === 'onLanding') {
         onLanding(obj.hasAnimated);
@@ -23,6 +23,8 @@ angular.module('RoomBaby')
         onFooterOverlay(obj.callback);
       } else if (type === 'onRenderLoading'){
         onRenderLoading(obj.props);
+      } else if (type === 'onShowCalendar') {
+        onShowCalendar(cb);
       }
     }
 
@@ -72,9 +74,10 @@ angular.module('RoomBaby')
     }
 
     function onCreateRoom() {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+          dashboardOverlay.velocity({ height: 344 })
       var dashboardContainer = angular.element(document.getElementById('dashboard-container'));
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
-      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       var sequence = [
         { e: dashboardContainer, p: 'fadeOut', o: { duration: 200, opacity: 0 } }, 
         { e: dashboardTable, p: 'fadeOut', o: { duration: 200,  opacity: 0, sequenceQueue: false } },
@@ -109,6 +112,12 @@ angular.module('RoomBaby')
     function onRenderLoading(props) {
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       dashboardOverlay.velocity(props);
+    }
+
+    function onShowCalendar(cb) {
+      var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
+      dashboardOverlay.velocity({ height: 619 })
+      cb();
     }
 
     function generateOpts(type, hasAnimated) {

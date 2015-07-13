@@ -64,7 +64,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
 
       /* Verify again on server along with file type */
       SessionApi.upload($scope.fileUpload, userId, sessionId).then(function(response) {
-        console.log('response', response);
         if (response.status === 200) {
           $scope.fileUrl = response.data;
           $scope.showLoadingSpinner = false;

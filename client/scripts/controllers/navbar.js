@@ -56,7 +56,13 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
 
   this.getTimeLeft = function() {
     return $scope.timeLeft || '';
-  }
+  };
+
+  this.getProfileImg = function() {
+    if (localStorageService.get('user')) {
+      return localStorageService.get('user').profileImage;
+    }
+  };
 
   ctrl.toggleOverlay = function() {
     $scope.showOverlay = !$scope.showOverlay;

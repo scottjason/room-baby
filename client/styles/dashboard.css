@@ -74,8 +74,8 @@ div.form-container {
 .dashboard-overlay {
   position: fixed;
   width: 600px;
-  height: 619px;
-  background-color: black;
+  height: 344;
+  background-color: #000;
   margin: auto;
   top: 0;
   left: 0;

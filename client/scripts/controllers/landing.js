@@ -7,9 +7,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 
   var ctrl = this;
 
-
   this.registerEvents = function() {
-
     PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
     PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
     StateService.data['Controllers'].Landing.isReady = true;
@@ -37,11 +35,9 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       var isFooterReady = StateService.data['Controllers'].Footer.isReady;
       var isNavReady = StateService.data['Controllers'].Navbar.isReady;
       if (isFooterReady && isNavReady) {
-        console.log('is ready');
         PubSub.trigger('toggleNavBar', false);
         PubSub.trigger('toggleFooter', false);
       } else {
-        console.log('else block')
         $timeout(getState, 200);
       }
     }
@@ -75,9 +71,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       localStorageService.clearAll();
-      $state.go($state.current, {}, {
-        reload: true
-      });
+      $state.go($state.current, {}, { reload: true });
     }
   };
 
@@ -123,8 +117,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
             $scope.showErr = null;
             $scope.errMessage = '';
           }, 2000);
-          var isApplying = ($scope.$parent.$$phase === '$apply');
-          isApplying ? null : $scope.$apply();
+          ($scope.$parent.$$phase === '$apply') ? null : $scope.$apply();
         }
       });
     }
@@ -191,13 +184,17 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         ctrl.renderError(response.data.message);
       } else if (!response.data.session) {
         var user = response.data.user;
-        var opts = { user_id: user._id }
+        var opts = {
+          user_id: user._id
+        }
         localStorageService.set('user', user);
         ctrl.grantAccess(opts);
       } else {
         var user = response.data.user;
         var session = response.data.sessions;
-        var opts = { user_id: user._id }
+        var opts = {
+          user_id: user._id
+        }
         localStorageService.set('sessions', sessions);
         localStorageService.set('user', user);
         ctrl.grantAccess(opts);
@@ -208,7 +205,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
   };
 
   ctrl.grantAccess = function(opts) {
-    $scope.showLanding = false;
+    // $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
 

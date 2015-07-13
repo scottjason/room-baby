@@ -7,6 +7,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   var ctrl = this;
   $scope.room = {};
+
   var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
 
@@ -190,10 +191,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         ctrl.renderConfirmation();
       }
     } else {
-      $scope.showCalendar = true;
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+      var opts = {
+        type: 'onShowCalendar'
+      };
+      Animator.run(opts, function() {
+        $scope.showCalendar = true;
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+      });
     }
   };
 
