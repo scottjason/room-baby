@@ -241,11 +241,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       Animator.run(obj);
       $scope.showLoading = false;
       $timeout(function() {
+        StateService.data['createRoom']['name'].text = '';
+        StateService.data['createRoom']['guestEmail'].text = '';
         StateService.data['createRoom']['startDate'].isValid = false;
         StateService.data['createRoom']['name'].isValid = false;
         StateService.data['createRoom']['guestEmail'].isValid = false;
         StateService.data['createRoom']['formData'].isValid = false;
         StateService.data['overlay'].isOpen = false;
+        $scope.room = {};
+        $scope.showConfirmation = false;
       }, 1200);
     }, function(err) {
       console.log(err)
