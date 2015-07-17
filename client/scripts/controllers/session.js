@@ -314,6 +314,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   ctrl.getVideoStatus = function(archiveId) {
     $scope.archiveId = archiveId ? archiveId : $scope.archiveId
     SessionApi.getVideoStatus($scope.archiveId).then(function(response) {
+      console.log(response);
       var isReady = response.data.isReady;
       if (isReady) {
         var videoUrl = response.data.video.url;
