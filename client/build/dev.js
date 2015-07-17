@@ -935,7 +935,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     PubSub.on('stopRecording', ctrl.stopRecording);
     PubSub.on('disconnect', ctrl.disconnect);
     PubSub.on('toggleUpload', ctrl.toggleUpload);
-    PubSub.on('enterBtn:onChatMessage', this.sendMessage);
+    // PubSub.on('enterBtn:onChatMessage', this.sendMessage);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('setUser', $scope.user);
 
@@ -2651,7 +2651,7 @@ angular.module('RoomBaby')
         var isLogin = (event.target.id === 'login-input');
         var isRegister = (event.target.id === 'register-input');
         if (isEnterBtn && isChatMessage) {
-          PubSub.trigger('enterBtn:onChatMessage');
+          // PubSub.trigger('enterBtn:onChatMessage');
         } else if (isEnterBtn && isLogin) {
           // PubSub.trigger('enterBtn:onLogin');
         } else if (isEnterBtn && isRegister) {

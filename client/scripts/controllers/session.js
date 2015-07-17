@@ -63,7 +63,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     PubSub.on('stopRecording', ctrl.stopRecording);
     PubSub.on('disconnect', ctrl.disconnect);
     PubSub.on('toggleUpload', ctrl.toggleUpload);
-    PubSub.on('enterBtn:onChatMessage', this.sendMessage);
+    // PubSub.on('enterBtn:onChatMessage', this.sendMessage);
     PubSub.trigger('toggleNavBar', true);
     PubSub.trigger('setUser', $scope.user);
 
