@@ -5,14 +5,14 @@ angular.module('RoomBaby')
 
 function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, ngDialog, ConstantService, StateService, PubSub, UserApi, SessionApi, Animator, TimeService, localStorageService) {
 
+  /* Initial Declarations */
+
   var ctrl = this;
+
   $scope.room = {};
-  var counter = 0;
 
-  var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
-
-  PubSub.trigger('dashboardLoaded');
+  StateService.data['Dashboard'].isOnLoad = true;
 
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
@@ -22,10 +22,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     }
   });
 
+  /* Dom Bound Methods */
+
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
-        $scope.user = localStorageService.get('user') || [];
+        $scope.user = localStorageService.get('user');
         $scope.sessions = localStorageService.get('sessions') || [];
         $scope.archives = localStorageService.get('archives') || [];
         ctrl.initialize();
@@ -147,7 +149,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.getSessions();
       ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
-      PubSub.trigger('setUser', $scope.user);
+      PubSub.trigger('setUser', localStorageService.get('user'));
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
       ctrl.renderTable();
@@ -194,6 +196,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       var isValidName = StateService.data['createRoom']['name'].isValid;
       var isValidEmail = StateService.data['createRoom']['guestEmail'].isValid;
       if (isValidName && isValidEmail) {
+        var fiveMinutes = 300000;
         $scope.room.isTimeSet = true;
         $scope.room.startsAt = new Date().getTime();
         $scope.room.startsAtFormatted = moment(new Date().getTime()).format("dddd, MMMM Do YYYY, h:mm a");
@@ -255,7 +258,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
-    counter++
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
@@ -265,7 +267,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.table = table;
       });
     });
-    if (counter === 1) {
+    var isOnLoad = StateService.data['Dashboard'].isOnLoad;
+    if (isOnLoad) {
+      StateService.data['Dashboard'].isOnLoad = false;
       getStatus();
     }
   };
@@ -308,24 +312,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       console.log(err);
     });
   };
-
-  // ctrl.onFacebookSuccess = function(user, sessions) {
-  //   $scope.user = user;
-  //   if (sessions) {
-  //     localStorageService.set('sessions', sessions);
-  //   }
-  //   if (!$scope.user.username) {
-  //     ctrl.getUserName();
-  //   } else {
-  //     ctrl.getSessions();
-  //     ctrl.isExpired();
-  //     PubSub.trigger('toggleNavBar', true);
-  //     var obj = {};
-  //     obj.type = 'onDashboard';
-  //     Animator.run(obj);
-  //     ctrl.renderTable();
-  //   }
-  // };
 
   ctrl.getUserName = function(callback) {
     ngDialog.openConfirm({

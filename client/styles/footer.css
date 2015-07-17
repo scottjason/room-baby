@@ -1,13 +1,3 @@
-.fa.fa-video-camera {
-  color: white;
-  position: absolute;
-  left: 165px;
-  margin: auto;
-  top: 11px;
-  bottom: 0;
-  font-size: 14px;
-}
-
 ul.is-recording-container > li > span > button {
   position: absolute;
   top: 35px;

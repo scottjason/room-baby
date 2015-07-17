@@ -50,7 +50,8 @@ angular.module('RoomBaby')
       'Dashboard': {
         'options': {
           'connect': false
-        }
+        },
+        'isOnLoad': true
       },
       'Auth': {
         'isFacebook': false

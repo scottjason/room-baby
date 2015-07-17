@@ -342,7 +342,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
   ctrl.getAllArchives = function(user_id) {
     ArchiveService.getAll(user_id).then(function(response) {
-      console.log('getAllArchives', response.data);
       localStorageService.set('archives', response.data);
     });
   }

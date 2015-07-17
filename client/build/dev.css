@@ -280,11 +280,6 @@ div.panel-body > p > span {
 }
 
 
-.y-scroll {
-  /*overflow-y: scroll !important;*/
-  overflow: scroll;
-}
-
 #dashboard-overlay > div:nth-child(2) > div > p {
   position: relative;
   left: 0;
@@ -357,6 +352,8 @@ div.form-container {
   cursor: pointer;
   z-index: 10;
 }
+
+
 .dashboard-overlay {
   position: fixed;
   width: 600px;
@@ -721,16 +718,6 @@ i.glyphicon.glyphicon-arrow-right {
   color: #79DFB6;
 }
 
-
-.fa.fa-video-camera {
-  color: white;
-  position: absolute;
-  left: 165px;
-  margin: auto;
-  top: 11px;
-  bottom: 0;
-  font-size: 14px;
-}
 
 ul.is-recording-container > li > span > button {
   position: absolute;

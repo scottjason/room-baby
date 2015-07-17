@@ -26,7 +26,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
-      console.error(err);
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
@@ -71,7 +71,9 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       localStorageService.clearAll();
-      $state.go($state.current, {}, { reload: true });
+      $state.go($state.current, {}, {
+        reload: true
+      });
     }
   };
 
@@ -117,7 +119,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
             $scope.showErr = null;
             $scope.errMessage = '';
           }, 2000);
-          ($scope.$parent.$$phase === '$apply') ? null : $scope.$apply();
+          ($scope.$parent.$$phase === '$apply') ? null: $scope.$apply();
         }
       });
     }
@@ -171,7 +173,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
         $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
-      console.log(err);
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
@@ -202,7 +204,6 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
   };
 
   ctrl.grantAccess = function(opts) {
-    // $scope.showLanding = false;
     $state.go('dashboard', opts);
   };
 
