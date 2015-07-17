@@ -12,11 +12,9 @@ var User = require('../../models/user');
 var LocalStrategy = require('passport-local').Strategy;
 
 var getAllArchives = function(user, obj, callback) {
-  console.log('user', user);
   Archive.find({ users: { $elemMatch: { _id: user._id } } }, function(err, archives) {
-    console.log('archives on login', archives);
     if (err) return callback(err);
-    obj.archives = archives.length ? archives : null;
+    obj.archives = archives.length ? archives : [];
     callback(null, user, obj);
   });
 };
@@ -24,7 +22,6 @@ var getAllArchives = function(user, obj, callback) {
 var getAllSessions = function(user, callback) {
 
   var obj = {};
-  obj.otSessions = null;
   var otSessions = [];
 
   Session.find({ users: { $elemMatch: { _id: user._id } } }, function (err, sessions) {
@@ -35,7 +32,7 @@ var getAllSessions = function(user, callback) {
       session.secret = config.openTok.secret;
       otSessions.push(session);
     });
-    obj.otSessions = otSessions.length ? otSessions : obj.otSessions;
+    obj.otSessions = otSessions;
     getAllArchives(user, obj, callback);
   });
 };

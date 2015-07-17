@@ -160,13 +160,10 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
   ctrl.login = function(opts) {
     UserApi.login(opts).then(function(response) {
       if (response.status == 200) {
-        var user = response.data.user;
-        var sessions = response.data.sessions ? response.data.sessions : null;
-        var archives = response.data.archives ? response.data.archives : null;
-        localStorageService.set('user', user);
-        localStorageService.set('sessions', sessions);
-        localStorageService.set('archives', archives);
-        var opts = UserApi.generateOpts(user);
+        localStorageService.set('user', response.data.user);
+        localStorageService.set('sessions', response.data.sessions);
+        localStorageService.set('archives', response.data.archives);
+        var opts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(opts);
       } else if (response.status === 401) {
         ctrl.renderError(response.data.message)

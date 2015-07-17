@@ -6,7 +6,7 @@
 
 var User = require('../models/user');
 var Session = require('../models/session');
-var FB = require('fb');
+var Archive = require('../models/archive');
 var async = require('async');
 var crypto = require('crypto');
 var mailer = require('../config/utils/mailer');
@@ -16,9 +16,6 @@ var utils = require('../config/utils');
 
 var transporter = mailer.transporter();
 
-exports.postToFacebook = function(req, res, next) {
-
-};
 
 exports.connectAccts = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
@@ -27,7 +24,7 @@ exports.connectAccts = function(req, res, next) {
     user.username = req.body.username;
     user.password = req.body.password;
     user.save(function(err, savedUser) {
-      console.log('saved user', savedUser);
+      if (err) return next(err);
       savedUser.password = null;
       req.session.user = savedUser;
       res.json({
@@ -41,8 +38,9 @@ exports.saveUserName = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
     user.username = req.body.username;
     user.save(function(err, savedUser) {
-      req.session.user = savedUser;
       if (err) return next(err);
+      savedUser.password = null;
+      req.session.user = savedUser;
       res.json({
         user: savedUser
       });
@@ -85,23 +83,31 @@ exports.getAll = function(req, res, next) {
           })
           callback(null, sessionArr);
         });
+      },
+      archives: function(callback) {
+        Archive.find({
+          users: {
+            $elemMatch: {
+              _id: req.params.user_id
+            }
+          }
+        }, function(err, archives) {
+          if (err) return callback(err);
+          if (!archives || archives && !archives.length) return callback(null, []);
+          callback(null, archives);
+        });
       }
     },
     function(err, results) {
-      if (err) return next(err)
-      if (results.user && results.sessions.length) {
-        req.session.user = results.user;
-        req.session.otSessions = results.sessions;
-        res.json({
-          user: results.user,
-          sessions: results.sessions
-        });
-      } else if (results.user) {
-        req.session.user = results.user;
-        res.json({
-          user: results.user
-        });
-      }
+      if (err) return next(err);
+      req.session.user = results.user;
+      req.session.otSessions = results.sessions;
+      req.session.archives = results.archives;
+      res.json({
+        user: results.user,
+        sessions: results.sessions,
+        archives: results.archives
+      });
     });
 };
 

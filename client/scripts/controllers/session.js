@@ -316,6 +316,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       var isReady = response.data.isReady;
       if (isReady) {
         var videoUrl = response.data.video.url;
+        localStorageService.set('videoUrl', videoUrl);
         ctrl.broadcast('shareVideo', videoUrl);
         ctrl.createArchive();
       } else {
@@ -330,7 +331,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ArchiveService.generateOpts(function(opts) {
       ArchiveService.createArchive(opts).then(function(response) {
         var archives = localStorageService.get('archives');
-        archives = archives ? archives : [];
         archives.push(response.data);
         localStorageService.set('archives', archives);
         ctrl.emit('getAllArchives', '');
@@ -341,15 +341,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.getAllArchives = function(user_id) {
-    ArchiveService.getAll(user_id).then(function(response){
-      var archives = localStorageService.get('archives');
-      archives = archives ? archives : null;
-      if (!archives) {
-        archives = response.data;
-      } else {
-        archives.push(response.data);
-      }
-      localStorageService.set('archives', archives);
+    ArchiveService.getAll(user_id).then(function(response) {
+      console.log('getAllArchives', response.data);
+      localStorageService.set('archives', response.data);
     });
   }
 
@@ -392,10 +386,10 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.deleteRoom = function(session_id, user_id) {
-    var sessions;
+    var sessions = [];
     SessionApi.deleteRoom(session_id, user_id).then(function(response) {
-      (response.data && response.data.sessions) ? (sessions = response.data.sessions) : (sessions = null);
-      localStorageService.set('sessions', sessions);
+      console.log('response', response);
+      localStorageService.set('sessions', response.data.sessions);
       $scope.session.disconnect();
     }, function(err) {
       console.error(err);

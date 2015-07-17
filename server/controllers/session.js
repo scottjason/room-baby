@@ -53,6 +53,7 @@ exports.getAll = function(req, res, next) {
     }
   }, function(err, sessions) {
     if (err) return next(err);
+    req.session.otSessions = sessionArr;
     if (!sessions.length) return res.json({
       session: sessionArr
     });
@@ -60,7 +61,7 @@ exports.getAll = function(req, res, next) {
       session.key = config.openTok.key;
       session.secret = config.openTok.secret;
       sessionArr.push(session);
-    })
+    });
     req.session.otSessions = sessionArr;
     res.json({
       sessions: sessionArr

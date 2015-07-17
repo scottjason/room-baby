@@ -7,6 +7,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   var ctrl = this;
   $scope.room = {};
+  var counter = 0;
 
   var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
@@ -24,10 +25,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
-        $scope.user = localStorageService.get('user');
-        $scope.sessions = localStorageService.get('sessions');
-        $scope.archives = localStorageService.get('archives');
-        console.log('on dashboard isAuthenticated archives', $scope.archives);
+        $scope.user = localStorageService.get('user') || [];
+        $scope.sessions = localStorageService.get('sessions') || [];
+        $scope.archives = localStorageService.get('archives') || [];
         ctrl.initialize();
       } else {
         localStorageService.clearAll();
@@ -140,20 +140,17 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   /* Controller Methods */
 
   ctrl.initialize = function() {
-    console.log('init')
     if (localStorageService.get('isFacebookLogin')) {
-      console.log('condition one');
       StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
-      console.log('condition two');
       ctrl.getSessions();
       ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
       PubSub.trigger('setUser', $scope.user);
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
-      ctrl.renderTable(true);
+      ctrl.renderTable();
     }
   };
 
@@ -163,19 +160,19 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.getSessions = function() {
 
-    var startingLen;
-
-    if (localStorageService.get('sessions')) {
-      startingLen = localStorageService.get('sessions').length;
+    if (!localStorageService.get('sessions')) {
+      localStorageService.set('sessions', []);
     }
 
+    var lengthBefore = localStorageService.get('sessions').length;
+
     SessionApi.getAll($scope.user._id).then(function(response) {
-      if (startingLen && response.data.sessions && response.data.sessions.length > startingLen) {
-        localStorageService.set('sessions', response.data.sessions);
-        ctrl.renderTable(null);
-      } else if (!startingLen && response.data.sessions) {
-        localStorageService.set('sessions', response.data.sessions);
-        ctrl.renderTable(null);
+      if (response.data.sessions) {
+        var lengthAfter = response.data.sessions.length;
+        if (lengthAfter > lengthBefore) {
+          localStorageService.set('sessions', response.data.sessions);
+          ctrl.renderTable();
+        }
       }
     });
     if ($state.current.name === 'dashboard') {
@@ -258,47 +255,49 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* render table (or re-render after save room) */
   ctrl.renderTable = function(isOnLoad) {
+    counter++
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
     TimeService.generateTable(sessions, archives, function(table) {
       StateService.data['Session'].table = table;
-      $scope.table = table;
-      if (!$scope.$$phase) {
-        $scope.$apply();
-      }
+      $timeout(function() {
+        $scope.table = table;
+      });
     });
-    if (isOnLoad && sessions && sessions.length) {
+    if (counter === 1) {
       getStatus();
     }
   };
 
   ctrl.renderMessage = function(binding, message) {
-    $scope[binding] = message;
-    if (!$scope.$$phase) {
-      $timeout(function() {
-        $scope.$apply();
-      });
-    }
     $timeout(function() {
-      $scope[binding] = '';
-    }, 1600);
+      $scope[binding] = message;
+      $timeout(function() {
+        $scope[binding] = '';
+      }, 1600);
+    });
   };
 
   ctrl.onFacebookLogin = function(user_id) {
     UserApi.getAll(user_id).then(function(response) {
-      if (response.status === 200 && !response.data.sessions) {
-        var user = response.data.user;
-        localStorageService.set('user', user);
-        PubSub.trigger('setUser', user);
-        ctrl.onFacebookSuccess(user, null);
-      } else if (response.status === 200) {
-        var user = response.data.user;
-        var sessions = response.data.sessions;
-        localStorageService.set('user', user);
-        localStorageService.set('sessions', sessions);
-        PubSub.trigger('setUser', user);
-        ctrl.onFacebookSuccess(user, sessions);
+      if (response.status === 200) {
+        $scope.user = response.data.user;
+        localStorageService.set('user', $scope.user);
+        localStorageService.set('sessions', response.data.sessions || []);
+        localStorageService.set('archives', response.data.archives || []);
+        PubSub.trigger('setUser', $scope.user);
+        if (!$scope.user.username) {
+          ctrl.getUserName();
+        } else {
+          ctrl.getSessions();
+          ctrl.isExpired();
+          PubSub.trigger('toggleNavBar', true);
+          var obj = {};
+          obj.type = 'onDashboard';
+          Animator.run(obj);
+          ctrl.renderTable();
+        }
       } else {
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
@@ -310,23 +309,23 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     });
   };
 
-  ctrl.onFacebookSuccess = function(user, sessions) {
-    $scope.user = user;
-    if (sessions) {
-      localStorageService.set('sessions', sessions);
-    }
-    if (!$scope.user.username) {
-      ctrl.getUserName();
-    } else {
-      ctrl.getSessions();
-      ctrl.isExpired();
-      PubSub.trigger('toggleNavBar', true);
-      var obj = {};
-      obj.type = 'onDashboard';
-      Animator.run(obj);
-      ctrl.renderTable(true);
-    }
-  };
+  // ctrl.onFacebookSuccess = function(user, sessions) {
+  //   $scope.user = user;
+  //   if (sessions) {
+  //     localStorageService.set('sessions', sessions);
+  //   }
+  //   if (!$scope.user.username) {
+  //     ctrl.getUserName();
+  //   } else {
+  //     ctrl.getSessions();
+  //     ctrl.isExpired();
+  //     PubSub.trigger('toggleNavBar', true);
+  //     var obj = {};
+  //     obj.type = 'onDashboard';
+  //     Animator.run(obj);
+  //     ctrl.renderTable();
+  //   }
+  // };
 
   ctrl.getUserName = function(callback) {
     ngDialog.openConfirm({
@@ -362,7 +361,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       var obj = {};
       obj.type = 'onDashboard';
       Animator.run(obj);
-      ctrl.renderTable(true);
+      ctrl.renderTable();
     }, 350);
   };
 

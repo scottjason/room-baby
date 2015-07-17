@@ -207,6 +207,7 @@ angular.module('RoomBaby')
 
       if (archives && archives.length) {
         archives.forEach(function(archive) {
+          console.log(archive)
           var obj = {};
           obj.name = archive.name;
           obj.createdBy = archive.createdBy;

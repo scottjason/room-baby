@@ -23,7 +23,6 @@ module.exports = function(app, passport) {
   router.get('/logout/:user_id', userCtrl.logout);
   router.get('/get-one/:user_id', userCtrl.getOne);
   router.get('/get-all/:user_id', userCtrl.getAll);
-  router.post('/facebook-post', userCtrl.postToFacebook);
 
   router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, obj) {
@@ -39,13 +38,9 @@ module.exports = function(app, passport) {
         }
 
         req.session.user = user;
+        req.session.otSessions = obj.otSessions;
+        req.session.archives = obj.archives;
 
-        if (obj.otSessions) {
-          req.session.otSessions = obj.otSessions;
-        }
-        if (obj.archives) {
-          req.session.archives = obj.archives;
-        }
         return res.json({
           user: user,
           sessions: obj.otSessions,

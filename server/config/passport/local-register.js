@@ -20,8 +20,6 @@ exports.getAll = function(user, callback) {
       session.secret = config.openTok.secret;
       allSessions.push(session);
     })
-    console.log('on get all user', user)
-    console.log('on get allSessions', allSessions);
     callback(null, user, allSessions);
   });
 };

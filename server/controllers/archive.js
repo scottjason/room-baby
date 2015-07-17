@@ -28,7 +28,6 @@ exports.getAll = function(req, res, next) {
       }
     }
   }, function(err, archives) {
-    console.log('on getall archives', archives);
     if (err) return next(err);
     req.session.archives = archives;
     res.status(200).json(archives);
