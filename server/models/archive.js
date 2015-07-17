@@ -9,6 +9,9 @@ var archiveSchema = new mongoose.Schema({
   name: {
     type: String
   },
+  createdBy: {
+    type: String
+  },
   shortUrl: {
     type: String,
   },

@@ -11,6 +11,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
 
+  PubSub.trigger('dashboardLoaded');
+
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -27,11 +29,11 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.archives = localStorageService.get('archives');
         ctrl.initialize();
       } else {
-        localStorageService.clearAll()
+        localStorageService.clearAll();
         $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
-      localStorageService.clearAll()
+      localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
@@ -112,6 +114,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   /* return the ready state of session status, ability for user to connect */
   this.getReadyState = function(obj) {
     return (obj.status === 'ready');
+  };
+
+  this.clearForm = function() {
+    $scope.room = {};
   };
 
   /* recursive method to get statuses of room */
@@ -246,9 +252,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   ctrl.renderTable = function(isOnLoad) {
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
-
+    var archives = localStorageService.get('archives');
     if (sessions && sessions.length) {
-      TimeService.generateTable(sessions, function(table) {
+      TimeService.generateTable(sessions, archives, function(table) {
         StateService.data['Session'].table = table;
         $scope.table = table;
         if (!$scope.$$phase) {

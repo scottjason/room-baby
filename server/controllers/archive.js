@@ -12,6 +12,7 @@ exports.createArchive = function(req, res, next) {
     if (err) return next(err);
     archive.shortUrl = shortUrl
     archive.save(function(err, savedArchive) {
+      console.log('savedArchive', savedArchive);
       if (err) return next(err);
       res.status(200).json(savedArchive);
     });

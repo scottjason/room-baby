@@ -280,6 +280,11 @@ div.panel-body > p > span {
 }
 
 
+.y-scroll {
+  /*overflow-y: scroll !important;*/
+  overflow: scroll;
+}
+
 #dashboard-overlay > div:nth-child(2) > div > p {
   position: relative;
   left: 0;
@@ -352,22 +357,19 @@ div.form-container {
   cursor: pointer;
   z-index: 10;
 }
-
 .dashboard-overlay {
   position: fixed;
   width: 600px;
   height: 344;
   background-color: #000;
   margin: auto;
-  top: 0;
+  top: 56px;
   left: 0;
   right: 0;
-  bottom: 0;
   border: 1px solid #EFEFEF;
   border-radius: 15px;
   opacity: 0;
 }
-
 .fa.fa-circle-o-notch.fa-spin {
   font-size: 34px;
   margin-top: 20px;
@@ -1208,7 +1210,7 @@ button#details.btn.btn-md.members {
   border-radius: 12px;
   text-align: center;
   cursor: pointer;
-  color: rgba(255,255,255,.9);
+  color: rgba(255, 255, 255, .9);
   top: 200px;
   margin: auto;
   left: 0;

@@ -68,6 +68,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var fiveMinutes = 300000;
   StateService.data['Facebook'].shareDialog.isOpen = false;
 
+  PubSub.trigger('dashboardLoaded');
+
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
       $timeout(function() {
@@ -84,11 +86,11 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.archives = localStorageService.get('archives');
         ctrl.initialize();
       } else {
-        localStorageService.clearAll()
+        localStorageService.clearAll();
         $window.location.href = $window.location.protocol + '//' + $window.location.host;
       }
     }, function(err) {
-      localStorageService.clearAll()
+      localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
@@ -169,6 +171,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   /* return the ready state of session status, ability for user to connect */
   this.getReadyState = function(obj) {
     return (obj.status === 'ready');
+  };
+
+  this.clearForm = function() {
+    $scope.room = {};
   };
 
   /* recursive method to get statuses of room */
@@ -303,9 +309,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   ctrl.renderTable = function(isOnLoad) {
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
-
+    var archives = localStorageService.get('archives');
     if (sessions && sessions.length) {
-      TimeService.generateTable(sessions, function(table) {
+      TimeService.generateTable(sessions, archives, function(table) {
         StateService.data['Session'].table = table;
         $scope.table = table;
         if (!$scope.$$phase) {
@@ -540,6 +546,24 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   }
 
   FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+}
+
+
+'use strict';
+
+angular.module('RoomBaby')
+  .controller('GlobalCtrl', GlobalCtrl);
+
+function GlobalCtrl($scope, $rootScope, $state, $timeout, PubSub, StateService, localStorageService) {
+
+  var ctrl = this;
+
+  PubSub.on('dashboardLoaded', function(){
+    $scope.addScroll = true;
+    console.log('dashboardLoaded');
+  });
+
+  GlobalCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', 'PubSub', 'StateService', 'localStorageService'];
 }
 
 
@@ -1184,7 +1208,10 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   ctrl.createArchive = function() {
     ArchiveService.generateOpts(function(opts) {
       ArchiveService.createArchive(opts).then(function(response) {
-        console.log('On Create Archive Response', response);
+        var archives = localStorageService.get('archives');
+        archives = archives ? archives : [];
+        archives.push(response.data);
+        localStorageService.set('archives', archives);
       }, function(err) {
         console.error(err);
       })
@@ -1969,10 +1996,15 @@ angular.module('RoomBaby')
       }
     }
 
-    function generateDetails(obj, callback) {
-      var startsAt = obj.startsAtFormatted;
-      obj.details = 'Starts On ' + startsAt;
-      callback(obj);
+    function generateDetails(obj, isArchive, callback) {
+      if (!isArchive) {
+        var startsAt = obj.startsAtFormatted;
+        obj.details = 'Starts On ' + startsAt;
+        callback(obj);
+      } else {
+        obj.details = shortUrl;
+        callback(obj);
+      }
     }
 
     function getStatus(sessions, callback) {
@@ -1995,7 +2027,7 @@ angular.module('RoomBaby')
       callback(isSessionReady, sessions);
     }
 
-    function generateTable(sessions, callback) {
+    function generateTable(sessions, archives, callback) {
 
       var arr = [];
       var _this = this;
@@ -2035,13 +2067,32 @@ angular.module('RoomBaby')
         } else {
           obj.status = 'scheduled'
           obj.options = 'details';
-          generateDetails(obj, function(object) {
+          generateDetails(obj, null, function(object) {
             obj = object;
           });
         }
         arr.push(obj);
       });
       var sortedArr = sortByStartsAt(arr);
+
+      if (archives && archives.length) {
+        archives.forEach(function(archive) {
+          var obj = {};
+          obj.name = archive.name;
+          obj.createdBy = archive.createdBy;
+          archive.users.forEach(function(invitedUser, index) {
+            if (index === (archive.users.length - 1)) {
+              obj.members = (obj.members || '') + invitedUser.email;
+            } else {
+              obj.members = (obj.members || '') + invitedUser.email + ', ';
+            }
+          });
+          obj.status = 'archived';
+          obj.options = 'details';
+          obj.details = archive.shortUrl;
+          sortedArr.push(obj);
+        });
+      }
       callback(sortedArr);
     }
 
@@ -2720,7 +2771,14 @@ angular.module('RoomBaby')
           StateService.data['overlay'].isOpen = true;
           Animator.run(obj);
         } else if (isOpen && isExitBtn && !isSubmitBtn) {
+          StateService.data['createRoom']['name'].text = '';
+          StateService.data['createRoom']['guestEmail'].text = '';
+          StateService.data['createRoom']['name'].isValid = false;
+          StateService.data['createRoom']['guestEmail'].isValid = false;
+          StateService.data['createRoom']['formData'].isValid = false;
           StateService.data['overlay'].isOpen = false;
+          scope.$apply(attrs.clearForm);
+
           if (scope.showCalendar) {
             scope.showCalendar = false;
             if (!scope.$$phase) {
@@ -2731,7 +2789,7 @@ angular.module('RoomBaby')
           Animator.run(obj);
         }
       });
-    };
+    }
     ngOverlay.$inject('Animator, Validator, StateService');
   });
 

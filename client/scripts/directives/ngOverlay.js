@@ -15,7 +15,14 @@ angular.module('RoomBaby')
           StateService.data['overlay'].isOpen = true;
           Animator.run(obj);
         } else if (isOpen && isExitBtn && !isSubmitBtn) {
+          StateService.data['createRoom']['name'].text = '';
+          StateService.data['createRoom']['guestEmail'].text = '';
+          StateService.data['createRoom']['name'].isValid = false;
+          StateService.data['createRoom']['guestEmail'].isValid = false;
+          StateService.data['createRoom']['formData'].isValid = false;
           StateService.data['overlay'].isOpen = false;
+          scope.$apply(attrs.clearForm);
+
           if (scope.showCalendar) {
             scope.showCalendar = false;
             if (!scope.$$phase) {
@@ -26,6 +33,6 @@ angular.module('RoomBaby')
           Animator.run(obj);
         }
       });
-    };
+    }
     ngOverlay.$inject('Animator, Validator, StateService');
   });

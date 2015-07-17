@@ -325,7 +325,10 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   ctrl.createArchive = function() {
     ArchiveService.generateOpts(function(opts) {
       ArchiveService.createArchive(opts).then(function(response) {
-        console.log('On Create Archive Response', response);
+        var archives = localStorageService.get('archives');
+        archives = archives ? archives : [];
+        archives.push(response.data);
+        localStorageService.set('archives', archives);
       }, function(err) {
         console.error(err);
       })

@@ -189,6 +189,7 @@ var createSessionThree = function createSessionThree(arr) {
 
 var createArchiveOne = function createArchiveOne(session) {
   var archive = new Archive();
+  archive.createdBy = session.createdBy.username;
   archive.sessionId = session._id;
   archive.sessionStart = session.startsAt;
   archive.users = session.users;
@@ -205,6 +206,7 @@ var createArchiveOne = function createArchiveOne(session) {
 var createArchiveTwo = function createArchiveTwo(savedArchive) {
   var tenMinutes = 600000;
   var archive = new Archive();
+  archive.createdBy = savedArchive.createdBy;
   archive.sessionId = '0101010101010101';
   archive.sessionStart = (savedArchive.sessionStart - tenMinutes);
   archive.users = savedArchive.users;

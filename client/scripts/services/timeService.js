@@ -123,10 +123,15 @@ angular.module('RoomBaby')
       }
     }
 
-    function generateDetails(obj, callback) {
-      var startsAt = obj.startsAtFormatted;
-      obj.details = 'Starts On ' + startsAt;
-      callback(obj);
+    function generateDetails(obj, isArchive, callback) {
+      if (!isArchive) {
+        var startsAt = obj.startsAtFormatted;
+        obj.details = 'Starts On ' + startsAt;
+        callback(obj);
+      } else {
+        obj.details = shortUrl;
+        callback(obj);
+      }
     }
 
     function getStatus(sessions, callback) {
@@ -149,7 +154,7 @@ angular.module('RoomBaby')
       callback(isSessionReady, sessions);
     }
 
-    function generateTable(sessions, callback) {
+    function generateTable(sessions, archives, callback) {
 
       var arr = [];
       var _this = this;
@@ -189,13 +194,32 @@ angular.module('RoomBaby')
         } else {
           obj.status = 'scheduled'
           obj.options = 'details';
-          generateDetails(obj, function(object) {
+          generateDetails(obj, null, function(object) {
             obj = object;
           });
         }
         arr.push(obj);
       });
       var sortedArr = sortByStartsAt(arr);
+
+      if (archives && archives.length) {
+        archives.forEach(function(archive) {
+          var obj = {};
+          obj.name = archive.name;
+          obj.createdBy = archive.createdBy;
+          archive.users.forEach(function(invitedUser, index) {
+            if (index === (archive.users.length - 1)) {
+              obj.members = (obj.members || '') + invitedUser.email;
+            } else {
+              obj.members = (obj.members || '') + invitedUser.email + ', ';
+            }
+          });
+          obj.status = 'archived';
+          obj.options = 'details';
+          obj.details = archive.shortUrl;
+          sortedArr.push(obj);
+        });
+      }
       callback(sortedArr);
     }
 
