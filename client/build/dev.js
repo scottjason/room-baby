@@ -983,8 +983,9 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       if (event.connection.creationTime > $scope.session.connection.creationTime) {
         $scope.connectionObj = event.connection;
       }
-      if ($rootScope.connectionCount !== 1) {
-        ctrl.emit('onConnected', $scope.user.username);
+      if ($rootScope.connectionCount > 1) {
+        console.log($scope.user);
+        ctrl.emit('onConnected', $scope.user.username || localStorageService.get('user').username);
       }
     });
 
