@@ -1,9 +1,9 @@
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var Bitly = require('bitly');
 var config = require('../config');
 
 var bitly = new Bitly(config.bitly.username, config.bitly.key);
-
-var mongoose = require('mongoose');
 
 var archiveSchema = new mongoose.Schema({
   name: {
@@ -24,9 +24,18 @@ var archiveSchema = new mongoose.Schema({
   sessionStart: {
     type: Number
   },
-  users: {
-    type: Array
-  },
+  users: [{
+    _id: {
+      type: ObjectId,
+      ref: 'User'
+    },
+    email: {
+      type: String
+    },
+    username: {
+      type: String
+    }
+  }],
   createdAt: {
     type: Number
   }

@@ -139,7 +139,7 @@ var createSessionTwo = function createSessionTwo(arr) {
     session.name = 'Document Overview';
     var currentMsUtc = dateTime.getMsUtc();
     var startsAtMsUtc = currentMsUtc;
-    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 1);
+    var expiresAtMsUtc = dateTime.addMinutes(startsAtMsUtc, 2);
     session.startsAt = startsAtMsUtc;
     session.expiresAt = expiresAtMsUtc;
     session.sessionId = otSession.sessionId;
@@ -188,19 +188,19 @@ var createSessionThree = function createSessionThree(arr) {
 
 
 var createArchiveOne = function createArchiveOne(session) {
-  var archive = new Archive();
-  archive.createdBy = session.createdBy.username;
-  archive.sessionId = session._id;
-  archive.sessionStart = session.startsAt;
-  archive.users = session.users;
-  archive.name = session.name;
-  archive.shortUrl = 'http://wwww.google.com/';
-  archive.longUrl = 'http://wwww.github.com/';
-  archive.save(function(err, savedArchive){
-    console.log(savedArchive)
-    if (err) console.log('err', err);
-    createArchiveTwo(savedArchive)
-  });
+  // var archive = new Archive();
+  // archive.createdBy = session.createdBy.username;
+  // archive.sessionId = session._id;
+  // archive.sessionStart = session.startsAt;
+  // archive.users = session.users;
+  // archive.name = session.name;
+  // archive.shortUrl = 'http://wwww.google.com/';
+  // archive.longUrl = 'http://wwww.github.com/';
+  // archive.save(function(err, savedArchive){
+  //   console.log(savedArchive)
+  //   if (err) console.log('err', err);
+  //   createArchiveTwo(savedArchive)
+  // });
 };
 
 var createArchiveTwo = function createArchiveTwo(savedArchive) {

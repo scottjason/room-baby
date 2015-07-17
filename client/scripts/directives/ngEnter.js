@@ -10,7 +10,7 @@ angular.module('RoomBaby')
         if (isEnterBtn && isChatMessage) {
           PubSub.trigger('enterBtn:onChatMessage');
         } else if (isEnterBtn && isLogin) {
-          PubSub.trigger('enterBtn:onLogin');
+          // PubSub.trigger('enterBtn:onLogin');
         } else if (isEnterBtn && isRegister) {
           PubSub.trigger('enterBtn:onRegister');
         }

@@ -12,7 +12,9 @@ var User = require('../../models/user');
 var LocalStrategy = require('passport-local').Strategy;
 
 var getAllArchives = function(user, obj, callback) {
+  console.log('user', user);
   Archive.find({ users: { $elemMatch: { _id: user._id } } }, function(err, archives) {
+    console.log('archives on login', archives);
     if (err) return callback(err);
     obj.archives = archives.length ? archives : null;
     callback(null, user, obj);

@@ -204,6 +204,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       localStorageService.set('archive', archive);
     });
 
+    $scope.session.on('signal:getAllArchives', function(event) {
+      var user_id = localStorageService.get('user')._id;
+      ctrl.getAllArchives(user_id);
+    });
+
     $scope.session.on('signal:shareVideo', function(event) {
       PubSub.trigger('generatingVideo', false);
       localStorageService.set('videoUrl', event.data);
@@ -211,7 +216,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
-        ctrl.createArchive();
         var isFacebookLogin = StateService.data['Auth'].isFacebook;
         var isOpen = StateService.data['Facebook'].shareDialog.isOpen;
         if (isFacebookLogin && !isOpen) {
@@ -301,7 +305,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ctrl.broadcast('stopRecording', '');
     var archiveId = localStorageService.get('archive').id;
     SessionApi.stopRecording(archiveId).then(function(response) {
-      console.log('archiveResponse', response.data);
       localStorageService.set('archiveResponse', response.data);
       ctrl.getVideoStatus(archiveId);
     });
@@ -314,6 +317,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       if (isReady) {
         var videoUrl = response.data.video.url;
         ctrl.broadcast('shareVideo', videoUrl);
+        ctrl.createArchive();
       } else {
         $timeout(ctrl.getVideoStatus, 300);
       }
@@ -329,11 +333,25 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
         archives = archives ? archives : [];
         archives.push(response.data);
         localStorageService.set('archives', archives);
+        ctrl.emit('getAllArchives', '');
       }, function(err) {
         console.error(err);
       })
     });
   };
+
+  ctrl.getAllArchives = function(user_id) {
+    ArchiveService.getAll(user_id).then(function(response){
+      var archives = localStorageService.get('archives');
+      archives = archives ? archives : null;
+      if (!archives) {
+        archives = response.data;
+      } else {
+        archives.push(response.data);
+      }
+      localStorageService.set('archives', archives);
+    });
+  }
 
   ctrl.openShareDialog = function() {
     StateService.data['Facebook'].shareDialog.isOpen = true;

@@ -12,8 +12,9 @@ exports.createArchive = function(req, res, next) {
     if (err) return next(err);
     archive.shortUrl = shortUrl
     archive.save(function(err, savedArchive) {
-      console.log('savedArchive', savedArchive);
       if (err) return next(err);
+      req.session.archives = req.session.archives ? req.session.archives : [];
+      req.session.archives.push(savedArchive);
       res.status(200).json(savedArchive);
     });
   });
@@ -27,9 +28,9 @@ exports.getAll = function(req, res, next) {
       }
     }
   }, function(err, archives) {
+    console.log('on getall archives', archives);
     if (err) return next(err);
-    if (err) console.log('err', err);
-    console.log('on getAll archives');
+    req.session.archives = archives;
     res.status(200).json(archives);
   })
 }

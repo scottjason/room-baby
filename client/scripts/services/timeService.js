@@ -157,50 +157,53 @@ angular.module('RoomBaby')
     function generateTable(sessions, archives, callback) {
 
       var arr = [];
+      var sortedArr = [];
       var _this = this;
 
-      sessions.forEach(function(session) {
-        var obj = {};
-        obj._id = session._id;
-        obj.sessionId = session.sessionId;
-        obj.key = session.key;
-        obj.secret = session.secret;
-        obj.token = session.token
-        obj.name = session.name;
-        obj.createdBy = 'created by ' + session.createdBy.username;
+      if (sessions && sessions.length) {
+        sessions.forEach(function(session) {
+          var obj = {};
+          obj._id = session._id;
+          obj.sessionId = session.sessionId;
+          obj.key = session.key;
+          obj.secret = session.secret;
+          obj.token = session.token
+          obj.name = session.name;
+          obj.createdBy = 'created by ' + session.createdBy.username;
 
-        obj.startsAtMsUtc = session.startsAt;
-        obj.expiresAtMsUtc = session.expiresAt;
+          obj.startsAtMsUtc = session.startsAt;
+          obj.expiresAtMsUtc = session.expiresAt;
 
-        obj.startsAtLocal = new Date(obj.startsAtMsUtc);
-        obj.expiresAtLocal = new Date(obj.expiresAtMsUtc);
+          obj.startsAtLocal = new Date(obj.startsAtMsUtc);
+          obj.expiresAtLocal = new Date(obj.expiresAtMsUtc);
 
-        obj.startsAtFormatted = moment(angular.copy(obj.startsAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
-        obj.expiresAtFormatted = moment(angular.copy(obj.expiresAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
+          obj.startsAtFormatted = moment(angular.copy(obj.startsAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
+          obj.expiresAtFormatted = moment(angular.copy(obj.expiresAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
 
-        session.users.forEach(function(invitedUser, index) {
-          if (index === (session.users.length - 1)) {
-            obj.members = (obj.members || '') + invitedUser.email;
-          } else {
-            obj.members = (obj.members || '') + invitedUser.email + ', ';
-          }
-        });
-
-        var isReady = getReadyStatus(obj.startsAtMsUtc);
-
-        if (isReady) {
-          obj.status = 'ready';
-          obj.options = 'connect';
-        } else {
-          obj.status = 'scheduled'
-          obj.options = 'details';
-          generateDetails(obj, null, function(object) {
-            obj = object;
+          session.users.forEach(function(invitedUser, index) {
+            if (index === (session.users.length - 1)) {
+              obj.members = (obj.members || '') + invitedUser.email;
+            } else {
+              obj.members = (obj.members || '') + invitedUser.email + ', ';
+            }
           });
-        }
-        arr.push(obj);
-      });
-      var sortedArr = sortByStartsAt(arr);
+
+          var isReady = getReadyStatus(obj.startsAtMsUtc);
+
+          if (isReady) {
+            obj.status = 'ready';
+            obj.options = 'connect';
+          } else {
+            obj.status = 'scheduled'
+            obj.options = 'details';
+            generateDetails(obj, null, function(object) {
+              obj = object;
+            });
+          }
+          arr.push(obj);
+        });
+        sortedArr = sortByStartsAt(arr);
+      }
 
       if (archives && archives.length) {
         archives.forEach(function(archive) {
@@ -215,7 +218,7 @@ angular.module('RoomBaby')
             }
           });
           obj.status = 'archived';
-          obj.options = 'details';
+          obj.options = 'video url';
           obj.details = archive.shortUrl;
           sortedArr.push(obj);
         });

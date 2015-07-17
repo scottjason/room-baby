@@ -9,6 +9,7 @@ angular.module('RoomBaby')
 
       opts.name = localStorageService.get('otSession').name;
       opts.sessionId = localStorageService.get('otSession')._id;
+      opts.createdBy = localStorageService.get('otSession').createdBy;
       opts.sessionStart = localStorageService.get('otSession').startsAtMsUtc;
       opts.longUrl = localStorageService.get('videoUrl');
 
@@ -25,10 +26,6 @@ angular.module('RoomBaby')
       callback(opts);
     }
 
-    function generateTable() {
-
-    }
-
     function createArchive(params) {
       var request = $http({
         method: 'POST',
@@ -37,6 +34,14 @@ angular.module('RoomBaby')
       });
       return (request.then(successHandler, errorHandler));
     }
+
+    function getAll(user_id) {
+      var request = $http({
+        method: 'GET',
+        url: '/archive/' + user_id
+      });
+      return (request.then(successHandler, errorHandler));
+    };
 
     function successHandler(response) {
       return (response);
@@ -48,8 +53,8 @@ angular.module('RoomBaby')
 
     return ({
       generateOpts: generateOpts,
-      generateTable: generateTable,
-      createArchive: createArchive
+      createArchive: createArchive,
+      getAll: getAll
     });
     ArchiveService.$inject('$http', 'localStorageService');
   });

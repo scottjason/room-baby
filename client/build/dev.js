@@ -84,6 +84,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.user = localStorageService.get('user');
         $scope.sessions = localStorageService.get('sessions');
         $scope.archives = localStorageService.get('archives');
+        console.log('on dashboard isAuthenticated archives', $scope.archives);
         ctrl.initialize();
       } else {
         localStorageService.clearAll();
@@ -196,10 +197,13 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   /* Controller Methods */
 
   ctrl.initialize = function() {
+    console.log('init')
     if (localStorageService.get('isFacebookLogin')) {
+      console.log('condition one');
       StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
+      console.log('condition two');
       ctrl.getSessions();
       ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
@@ -310,18 +314,16 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
-    if (sessions && sessions.length) {
-      TimeService.generateTable(sessions, archives, function(table) {
-        StateService.data['Session'].table = table;
-        $scope.table = table;
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });
-      if (isOnLoad && sessions.length) {
-        getStatus();
+    TimeService.generateTable(sessions, archives, function(table) {
+      StateService.data['Session'].table = table;
+      $scope.table = table;
+      if (!$scope.$$phase) {
+        $scope.$apply();
       }
-    };
+    });
+    if (isOnLoad && sessions && sessions.length) {
+      getStatus();
+    }
   };
 
   ctrl.renderMessage = function(binding, message) {
@@ -1087,6 +1089,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       localStorageService.set('archive', archive);
     });
 
+    $scope.session.on('signal:getAllArchives', function(event) {
+      var user_id = localStorageService.get('user')._id;
+      ctrl.getAllArchives(user_id);
+    });
+
     $scope.session.on('signal:shareVideo', function(event) {
       PubSub.trigger('generatingVideo', false);
       localStorageService.set('videoUrl', event.data);
@@ -1094,7 +1101,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       Transport.generateHtml(opts, function(html) {
         chatbox.append(html);
         Transport.scroll('down');
-        ctrl.createArchive();
         var isFacebookLogin = StateService.data['Auth'].isFacebook;
         var isOpen = StateService.data['Facebook'].shareDialog.isOpen;
         if (isFacebookLogin && !isOpen) {
@@ -1184,7 +1190,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ctrl.broadcast('stopRecording', '');
     var archiveId = localStorageService.get('archive').id;
     SessionApi.stopRecording(archiveId).then(function(response) {
-      console.log('archiveResponse', response.data);
       localStorageService.set('archiveResponse', response.data);
       ctrl.getVideoStatus(archiveId);
     });
@@ -1197,6 +1202,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
       if (isReady) {
         var videoUrl = response.data.video.url;
         ctrl.broadcast('shareVideo', videoUrl);
+        ctrl.createArchive();
       } else {
         $timeout(ctrl.getVideoStatus, 300);
       }
@@ -1212,11 +1218,25 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
         archives = archives ? archives : [];
         archives.push(response.data);
         localStorageService.set('archives', archives);
+        ctrl.emit('getAllArchives', '');
       }, function(err) {
         console.error(err);
       })
     });
   };
+
+  ctrl.getAllArchives = function(user_id) {
+    ArchiveService.getAll(user_id).then(function(response){
+      var archives = localStorageService.get('archives');
+      archives = archives ? archives : null;
+      if (!archives) {
+        archives = response.data;
+      } else {
+        archives.push(response.data);
+      }
+      localStorageService.set('archives', archives);
+    });
+  }
 
   ctrl.openShareDialog = function() {
     StateService.data['Facebook'].shareDialog.isOpen = true;
@@ -1456,6 +1476,7 @@ angular.module('RoomBaby')
 
       opts.name = localStorageService.get('otSession').name;
       opts.sessionId = localStorageService.get('otSession')._id;
+      opts.createdBy = localStorageService.get('otSession').createdBy;
       opts.sessionStart = localStorageService.get('otSession').startsAtMsUtc;
       opts.longUrl = localStorageService.get('videoUrl');
 
@@ -1472,10 +1493,6 @@ angular.module('RoomBaby')
       callback(opts);
     }
 
-    function generateTable() {
-
-    }
-
     function createArchive(params) {
       var request = $http({
         method: 'POST',
@@ -1484,6 +1501,14 @@ angular.module('RoomBaby')
       });
       return (request.then(successHandler, errorHandler));
     }
+
+    function getAll(user_id) {
+      var request = $http({
+        method: 'GET',
+        url: '/archive/' + user_id
+      });
+      return (request.then(successHandler, errorHandler));
+    };
 
     function successHandler(response) {
       return (response);
@@ -1495,8 +1520,8 @@ angular.module('RoomBaby')
 
     return ({
       generateOpts: generateOpts,
-      generateTable: generateTable,
-      createArchive: createArchive
+      createArchive: createArchive,
+      getAll: getAll
     });
     ArchiveService.$inject('$http', 'localStorageService');
   });
@@ -2030,50 +2055,53 @@ angular.module('RoomBaby')
     function generateTable(sessions, archives, callback) {
 
       var arr = [];
+      var sortedArr = [];
       var _this = this;
 
-      sessions.forEach(function(session) {
-        var obj = {};
-        obj._id = session._id;
-        obj.sessionId = session.sessionId;
-        obj.key = session.key;
-        obj.secret = session.secret;
-        obj.token = session.token
-        obj.name = session.name;
-        obj.createdBy = 'created by ' + session.createdBy.username;
+      if (sessions && sessions.length) {
+        sessions.forEach(function(session) {
+          var obj = {};
+          obj._id = session._id;
+          obj.sessionId = session.sessionId;
+          obj.key = session.key;
+          obj.secret = session.secret;
+          obj.token = session.token
+          obj.name = session.name;
+          obj.createdBy = 'created by ' + session.createdBy.username;
 
-        obj.startsAtMsUtc = session.startsAt;
-        obj.expiresAtMsUtc = session.expiresAt;
+          obj.startsAtMsUtc = session.startsAt;
+          obj.expiresAtMsUtc = session.expiresAt;
 
-        obj.startsAtLocal = new Date(obj.startsAtMsUtc);
-        obj.expiresAtLocal = new Date(obj.expiresAtMsUtc);
+          obj.startsAtLocal = new Date(obj.startsAtMsUtc);
+          obj.expiresAtLocal = new Date(obj.expiresAtMsUtc);
 
-        obj.startsAtFormatted = moment(angular.copy(obj.startsAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
-        obj.expiresAtFormatted = moment(angular.copy(obj.expiresAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
+          obj.startsAtFormatted = moment(angular.copy(obj.startsAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
+          obj.expiresAtFormatted = moment(angular.copy(obj.expiresAtLocal)).format("ddd, MMMM Do YYYY, h:mm a");
 
-        session.users.forEach(function(invitedUser, index) {
-          if (index === (session.users.length - 1)) {
-            obj.members = (obj.members || '') + invitedUser.email;
-          } else {
-            obj.members = (obj.members || '') + invitedUser.email + ', ';
-          }
-        });
-
-        var isReady = getReadyStatus(obj.startsAtMsUtc);
-
-        if (isReady) {
-          obj.status = 'ready';
-          obj.options = 'connect';
-        } else {
-          obj.status = 'scheduled'
-          obj.options = 'details';
-          generateDetails(obj, null, function(object) {
-            obj = object;
+          session.users.forEach(function(invitedUser, index) {
+            if (index === (session.users.length - 1)) {
+              obj.members = (obj.members || '') + invitedUser.email;
+            } else {
+              obj.members = (obj.members || '') + invitedUser.email + ', ';
+            }
           });
-        }
-        arr.push(obj);
-      });
-      var sortedArr = sortByStartsAt(arr);
+
+          var isReady = getReadyStatus(obj.startsAtMsUtc);
+
+          if (isReady) {
+            obj.status = 'ready';
+            obj.options = 'connect';
+          } else {
+            obj.status = 'scheduled'
+            obj.options = 'details';
+            generateDetails(obj, null, function(object) {
+              obj = object;
+            });
+          }
+          arr.push(obj);
+        });
+        sortedArr = sortByStartsAt(arr);
+      }
 
       if (archives && archives.length) {
         archives.forEach(function(archive) {
@@ -2088,7 +2116,7 @@ angular.module('RoomBaby')
             }
           });
           obj.status = 'archived';
-          obj.options = 'details';
+          obj.options = 'video url';
           obj.details = archive.shortUrl;
           sortedArr.push(obj);
         });
@@ -2643,7 +2671,7 @@ angular.module('RoomBaby')
         if (isEnterBtn && isChatMessage) {
           PubSub.trigger('enterBtn:onChatMessage');
         } else if (isEnterBtn && isLogin) {
-          PubSub.trigger('enterBtn:onLogin');
+          // PubSub.trigger('enterBtn:onLogin');
         } else if (isEnterBtn && isRegister) {
           PubSub.trigger('enterBtn:onRegister');
         }

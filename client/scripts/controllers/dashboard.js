@@ -27,6 +27,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         $scope.user = localStorageService.get('user');
         $scope.sessions = localStorageService.get('sessions');
         $scope.archives = localStorageService.get('archives');
+        console.log('on dashboard isAuthenticated archives', $scope.archives);
         ctrl.initialize();
       } else {
         localStorageService.clearAll();
@@ -139,10 +140,13 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   /* Controller Methods */
 
   ctrl.initialize = function() {
+    console.log('init')
     if (localStorageService.get('isFacebookLogin')) {
+      console.log('condition one');
       StateService.data['Auth'].isFacebook = true;
       ctrl.onFacebookLogin($state.params.user_id);
     } else {
+      console.log('condition two');
       ctrl.getSessions();
       ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
@@ -253,18 +257,16 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     $scope.showTable = true;
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
-    if (sessions && sessions.length) {
-      TimeService.generateTable(sessions, archives, function(table) {
-        StateService.data['Session'].table = table;
-        $scope.table = table;
-        if (!$scope.$$phase) {
-          $scope.$apply();
-        }
-      });
-      if (isOnLoad && sessions.length) {
-        getStatus();
+    TimeService.generateTable(sessions, archives, function(table) {
+      StateService.data['Session'].table = table;
+      $scope.table = table;
+      if (!$scope.$$phase) {
+        $scope.$apply();
       }
-    };
+    });
+    if (isOnLoad && sessions && sessions.length) {
+      getStatus();
+    }
   };
 
   ctrl.renderMessage = function(binding, message) {
