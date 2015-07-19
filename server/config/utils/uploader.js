@@ -13,7 +13,6 @@ var bitly = new Bitly(config.bitly.username, config.bitly.key);
 module.exports = {
   obj: {},
   setId: function() {
-    if(this.obj.uuid) delete this.obj.uuid;
     this.obj.uuid = uuid.v1();
   },
   getId: function() {

@@ -119,7 +119,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
-    (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
+    (otSession.status === 'ready') ? ctrl.connect(otSession) : ctrl.showOverlay(otSession.status);
   };
 
   /* date timepicker config */
@@ -537,24 +537,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   }
 
   FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
-}
-
-
-'use strict';
-
-angular.module('RoomBaby')
-  .controller('GlobalCtrl', GlobalCtrl);
-
-function GlobalCtrl($scope, $rootScope, $state, $timeout, PubSub, StateService, localStorageService) {
-
-  var ctrl = this;
-
-  PubSub.on('dashboardLoaded', function(){
-    $scope.addScroll = true;
-    console.log('dashboardLoaded');
-  });
-
-  GlobalCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', 'PubSub', 'StateService', 'localStorageService'];
 }
 
 
@@ -1295,6 +1277,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
   SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'FacebookService', 'StateService', 'ArchiveService', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
 }
+
+
 
 
 angular.module('RoomBaby')

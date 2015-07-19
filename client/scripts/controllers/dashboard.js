@@ -62,7 +62,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
-    (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
+    (otSession.status === 'ready') ? ctrl.connect(otSession) : ctrl.showOverlay(otSession.status);
   };
 
   /* date timepicker config */

@@ -31,7 +31,7 @@ exports.getVideoStatus = function(req, res, next) {
   var obj = {};
 
   Video.findOne({ archiveId: req.params.archive_id }, function(err, video) {
-    console.log('getVideoStatus', video)
+    console.log('getVideoStatus', video);
     if (err) return next(err);
     if (!video || video.status !== 'uploaded') {
       obj.isReady = false;
