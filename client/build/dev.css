@@ -1,3 +1,11 @@
+#broadcast-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
 #permission-granted {
   margin-left: -41px;
   font-family: 'Open Sans', sans-serif;
@@ -1386,6 +1394,11 @@ li {
   cursor: pointer;
 }
 
+
+.reset-message {
+  font-size: 14px;
+  color: orange;
+}
 
 p.have-account {
   font-size: 14px;

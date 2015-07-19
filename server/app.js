@@ -35,6 +35,7 @@ database.connect(function() {
     console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
     /* Start worker */
     worker.start();
+    // worker.sendMail();
   });
 });
 

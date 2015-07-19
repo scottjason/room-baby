@@ -14,12 +14,16 @@
   </form>
   <div ng-show="showForgotPassword">
     <p class='forgot-password-copy'>please enter your registered email to recover your password</p>
-    <form id="forgotPassword" name="authForm" class="form-inline">
-      <input class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+    <div ng-show='resetMessage'>
+      <p class='reset-message'>{{ resetMessage }}</p>
+      <button title="reset-success" class="btn btn-custom-login" ng-click="landingCtrl.reset(null);">OK</button>
+    </div>
+    <form ng-hide='resetMessage' id="forgotPassword" name="authForm" class="form-inline">
+      <input id='reset-password-input' class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
       <button title="cancel" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(true);">Cancel</button>
       <button type="submit" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(null);">Submit</button>
     </form>
-  </div>
+  </div >
   <div ng-show='showErr' class='login-btn-container'>
     <p class='landing-err-message'>{{ errMessage }}</p>
   </div>

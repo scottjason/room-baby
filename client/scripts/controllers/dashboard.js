@@ -57,6 +57,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.createRoom();
     } else if ($event.currentTarget.id === 'on-update-room-submit') {
       ctrl.updateRoom();
+    } else if ($event.currentTarget.id === 'create-broadcast-btn') {
+      ctrl.createBroadcast();
     }
   };
 
@@ -254,6 +256,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     }, function(err) {
       console.log(err)
     });
+  };
+
+  ctrl.createBroadcast = function() {
+    SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
+      localStorageService.set('broadcast', response.data);
+      var url = $state.href('broadcast', { broadcast_id: response.data._id });
+      console.log(url);
+      window.open(url,'_blank');
+    })
   };
 
   /* render table (or re-render after save room) */

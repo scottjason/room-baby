@@ -37,6 +37,11 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
+      .state('broadcast', {
+        url: '/broadcast/:broadcast_id/',
+        templateUrl: 'views/broadcast.html',
+        controller: 'BroadCastCtrl as broadCastCtrl'
+      })
 
     localStorageServiceProvider
       .setPrefix('RoomBaby')
@@ -53,6 +58,85 @@ angular.module('RoomBaby')
 
 angular.module('RoomBaby')
   .run(['TimeService', function(TimeService) {}]);
+
+
+'use strict';
+
+angular.module('RoomBaby')
+  .controller('BroadCastCtrl', BroadCastCtrl);
+
+function BroadCastCtrl($scope, $rootScope, $state, $timeout, $window, PubSub, ConstantService, SessionApi, Animator, StateService, localStorageService) {
+
+  var ctrl = this;
+
+  var layoutContainer = document.getElementById('broadcast-container');
+  var layoutOpts = ConstantService.generateOpts('layout');
+
+  var layout = TB.initLayoutContainer(layoutContainer, layoutOpts).layout;
+
+  $window.onresize = function() {
+    var resizeCams = function() {
+      layout();
+    }
+    $timeout(resizeCams, 20);
+  };
+
+  $scope.registerEvents = function(session) {
+    session.on('streamCreated', function(event) {
+      var subscriberProperties = {
+        insertMode: 'append',
+        width: '1024',
+        height: '768'
+      };
+      var subscriber = session.subscribe(event.stream,
+        'layoutContainer',
+        subscriberProperties,
+        function(error) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Subscriber added.');
+          }
+        });
+    });
+  }
+
+
+  this.init = function() {
+    if (localStorageService.get('user')) {
+      var broadcast = localStorageService.get('broadcast');
+      console.log('broadcast', broadcast);
+      $scope.session = OT.initSession(broadcast.key, broadcast.sessionId);
+      $scope.session.connect(broadcast.token, function(err) {
+        if (err) {
+          console.error('error connecting: ', err.code, err.message);
+        } else {
+          var pubElem = document.createElement('div');
+          var publisher = OT.initPublisher(pubElem, {
+            resolution: '1280x720'
+          }, function(err) {
+            if (err) console.error(err);
+            $scope.session.publish(publisher);
+            layoutContainer.appendChild(pubElem);
+            layout();
+            localStorageService.set('publisher', publisher);
+          });
+        }
+      });
+    } else {
+      SessionApi.getBroadcast($state.params.broadcast_id).then(function(response) {
+        console.log(response);
+        var broadcast = response.data;
+        $scope.session = OT.initSession(broadcast.key, broadcast.sessionId);
+        $scope.registerEvents($scope.session);
+        $scope.session.connect(broadcast.token, function(err) {});
+      });
+
+    }
+  };
+
+  BroadCastCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'PubSub', 'ConstantService', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+}
 
 
 'use strict';
@@ -114,6 +198,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.createRoom();
     } else if ($event.currentTarget.id === 'on-update-room-submit') {
       ctrl.updateRoom();
+    } else if ($event.currentTarget.id === 'create-broadcast-btn') {
+      ctrl.createBroadcast();
     }
   };
 
@@ -311,6 +397,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     }, function(err) {
       console.log(err)
     });
+  };
+
+  ctrl.createBroadcast = function() {
+    SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
+      localStorageService.set('broadcast', response.data);
+      var url = $state.href('broadcast', { broadcast_id: response.data._id });
+      console.log(url);
+      window.open(url,'_blank');
+    })
   };
 
   /* render table (or re-render after save room) */
@@ -545,30 +640,28 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
 angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
-function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
+function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
 
-  this.registerEvents = function() {
-    PubSub.on('enterBtn:onLogin', ctrl.validateLogin);
-    PubSub.on('enterBtn:onRegister', ctrl.validateRegistration);
+  this.onReady = function() {
+    PubSub.on('enterBtn:forgotPassword', this.onForgotPassword);
     StateService.data['Controllers'].Landing.isReady = true;
   };
 
   this.isAuthenticated = function() {
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
-        var opts = UserApi.generateOpts(response.data.user);
-        ctrl.grantAccess(opts);
+        var accessOpts = UserApi.generateOpts(response.data.user);
+        ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
         localStorageService.clearAll();
         ctrl.initialize();
       } else {
-        localStorageService.clearAll()
-        $window.location.href = $window.location.protocol + '//' + $window.location.host;
+        ctrl.reset(true);
       }
     }, function(err) {
-      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      ctrl.reset(true);
     });
   };
 
@@ -612,43 +705,36 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
     } else if (optSelected === 'forgotPassword') {
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
-      localStorageService.clearAll();
-      $state.go($state.current, {}, {
-        reload: true
-      });
+      ctrl.resetState();
     }
   };
 
   this.validateLogin = function() {
-    var opts = Validator.generateOpts('login', $scope.user);
-    Validator.validate(opts, function(isValid, badInput, errMessage) {
-      if (isValid) {
-        ctrl.login(opts);
-      } else {
-        $scope.user[badInput] = '';
-        $scope.showErr = true;
-        $scope.errMessage = errMessage;
-        $timeout(function() {
-          $scope.errMessage = '';
-          $scope.showErr = false;
-        }, 2000);
-      }
-    });
+    var inProgress = StateService.data['Auth'].Login.inProgress;
+    if (!inProgress) {
+      StateService.data['Auth'].Login.inProgress = true;
+      var opts = Validator.generateOpts('login', $scope.user);
+      Validator.validate(opts, function(isValid, badInput, errMessage) {
+        if (isValid) {
+          ctrl.login(opts);
+        } else {
+          $scope.user[badInput] = '';
+          $scope.showErr = true;
+          $scope.errMessage = errMessage;
+          $timeout(function() {
+            $scope.errMessage = '';
+            $scope.showErr = false;
+            StateService.data['Auth'].Login.inProgress = false;
+          }, 1200);
+        }
+      });
+    }
   };
 
   this.validateRegistration = function() {
-
-    var twoSeconds = 2000;
-    var currentMsUtc = new Date().getTime();
-
-    $scope.lastClick = $scope.lastClick ? $scope.thisClick : currentMsUtc;
-    $scope.thisClick = currentMsUtc;
-
-    var lastClickedAt = ($scope.thisClick - $scope.lastClick);
-    var isInititalAttempt = !lastClickedAt;
-    var isDoubleRegister = (lastClickedAt < twoSeconds);
-
-    if (isInititalAttempt || (!isInititalAttempt && !isDoubleRegister)) {
+    var inProgress = StateService.data['Auth'].Registration.inProgress;
+    if (!inProgress) {
+      StateService.data['Auth'].Registration.inProgress = true;
       var opts = Validator.generateOpts('register', $scope.user);
       Validator.validate(opts, function(isValid, badInput, errMessage) {
         if (isValid) {
@@ -660,7 +746,8 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
           $timeout(function() {
             $scope.showErr = null;
             $scope.errMessage = '';
-          }, 2000);
+            StateService.data['Auth'].Registration.inProgress = false;
+          }, 1200);
           ($scope.$parent.$$phase === '$apply') ? null: $scope.$apply();
         }
       });
@@ -673,10 +760,12 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
       Validator.validate(opts, function(isValid) {
         if (!isValid) {
           var errMessage = ConstantService.generateError('invalidEmail');
-          ctrl.renderError(errMessage);
+          $timeout(function() {
+            ctrl.renderError(errMessage);
+          })
         } else {
           UserApi.resetPassword($scope.user).then(function(response) {
-            console.log('response', response);
+            $scope.resetMessage = response.data;
           });
         }
       });
@@ -701,51 +790,61 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
     }
   };
 
+  ctrl.reset = function(refreshPage) {
+    StateService.data['Animator']['login'].hasAnimated = false;
+    StateService.data['Auth'].Login.inProgress = false;
+    StateService.data['Auth'].Registration.inProgress = false;
+    localStorageService.clearAll();
+    if (!refreshPage) {
+      $state.go($state.current, {}, {
+        reload: true
+      });
+    } else {
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+    }
+  };
+
   ctrl.login = function(opts) {
     UserApi.login(opts).then(function(response) {
       if (response.status == 200) {
         localStorageService.set('user', response.data.user);
         localStorageService.set('sessions', response.data.sessions);
         localStorageService.set('archives', response.data.archives);
-        var opts = UserApi.generateOpts(response.data.user);
-        ctrl.grantAccess(opts);
+        var accessOpts = UserApi.generateOpts(response.data.user);
+        ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
+        $scope.user = {};
         ctrl.renderError(response.data.message)
       } else {
-        $window.location.href = $window.location.protocol + '//' + $window.location.host;
+        ctrl.reset(true);
       }
     }, function(err) {
-      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      ctrl.reset(true);
     });
   };
 
   ctrl.register = function(opts) {
     UserApi.register(opts).then(function(response) {
-      if (response.status === 401) {
+      if (response.status === 200) {
+        localStorageService.set('user', response.data.user);
+        localStorageService.set('sessions', response.data.sessions);
+        var accessOpts = UserApi.generateOpts(response.data.user);
+        ctrl.grantAccess(accessOpts);
+      } else if (response.status === 401) {
+        $scope.user = {};
         ctrl.renderError(response.data.message);
-      } else if (!response.data.session) {
-        var user = response.data.user;
-        var opts = {
-          user_id: user._id
-        }
-        localStorageService.set('user', user);
-        ctrl.grantAccess(opts);
       } else {
-        var user = response.data.user;
-        var session = response.data.sessions;
-        var opts = {
-          user_id: user._id
-        }
-        localStorageService.set('sessions', sessions);
-        localStorageService.set('user', user);
-        ctrl.grantAccess(opts);
+        ctrl.reset(true);
       }
     }, function(err) {
-      console.log(err);
+      ctrl.reset(true);
     });
   };
 
   ctrl.grantAccess = function(opts) {
+    $scope.user = {};
+    StateService.data['Auth'].Login.inProgress = false
+    StateService.data['Auth'].Registration.inProgress = false
     $state.go('dashboard', opts);
   };
 
@@ -755,10 +854,12 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
     $timeout(function() {
       $scope.errMessage = '';
       $scope.showErr = false;
-    }, 2000);
+      StateService.data['Auth'].Login.inProgress = false;
+      StateService.data['Auth'].Registration.inProgress = false;
+    }, 1200);
   };
 
-  LandingCtrl.$inject['$scope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'ConstantService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
+  LandingCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'Validator', 'StateService', 'ConstantService', 'DeviceService', 'UserApi', 'PubSub', 'Animator', 'localStorageService'];
 };
 
 
@@ -767,7 +868,7 @@ function LandingCtrl($scope, $state, $window, $timeout, Validator, StateService,
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
   var ctrl = this;
 
@@ -786,9 +887,12 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   };
 
   this.dropdown = function(opt) {
+    console.log('opt', opt)
     if (opt === 'logout') {
       var userId = localStorageService.get('user')._id;
       ctrl.logout(userId);
+    } else if (opt === 'upload') {
+      ctrl.toggleUpload(null);
     }
   };
 
@@ -828,6 +932,47 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     }
   };
 
+  this.collectUpload = function() {
+
+    if (!$scope.fileUpload) {
+      console.error('!$scope.fileUpload');
+    } else if ($scope.fileUpload.size > 5e+6) { /* 5e+6 bytes === 5mb */
+      console.error('maxSizeExceeded');
+    } else {
+      $scope.showLoadingSpinner = true;
+
+      console.log($scope.fileUpload)
+
+      var userId = localStorageService.get('user')._id;
+
+      /* Verify again on server along with file type */
+      UserApi.upload($scope.fileUpload, userId).then(function(response) {
+        if (response.status === 200) {
+          var user = localStorageService.get('user');
+          user.profileImage = response.data;
+          localStorageService.set('user', user);
+          $scope.showLoadingSpinner = false;
+          ctrl.toggleUpload(true);
+        } else if (response.status === 401) {
+          console.error(401, response)
+        }
+      }, function(err) {
+        console.error(err);
+      });
+    }
+  };
+
+  ctrl.toggleUpload = function(isOpen) {
+    if (!isOpen) {
+      ngDialog.openConfirm({
+        template: '../../views/ngDialog/profile-image.html',
+        controller: 'NavBarCtrl'
+      });
+    } else {
+      ngDialog.closeAll();
+    }
+  };
+
   ctrl.toggleOverlay = function() {
     $scope.showOverlay = !$scope.showOverlay;
   };
@@ -848,7 +993,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
 }
 
 
@@ -1720,6 +1865,23 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function createBroadcast(user) {
+      var request = $http({
+        method: 'GET',
+        url: '/session/create-broadcast/' + user._id
+      });
+      return (request.then(successHandler, errorHandler));
+    };
+
+    function getBroadcast(broadcast_id) {
+      console.log('broadcast_id', broadcast_id);
+      var request = $http({
+        method: 'GET',
+        url: '/session/get-broadcast/' + broadcast_id
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function startRecording(otSessionId) {
       var request = $http({
         method: 'GET',
@@ -1752,7 +1914,7 @@ angular.module('RoomBaby')
       });
       return (request.then(successHandler, errorHandler));
     }
-    
+
     function successHandler(response) {
       return (response);
     }
@@ -1766,6 +1928,8 @@ angular.module('RoomBaby')
       deleteRoom: deleteRoom,
       getAll: getAll,
       upload: upload,
+      createBroadcast: createBroadcast,
+      getBroadcast: getBroadcast,
       startRecording: startRecording,
       stopRecording: stopRecording,
       getVideoStatus: getVideoStatus,
@@ -1831,7 +1995,16 @@ angular.module('RoomBaby')
         'isOnLoad': true
       },
       'Auth': {
-        'isFacebook': false
+        'isFacebook': false,
+        'Registration': {
+          'inProgress': false
+        },
+        'Login': {
+          'inProgress': false
+        },
+        'ForgotPassword': {
+          'isEnterBtn': false
+        }
       },
       'Facebook': {
         'shareDialog': {
@@ -2131,6 +2304,31 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function upload(params) {
+      var request = $http({
+        method: 'POST',
+        url: 'user/upload-profile-img',
+        data: params
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
+    function upload(file, user_id) {
+      var formData = new FormData();
+      formData.append('file', file);
+      formData.append('user_id', user_id);
+      var request = $http({
+        method: 'POST',
+        url: '/user/upload',
+        data: formData,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function logout(user_id) {
       var request = $http({
         method: 'GET',
@@ -2214,6 +2412,7 @@ angular.module('RoomBaby')
       update: update,
       getOne: getOne,
       getAll: getAll,
+      upload: upload,
       saveUserName: saveUserName,
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated,
@@ -2628,24 +2827,28 @@ angular.module('RoomBaby')
 
 
 angular.module('RoomBaby')
-  .directive('ngEnter', function(PubSub) {
-    return function(scope, element, attrs) {
-      element.bind('keydown keypress', function(event) {
+  .directive('ngEnter', function(StateService, PubSub) {
+    var linkObj = {
+      link: function(scope, element, attrs) {
+        element.bind('keydown', function(event) {
 
-        var isEnterBtn = (event.which === 13);
-        var isChatMessage = (event.target.id === 'transport-input');
-        var isLogin = (event.target.id === 'login-input');
-        var isRegister = (event.target.id === 'register-input');
-        if (isEnterBtn && isChatMessage) {
-          // PubSub.trigger('enterBtn:onChatMessage');
-        } else if (isEnterBtn && isLogin) {
-          // PubSub.trigger('enterBtn:onLogin');
-        } else if (isEnterBtn && isRegister) {
-          PubSub.trigger('enterBtn:onRegister');
-        }
-      });
-    };
-    ngEnter.$inject('PubSub');
+          var isEnterBtn = (event.which === 13);
+          var isResetBtn = (event.target.id === 'reset-password-input');
+          var isChatMessage = (event.target.id === 'transport-input');
+
+          if (isEnterBtn && isResetBtn) {
+            event.preventDefault();
+            PubSub.trigger('enterBtn:forgotPassword');
+          };
+
+          if (isEnterBtn && isChatMessage) {
+            // PubSub.trigger('enterBtn:onChatMessage');
+          }
+        });
+      }
+    }
+    return linkObj;
+    ngEnter.$inject('StateService', 'PubSub');
   });
 
 

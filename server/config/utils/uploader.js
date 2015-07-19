@@ -19,13 +19,16 @@ module.exports = {
     return this.obj.uuid;
   },
   generateKey: function(req) {
-    console.log('req.session', req.session);
     return 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension;
   },
   generateUrl: function(req, callback) {
-    this.generateShortUrl(config.aws.base + 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension, callback);
+    if (!req.isProfileImg) {
+      this.generateShortUrl(config.aws.base + 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension, callback);
+    } else {
+      callback(config.aws.base + 'user-id/' + req.session.user._id + '/' + this.getId() + '.' + req.files.file.extension);
+    }
   },
-  generateShortUrl: function(longUrl, callback){
+  generateShortUrl: function(longUrl, callback) {
     bitly.shorten(longUrl, function(err, res) {
       if (err) return callback(err);
       return callback(null, res.data.url);

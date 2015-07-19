@@ -46,6 +46,23 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function createBroadcast(user) {
+      var request = $http({
+        method: 'GET',
+        url: '/session/create-broadcast/' + user._id
+      });
+      return (request.then(successHandler, errorHandler));
+    };
+
+    function getBroadcast(broadcast_id) {
+      console.log('broadcast_id', broadcast_id);
+      var request = $http({
+        method: 'GET',
+        url: '/session/get-broadcast/' + broadcast_id
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function startRecording(otSessionId) {
       var request = $http({
         method: 'GET',
@@ -78,7 +95,7 @@ angular.module('RoomBaby')
       });
       return (request.then(successHandler, errorHandler));
     }
-    
+
     function successHandler(response) {
       return (response);
     }
@@ -92,6 +109,8 @@ angular.module('RoomBaby')
       deleteRoom: deleteRoom,
       getAll: getAll,
       upload: upload,
+      createBroadcast: createBroadcast,
+      getBroadcast: getBroadcast,
       startRecording: startRecording,
       stopRecording: stopRecording,
       getVideoStatus: getVideoStatus,

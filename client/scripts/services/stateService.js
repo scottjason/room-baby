@@ -54,7 +54,16 @@ angular.module('RoomBaby')
         'isOnLoad': true
       },
       'Auth': {
-        'isFacebook': false
+        'isFacebook': false,
+        'Registration': {
+          'inProgress': false
+        },
+        'Login': {
+          'inProgress': false
+        },
+        'ForgotPassword': {
+          'isEnterBtn': false
+        }
       },
       'Facebook': {
         'shareDialog': {

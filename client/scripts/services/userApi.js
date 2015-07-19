@@ -30,6 +30,31 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function upload(params) {
+      var request = $http({
+        method: 'POST',
+        url: 'user/upload-profile-img',
+        data: params
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
+    function upload(file, user_id) {
+      var formData = new FormData();
+      formData.append('file', file);
+      formData.append('user_id', user_id);
+      var request = $http({
+        method: 'POST',
+        url: '/user/upload',
+        data: formData,
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function logout(user_id) {
       var request = $http({
         method: 'GET',
@@ -113,6 +138,7 @@ angular.module('RoomBaby')
       update: update,
       getOne: getOne,
       getAll: getAll,
+      upload: upload,
       saveUserName: saveUserName,
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated,

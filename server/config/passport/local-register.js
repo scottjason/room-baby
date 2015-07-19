@@ -14,7 +14,7 @@ exports.getAll = function(user, callback) {
  var allSessions = [];
   Session.find({ users: { $elemMatch: { _id: user._id } } }, function (err, sessions) {
     if (err) return callback(err, null, null);
-    if(!sessions.length) return callback(null, user, null);
+    if(!sessions.length) return callback(null, user, allSessions);
     sessions.forEach(function(session){
       session.key = config.openTok.key;
       session.secret = config.openTok.secret;
@@ -32,7 +32,6 @@ module.exports = function(passport) {
     },
     function(req, email, password, callback) {
       User.findOne({ email: email }, function(err, user) {
-        console.log('on user find one', user);
         if (err) return callback(err);
         if (user) return callback(null, null, { message: dialog.emailAlreadyExists });
         var user = new User();
@@ -42,7 +41,6 @@ module.exports = function(passport) {
         user.save(function(err, savedUser) {
           if (err) return callback(err);
           user.password = null;
-          console.log('on saved user', savedUser)
           exports.getAll(savedUser, callback);
         });
       });

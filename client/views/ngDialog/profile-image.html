@@ -1,0 +1,18 @@
+<div ng-controller='NavBarCtrl as navCtrl'>
+  <div ng-show='showLoadingSpinner'>
+    <p class='enter-username'>Upload In Progress</p>
+    <div class='upload-spinner-container'>
+    <i class="fa fa-circle-o-notch fa-spin upload-spinner"></i>
+    </div>
+  </div>
+  <div ng-hide='showLoadingSpinner'>
+    <p class='enter-username'>Please Upload Your File</p>
+    <form id='uploadForm' class='upload-form'>
+      <div class="choose-file">
+        <span id='choose-file-copy' style="cursor:pointer">Choose File</span>
+        <input id='file-upload-btn' type='file' ng-upload='fileUpload' class='upload' />
+      </div>
+      <a id='register' ng-click='navCtrl.collectUpload();' class="btn btn-md btn-custom-landing">Upload</a>
+    </form>
+  </div>
+</div>

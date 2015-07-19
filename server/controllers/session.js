@@ -7,6 +7,7 @@
 var Session = require('../models/session');
 var User = require('../models/user');
 var Video = require('../models/video');
+var Broadcast = require('../models/broadcast');
 var OpenTok = require('opentok');
 var AWS = require('aws-sdk');
 var fs = require('fs');
@@ -30,8 +31,9 @@ exports.getVideoStatus = function(req, res, next) {
 
   var obj = {};
 
-  Video.findOne({ archiveId: req.params.archive_id }, function(err, video) {
-    console.log('getVideoStatus', video);
+  Video.findOne({
+    archiveId: req.params.archive_id
+  }, function(err, video) {
     if (err) return next(err);
     if (!video || video.status !== 'uploaded') {
       obj.isReady = false;
@@ -164,6 +166,33 @@ exports.createRoom = function(req, res, next) {
   )
 };
 
+exports.createBroadcast = function(req, res, next) {
+  opentok.createSession({
+    mediaMode: 'routed'
+  }, function(err, otSession) {
+
+    var broadcast = new Broadcast();
+
+    broadcast.key = config.openTok.key;
+    broadcast.secret = config.openTok.secret;
+    broadcast.sessionId = otSession.sessionId;
+    broadcast.token = opentok.generateToken(broadcast.sessionId);
+
+    broadcast.save(function(err, savedBroadcast) {
+      if (err) return next(err);
+      res.status(200).send(savedBroadcast);
+    })
+  });
+};
+
+exports.getBroadcast = function(req, res, next) {
+  console.log('##### getBroadcast Called');
+  var broadcastId = req.params.broadcast_id;
+  Broadcast.findById(broadcastId, function(err, broadcast) {
+    res.send(broadcast);
+  });
+}
+
 exports.upload = function(req, res, next) {
   async.waterfall([
       function(callback) {
@@ -245,20 +274,20 @@ exports.deleteRecording = function(req, res, next) {
 };
 
 exports.generateVideoEmbed = function(req, res, next) {
-    console.log('generateVideoEmbed', req.body);
-    var partnerId = req.body.partnerId;
-    var archiveId = req.body.archiveId;
-    var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
-    console.log('url', url);
-    request(url, function(error, response, body) {
-      console.log("response", response);
-      console.log('body', body);
+  console.log('generateVideoEmbed', req.body);
+  var partnerId = req.body.partnerId;
+  var archiveId = req.body.archiveId;
+  var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+  console.log('url', url);
+  request(url, function(error, response, body) {
+    console.log("response", response);
+    console.log('body', body);
     // if (!error && response.statusCode == 200) {
     //   console.log('body', body);
     //   console.log('');
     //   console.log('----------------');
     //   console.log('');
-      // console.log('response', response);
+    // console.log('response', response);
     // }
   });
 };

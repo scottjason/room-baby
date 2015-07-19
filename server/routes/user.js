@@ -18,6 +18,7 @@ module.exports = function(app, passport) {
   /* Not Protected EndPoints */
   router.post('/reset', userCtrl.resetPass);
   router.post('/save-user-name', userCtrl.saveUserName);
+  router.post('/upload', userCtrl.upload);
   router.get('/reset/:token', userCtrl.resetPassCallback)
   router.post('/reset-submit', userCtrl.resetPassSubmit);
   router.get('/logout/:user_id', userCtrl.logout);
@@ -61,13 +62,10 @@ module.exports = function(app, passport) {
         if (err) return next(err);
 
         req.session.user = user;
-
-        if (otSessions) {
-          req.session.otSessions = otSessions;
-        }
+        req.session.otSessions = otSessions;
         return res.json({
           user: user,
-          session: otSessions
+          sessions: otSessions
         });
       });
     })(req, res, next);

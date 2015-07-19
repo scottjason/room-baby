@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
   var ctrl = this;
 
@@ -22,9 +22,12 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   };
 
   this.dropdown = function(opt) {
+    console.log('opt', opt)
     if (opt === 'logout') {
       var userId = localStorageService.get('user')._id;
       ctrl.logout(userId);
+    } else if (opt === 'upload') {
+      ctrl.toggleUpload(null);
     }
   };
 
@@ -64,6 +67,47 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     }
   };
 
+  this.collectUpload = function() {
+
+    if (!$scope.fileUpload) {
+      console.error('!$scope.fileUpload');
+    } else if ($scope.fileUpload.size > 5e+6) { /* 5e+6 bytes === 5mb */
+      console.error('maxSizeExceeded');
+    } else {
+      $scope.showLoadingSpinner = true;
+
+      console.log($scope.fileUpload)
+
+      var userId = localStorageService.get('user')._id;
+
+      /* Verify again on server along with file type */
+      UserApi.upload($scope.fileUpload, userId).then(function(response) {
+        if (response.status === 200) {
+          var user = localStorageService.get('user');
+          user.profileImage = response.data;
+          localStorageService.set('user', user);
+          $scope.showLoadingSpinner = false;
+          ctrl.toggleUpload(true);
+        } else if (response.status === 401) {
+          console.error(401, response)
+        }
+      }, function(err) {
+        console.error(err);
+      });
+    }
+  };
+
+  ctrl.toggleUpload = function(isOpen) {
+    if (!isOpen) {
+      ngDialog.openConfirm({
+        template: '../../views/ngDialog/profile-image.html',
+        controller: 'NavBarCtrl'
+      });
+    } else {
+      ngDialog.closeAll();
+    }
+  };
+
   ctrl.toggleOverlay = function() {
     $scope.showOverlay = !$scope.showOverlay;
   };
@@ -84,5 +128,5 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
 }

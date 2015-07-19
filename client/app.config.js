@@ -24,6 +24,11 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
+      .state('broadcast', {
+        url: '/broadcast/:broadcast_id/',
+        templateUrl: 'views/broadcast.html',
+        controller: 'BroadCastCtrl as broadCastCtrl'
+      })
 
     localStorageServiceProvider
       .setPrefix('RoomBaby')

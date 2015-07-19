@@ -1,5 +1,5 @@
-<ng-enter>
-  <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.getState(); landingCtrl.isAuthenticated(); landingCtrl.registerEvents();">
+<ng-enter on-forgot-password-='onForgotPassword()'>
+  <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.getState(); landingCtrl.isAuthenticated(); landingCtrl.onReady();">
     <div class="col-md-12 text-center">
       <div class="row vertical-align-landing">
         <div class="cover">

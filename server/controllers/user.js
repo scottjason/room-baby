@@ -7,15 +7,77 @@
 var User = require('../models/user');
 var Session = require('../models/session');
 var Archive = require('../models/archive');
+var AWS = require('aws-sdk');
+var fs = require('fs');
 var async = require('async');
 var crypto = require('crypto');
 var mailer = require('../config/utils/mailer');
 var dialog = require('../config/utils/dialog');
+var uploader = require('../config/utils/uploader');
 var config = require('../config');
 var utils = require('../config/utils');
 
 var transporter = mailer.transporter();
+AWS.config.update(config.aws.credens);
+var s3Bucket = new AWS.S3();
 
+exports.upload = function(req, res, next) {
+  async.waterfall([
+      function(callback) {
+        console.log(req.files);
+        if (req.files.file.extension !== 'jpg' && req.files.file.extension !== 'jpeg' && req.files.file.extension !== 'png' && req.files.file.extension !== 'gif') return res.status(401).send(dialog.badFileType);
+        if (req.files.file.size > 5e+6) return res.status(401).send(dialog.maxSizeExceeded);
+        callback(null);
+      },
+      function(callback) {
+        fs.readFile(req.files.file.path, function(err, fileBody) {
+          if (err) return callback(err);
+          uploader.setId();
+          callback(null, fileBody);
+        })
+      },
+      function(fileBody, callback) {
+        var params = {
+          Bucket: config.aws.bucket,
+          Key: uploader.generateKey(req),
+          Body: fileBody,
+          ContentType: req.files.file.mimetype,
+          ACL: config.aws.acl
+        };
+        callback(null, params);
+      },
+      function(params, callback) {
+        s3Bucket.putObject(params, function(err) {
+          if (err) return callback(err);
+          callback(null);
+        });
+      },
+      function(callback) {
+        fs.unlink(req.files.file.path, function(err) {
+          if (err) return callback(err);
+          req.isProfileImg = true;
+          uploader.generateUrl(req, function(profileUrl) {
+            req.isProfileImg = false;
+            callback(null, profileUrl)
+          });
+        })
+      },
+      function(profileUrl, callback) {
+        User.findById(req.session.user._id, function(err, user) {
+          if (err) return callback(err);
+          user.profileImage = profileUrl;
+          user.save(function(err, savedUser) {
+            if (err) return callback(err);
+            callback(null, profileUrl);
+          });
+        })
+      }
+    ],
+    function(err, url) {
+      if (err) return next(err);
+      res.send(url);
+    })
+};
 
 exports.connectAccts = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
