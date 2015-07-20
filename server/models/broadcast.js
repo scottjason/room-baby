@@ -58,7 +58,7 @@ broadcastSchema.pre('save', function(callback) {
 
 
 broadcastSchema.methods.generateUrls = function(referer, broadcastId, cb) {
-  var longUrl = 'https://room-baby-video-api.herokuapp.com/' + broadcastId;
+  var longUrl = 'https://roombaby-api.herokuapp.com/' + broadcastId;
   this.generateShortUrl(longUrl, cb);
 };
 

@@ -279,7 +279,7 @@ exports.generateVideoEmbed = function(req, res, next) {
   console.log('generateVideoEmbed', req.body);
   var partnerId = req.body.partnerId;
   var archiveId = req.body.archiveId;
-  var url = 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+  var url = 'https://roombaby-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
   console.log('url', url);
   request(url, function(error, response, body) {
     console.log("response", response);
