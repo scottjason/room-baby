@@ -3,19 +3,37 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function generateHref() {
-      var partnerId = localStorageService.get('archive').partnerId;
-      var archiveId = localStorageService.get('archive').id;
-      return 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+    function generateHref(isBroadcast) {
+      if (!isBroadcast) {
+        var partnerId = localStorageService.get('archive').partnerId;
+        var archiveId = localStorageService.get('archive').id;
+        return 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+      } else {
+        return localStorageService.get('broadcast').longUrl;
+      }
     }
 
-    function openShareDialog(href) {
-      FB.ui({
-        method: 'share',
-        href: href
-      }, function(response) {
-        return;
-      });
+    function openShareDialog(href, isBroadcast) {
+      if (!isBroadcast) {
+        FB.ui({
+          method: 'share',
+          href: href
+        }, function(response) {
+          return;
+        });
+      } else {
+        console.log(href);
+
+        FB.ui({
+          method: 'feed',
+          link: href,
+          picture: 'https://raw.githubusercontent.com/scottjason/room-baby-videos-api/master/views/img/rb-embed-735-350.png',
+          name: "Room Baby Broadcast",
+          description: "The description who will be displayed"
+        }, function(response) {
+          console.log(response);
+        });
+      }
     }
 
     return ({

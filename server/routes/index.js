@@ -12,6 +12,8 @@ var indexCtrl = require('../controllers/index');
 module.exports = function(app, passport) {
   router.get('/', indexCtrl.render);
   router.get('/dashboard/:user_id', authCtrl.isAuthenticated, indexCtrl.render);
-  router.get('/broadcast/:broadcast_id', indexCtrl.render);
+  router.get('/broadcast/:*', indexCtrl.render);
+  // router.get('/broadcast/:broadcast_id?', indexCtrl.getBroadcast);
   app.use('/', router);
 }
+  router.get('/broadcast/:broadcast_id', indexCtrl.render);

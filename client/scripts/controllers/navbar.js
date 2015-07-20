@@ -12,6 +12,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   this.registerEvents = function() {
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
+    PubSub.on('onBroadcast', ctrl.onBroadcast);
     PubSub.on('setUser', ctrl.setUser);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
     StateService.data['Controllers'].Navbar.isReady = true;
@@ -76,8 +77,6 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     } else {
       $scope.showLoadingSpinner = true;
 
-      console.log($scope.fileUpload)
-
       var userId = localStorageService.get('user')._id;
 
       /* Verify again on server along with file type */
@@ -106,6 +105,10 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     } else {
       ngDialog.closeAll();
     }
+  };
+
+  ctrl.onBroadcast = function() {
+    $scope.showBroadcast = true;
   };
 
   ctrl.toggleOverlay = function() {

@@ -260,10 +260,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.createBroadcast = function() {
     SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
-      localStorageService.set('broadcast', response.data);
-      var url = $state.href('broadcast', { broadcast_id: response.data._id });
-      console.log(url);
-      window.open(url,'_blank');
+      var url = 'https://room-baby-video-api.herokuapp.com/' + response.data._id;
+      // var url = 'localhost:3001/' + response.data._id;
+      window.open(url, '_blank');
     })
   };
 

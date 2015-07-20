@@ -1,4 +1,4 @@
-<nav ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
+<nav ng-hide='showBroadcast' ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
   <div ng-class="{ 'body-overlay' : ( showOverlay ) }"></div>
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -29,3 +29,8 @@
     </ul>
   </div>
 </nav>
+
+
+
+
+

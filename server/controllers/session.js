@@ -170,27 +170,29 @@ exports.createBroadcast = function(req, res, next) {
   opentok.createSession({
     mediaMode: 'routed'
   }, function(err, otSession) {
-
     var broadcast = new Broadcast();
-
     broadcast.key = config.openTok.key;
     broadcast.secret = config.openTok.secret;
     broadcast.sessionId = otSession.sessionId;
     broadcast.token = opentok.generateToken(broadcast.sessionId);
-
-    broadcast.save(function(err, savedBroadcast) {
+    broadcast.generateUrls(req.headers.referer, broadcast._id, function(err, longUrl, shortUrl) {
       if (err) return next(err);
-      res.status(200).send(savedBroadcast);
-    })
+      broadcast.longUrl = longUrl;
+      broadcast.shortUrl = shortUrl;
+      broadcast.save(function(err, savedBroadcast) {
+        if (err) return next(err);
+        res.status(200).send(savedBroadcast);
+      });
+    });
   });
 };
 
 exports.getBroadcast = function(req, res, next) {
-  console.log('##### getBroadcast Called');
-  var broadcastId = req.params.broadcast_id;
-  Broadcast.findById(broadcastId, function(err, broadcast) {
-    res.send(broadcast);
-  });
+  console.log('##### getBroadcast Called', req);
+  // var broadcastId = req.params.broadcast_id;
+  // Broadcast.findById(broadcastId, function(err, broadcast) {
+    // res.send(broadcast);
+  // });
 }
 
 exports.upload = function(req, res, next) {

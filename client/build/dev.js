@@ -63,85 +63,6 @@ angular.module('RoomBaby')
 'use strict';
 
 angular.module('RoomBaby')
-  .controller('BroadCastCtrl', BroadCastCtrl);
-
-function BroadCastCtrl($scope, $rootScope, $state, $timeout, $window, PubSub, ConstantService, SessionApi, Animator, StateService, localStorageService) {
-
-  var ctrl = this;
-
-  var layoutContainer = document.getElementById('broadcast-container');
-  var layoutOpts = ConstantService.generateOpts('layout');
-
-  var layout = TB.initLayoutContainer(layoutContainer, layoutOpts).layout;
-
-  $window.onresize = function() {
-    var resizeCams = function() {
-      layout();
-    }
-    $timeout(resizeCams, 20);
-  };
-
-  $scope.registerEvents = function(session) {
-    session.on('streamCreated', function(event) {
-      var subscriberProperties = {
-        insertMode: 'append',
-        width: '1024',
-        height: '768'
-      };
-      var subscriber = session.subscribe(event.stream,
-        'layoutContainer',
-        subscriberProperties,
-        function(error) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Subscriber added.');
-          }
-        });
-    });
-  }
-
-
-  this.init = function() {
-    if (localStorageService.get('user')) {
-      var broadcast = localStorageService.get('broadcast');
-      console.log('broadcast', broadcast);
-      $scope.session = OT.initSession(broadcast.key, broadcast.sessionId);
-      $scope.session.connect(broadcast.token, function(err) {
-        if (err) {
-          console.error('error connecting: ', err.code, err.message);
-        } else {
-          var pubElem = document.createElement('div');
-          var publisher = OT.initPublisher(pubElem, {
-            resolution: '1280x720'
-          }, function(err) {
-            if (err) console.error(err);
-            $scope.session.publish(publisher);
-            layoutContainer.appendChild(pubElem);
-            layout();
-            localStorageService.set('publisher', publisher);
-          });
-        }
-      });
-    } else {
-      SessionApi.getBroadcast($state.params.broadcast_id).then(function(response) {
-        console.log(response);
-        var broadcast = response.data;
-        $scope.session = OT.initSession(broadcast.key, broadcast.sessionId);
-        $scope.registerEvents($scope.session);
-        $scope.session.connect(broadcast.token, function(err) {});
-      });
-
-    }
-  };
-
-  BroadCastCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'PubSub', 'ConstantService', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
-}
-
-
-'use strict';
-
-angular.module('RoomBaby')
   .controller('DashCtrl', DashCtrl);
 
 function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, ngDialog, ConstantService, StateService, PubSub, UserApi, SessionApi, Animator, TimeService, localStorageService) {
@@ -401,10 +322,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.createBroadcast = function() {
     SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
-      localStorageService.set('broadcast', response.data);
-      var url = $state.href('broadcast', { broadcast_id: response.data._id });
-      console.log(url);
-      window.open(url,'_blank');
+      var url = 'https://room-baby-video-api.herokuapp.com/' + response.data._id;
+      // var url = 'localhost:3001/' + response.data._id;
+      window.open(url, '_blank');
     })
   };
 
@@ -877,6 +797,7 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   this.registerEvents = function() {
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
+    PubSub.on('onBroadcast', ctrl.onBroadcast);
     PubSub.on('setUser', ctrl.setUser);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
     StateService.data['Controllers'].Navbar.isReady = true;
@@ -941,8 +862,6 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     } else {
       $scope.showLoadingSpinner = true;
 
-      console.log($scope.fileUpload)
-
       var userId = localStorageService.get('user')._id;
 
       /* Verify again on server along with file type */
@@ -971,6 +890,10 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     } else {
       ngDialog.closeAll();
     }
+  };
+
+  ctrl.onBroadcast = function() {
+    $scope.showBroadcast = true;
   };
 
   ctrl.toggleOverlay = function() {
@@ -1699,19 +1622,37 @@ angular.module('RoomBaby')
 
     'use strict'
 
-    function generateHref() {
-      var partnerId = localStorageService.get('archive').partnerId;
-      var archiveId = localStorageService.get('archive').id;
-      return 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+    function generateHref(isBroadcast) {
+      if (!isBroadcast) {
+        var partnerId = localStorageService.get('archive').partnerId;
+        var archiveId = localStorageService.get('archive').id;
+        return 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+      } else {
+        return localStorageService.get('broadcast').longUrl;
+      }
     }
 
-    function openShareDialog(href) {
-      FB.ui({
-        method: 'share',
-        href: href
-      }, function(response) {
-        return;
-      });
+    function openShareDialog(href, isBroadcast) {
+      if (!isBroadcast) {
+        FB.ui({
+          method: 'share',
+          href: href
+        }, function(response) {
+          return;
+        });
+      } else {
+        console.log(href);
+
+        FB.ui({
+          method: 'feed',
+          link: href,
+          picture: 'https://raw.githubusercontent.com/scottjason/room-baby-videos-api/master/views/img/rb-embed-735-350.png',
+          name: "Room Baby Broadcast",
+          description: "The description who will be displayed"
+        }, function(response) {
+          console.log(response);
+        });
+      }
     }
 
     return ({

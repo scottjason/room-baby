@@ -1,4 +1,8 @@
 var mongoose = require('mongoose');
+var config = require('../config');
+var Bitly = require('bitly');
+
+var bitly = new Bitly(config.bitly.username, config.bitly.key);
 
 var broadcastSchema = new mongoose.Schema({
   email: {
@@ -22,6 +26,12 @@ var broadcastSchema = new mongoose.Schema({
   secret: {
     type: String
   },
+  shortUrl: {
+    type: String
+  },
+  longUrl: {
+    type: String
+  },
   createdAt: {
     type: Number
   },
@@ -40,5 +50,21 @@ broadcastSchema.pre('save', function(callback) {
   this.expiresAt = this.startsAt + fiveMinutes;
   callback();
 });
+
+broadcastSchema.methods.generateUrls = function(referer, broadcastId, cb) {
+  referer = referer.split('/');
+  var protocol = referer[0];
+  var slashes = '//';
+  var longUrl = protocol + slashes + referer[2] + '/broadcast/' + broadcastId;
+  this.generateShortUrl(longUrl, cb);
+};
+
+broadcastSchema.methods.generateShortUrl = function(longUrl, cb) {
+  bitly.shorten(longUrl, function(err, res) {
+    if (err) return callback(err);
+    var shortUrl = res.data.url;
+    cb(null, longUrl, shortUrl);
+  });
+};
 
 module.exports = mongoose.model('Broadcast', broadcastSchema);
