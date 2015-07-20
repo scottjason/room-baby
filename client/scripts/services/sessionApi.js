@@ -96,6 +96,10 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function generateBroadcastUrl(broadcastId) {
+      return 'https://room-baby-video-api.herokuapp.com/' + broadcastId;
+    }
+
     function successHandler(response) {
       return (response);
     }
@@ -110,6 +114,7 @@ angular.module('RoomBaby')
       getAll: getAll,
       upload: upload,
       createBroadcast: createBroadcast,
+      generateBroadcastUrl: generateBroadcastUrl,
       getBroadcast: getBroadcast,
       startRecording: startRecording,
       stopRecording: stopRecording,

@@ -37,11 +37,6 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
-      .state('broadcast', {
-        url: '/broadcast/:broadcast_id/',
-        templateUrl: 'views/broadcast.html',
-        controller: 'BroadCastCtrl as broadCastCtrl'
-      })
 
     localStorageServiceProvider
       .setPrefix('RoomBaby')
@@ -322,7 +317,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.createBroadcast = function() {
     SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
-      var url = 'https://room-baby-video-api.herokuapp.com/' + response.data._id;
+      var url = SessionApi.generateBroadcastUrl(response.data._id);
       // var url = 'localhost:3001/' + response.data._id;
       window.open(url, '_blank');
     })
@@ -1856,6 +1851,10 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function generateBroadcastUrl(broadcastId) {
+      return 'https://room-baby-video-api.herokuapp.com/' + broadcastId;
+    }
+
     function successHandler(response) {
       return (response);
     }
@@ -1870,6 +1869,7 @@ angular.module('RoomBaby')
       getAll: getAll,
       upload: upload,
       createBroadcast: createBroadcast,
+      generateBroadcastUrl: generateBroadcastUrl,
       getBroadcast: getBroadcast,
       startRecording: startRecording,
       stopRecording: stopRecording,
