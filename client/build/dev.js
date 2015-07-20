@@ -1621,7 +1621,7 @@ angular.module('RoomBaby')
       if (!isBroadcast) {
         var partnerId = localStorageService.get('archive').partnerId;
         var archiveId = localStorageService.get('archive').id;
-        return 'https://room-baby-video-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
+        return 'https://roombaby-api.herokuapp.com/embed/' + partnerId + '/' + archiveId;
       } else {
         return localStorageService.get('broadcast').longUrl;
       }
@@ -1641,7 +1641,7 @@ angular.module('RoomBaby')
         FB.ui({
           method: 'feed',
           link: href,
-          picture: 'https://raw.githubusercontent.com/scottjason/room-baby-videos-api/master/views/img/rb-embed-735-350.png',
+          picture: 'https://raw.githubusercontent.com/scottjason/room-baby-api/master/views/img/rb-embed-735-350.png',
           name: "Room Baby Broadcast",
           description: "The description who will be displayed"
         }, function(response) {
@@ -1852,7 +1852,7 @@ angular.module('RoomBaby')
     }
 
     function generateBroadcastUrl(broadcastId) {
-      return 'https://room-baby-video-api.herokuapp.com/' + broadcastId;
+      return 'https://roombaby-api.herokuapp.com/' + broadcastId;
     }
 
     function successHandler(response) {
