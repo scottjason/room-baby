@@ -26,6 +26,10 @@ var broadcastSchema = new mongoose.Schema({
   secret: {
     type: String
   },
+  connectCount: {
+    type: Number,
+    default: 0
+  },
   shortUrl: {
     type: String
   },
@@ -43,19 +47,18 @@ var broadcastSchema = new mongoose.Schema({
   }
 });
 
+
 broadcastSchema.pre('save', function(callback) {
   var fiveMinutes = 300000;
-  this.createdAt = new Date().getTime();
-  this.startsAt = new Date().getTime();
-  this.expiresAt = this.startsAt + fiveMinutes;
+  this.createdAt = this.createdAt ? this.createdAt : new Date().getTime();
+  this.startsAt = this.startsAt ? this.startsAt : new Date().getTime();
+  this.expiresAt = this.expiresAt ? this.expiresAt : (this.startsAt + fiveMinutes);
   callback();
 });
 
+
 broadcastSchema.methods.generateUrls = function(referer, broadcastId, cb) {
-  referer = referer.split('/');
-  var protocol = referer[0];
-  var slashes = '//';
-  var longUrl = protocol + slashes + referer[2] + '/broadcast/' + broadcastId;
+  var longUrl = 'https://room-baby-video-api.herokuapp.com/' + broadcastId;
   this.generateShortUrl(longUrl, cb);
 };
 
