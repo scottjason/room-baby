@@ -68,7 +68,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     } else if (optSelected === 'forgotPassword') {
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
-      ctrl.resetState();
+      ctrl.reset();
     }
   };
 
