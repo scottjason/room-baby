@@ -93,4 +93,7 @@ module.exports = {
     activeUsersApiKey: process.env.ACTIVE_USERS_API_KEY || env.ACTIVE_USERS_API_KEY,
     videoStatus: process.env.VIDEO_STATUS_API || env.VIDEO_STATUS_API
   },
+  newRelic: {
+    key: process.env.NEW_RELIC_KEY || env.NEW_RELIC_KEY
+  }
 };
