@@ -24,10 +24,10 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
-      .state('works', {
+      .state('work', {
         url: '/how-this-works',
-        templateUrl: 'views/works.html',
-        controller: 'WorksCtrl as workCtrl'
+        templateUrl: 'views/work.html',
+        controller: 'WorkCtrl as workCtrl'
       })
 
     localStorageServiceProvider
