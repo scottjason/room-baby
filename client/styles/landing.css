@@ -1,16 +1,4 @@
-.how-this-works {
-  position: absolute;
-  text-align: center;
-  color: #79DFB6;
-  right: 0;
-  bottom: 180px;
-  left: 548px;
-  font-size: 18px;
-  font-weight: 300;
-  white-space: nowrap;
-  cursor: pointer;
-  opacity: 0;
-}
+
 
 .reset-message {
   font-size: 14px;
@@ -283,7 +271,7 @@ a.logo-text:active {
   border-color: #d0314f;
   margin-top: -26px;
   margin-bottom: 0;
-  width: 680px;`
+  width: 680px;
 }
 
 .slogan-text {

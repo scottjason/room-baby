@@ -558,6 +558,22 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
 'use strict';
 
 angular.module('RoomBaby')
+  .controller('GlobalCtrl', GlobalCtrl);
+
+function GlobalCtrl($scope, PubSub) {
+
+  $scope.registerEvents = function() {
+    PubSub.on('toggleOverflow', function(_bool) {
+      $scope.showOverflow = _bool;
+    });
+  };
+  GlobalCtrl.$inject['$scope', 'PubSub'];
+}
+
+
+'use strict';
+
+angular.module('RoomBaby')
   .controller('LandingCtrl', LandingCtrl);
 
 function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
@@ -764,6 +780,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.onHowThisWorks = function() {
+    PubSub.trigger('toggleOverflow', true);
     $state.go('work');
   };
 
@@ -1358,14 +1375,25 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 angular.module('RoomBaby')
   .controller('WorkCtrl', WorkCtrl);
 
-function WorkCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
+function WorkCtrl($scope, $state, $timeout, PubSub, Animator) {
 
-  var ctrl = this;
+  PubSub.trigger('toggleOverflow', true);
 
-  console.log('how this works controller');
+  var obj = {};
+  obj.type = 'onHowThisWorks';
 
+  Animator.run(obj, function() {
+    $timeout(function() {
+      $scope.toggleColors = true;
+    }, 1200);
+  });
 
-  WorkCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+  this.onExit = function() {
+  	 PubSub.trigger('toggleOverflow', false);
+  	$state.go('landing', { reload: true });
+  };
+
+  WorkCtrl.$inject['$scope', '$state', '$timeout', 'PubSub', 'Animator'];
 }
 
 
@@ -1398,6 +1426,8 @@ angular.module('RoomBaby')
         onShowCalendar(cb);
       } else if (type === 'onRenderConfirmation') {
         onRenderConfirmation(cb);
+      } else if (type === 'onHowThisWorks') {
+        onHowThisWorks(cb);
       }
     }
 
@@ -1502,6 +1532,13 @@ angular.module('RoomBaby')
     function onRenderConfirmation(cb) {
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       dashboardOverlay.velocity({ height: 619 })
+      cb();
+    }
+
+    function onHowThisWorks(cb) {
+      var workSubtitle = angular.element(document.getElementById('work-subtitle')); 
+      var opts = { duration: 750, delay: 500 };
+      workSubtitle.velocity("transition.slideLeftIn", opts);
       cb();
     }
 

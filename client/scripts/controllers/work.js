@@ -3,12 +3,23 @@
 angular.module('RoomBaby')
   .controller('WorkCtrl', WorkCtrl);
 
-function WorkCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
+function WorkCtrl($scope, $state, $timeout, PubSub, Animator) {
 
-  var ctrl = this;
+  PubSub.trigger('toggleOverflow', true);
 
-  console.log('how this works controller');
+  var obj = {};
+  obj.type = 'onHowThisWorks';
 
+  Animator.run(obj, function() {
+    $timeout(function() {
+      $scope.toggleColors = true;
+    }, 1200);
+  });
 
-  WorkCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+  this.onExit = function() {
+  	 PubSub.trigger('toggleOverflow', false);
+  	$state.go('landing', { reload: true });
+  };
+
+  WorkCtrl.$inject['$scope', '$state', '$timeout', 'PubSub', 'Animator'];
 }

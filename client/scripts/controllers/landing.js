@@ -207,6 +207,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.onHowThisWorks = function() {
+    PubSub.trigger('toggleOverflow', true);
     $state.go('work');
   };
 

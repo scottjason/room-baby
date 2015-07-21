@@ -21,13 +21,13 @@
         <script src="/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
   <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId: '921064881267563',
-        xfbml: true,
-        version: 'v2.4'
-      });
-    };
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '921064881267563',
+      xfbml: true,
+      version: 'v2.4'
+    });
+  };
 
   (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -43,11 +43,12 @@
 </head>
 
 <body ng-app="RoomBaby">
-  <div ng-include src="'views/includes/navbar.html'"></div>
-  <div id="fb-root"></div>
-  <div ui-view></div>
-  <div ng-include src="'views/includes/footer.html'"></div>
-  <!-- Grunt Build Vendor & Dev Scripts -->
+  <div class='global' ng-controller='GlobalCtrl' ng-init='registerEvents();' ng-class='{ "overflow-y" : (showOverflow) }'>
+    <div ng-include src="'views/includes/navbar.html'"></div>
+    <div id="fb-root"></div>
+    <div ui-view></div>
+    <div ng-include src="'views/includes/footer.html'"></div>
+  </div>
   <script src="/build/vendor.min.js"></script>
   <script src="/scripts/lib/opentok-min.js"></script>
   <script src="/scripts/lib/opentok-layout.min.js"></script>

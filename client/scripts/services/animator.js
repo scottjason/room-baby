@@ -27,6 +27,8 @@ angular.module('RoomBaby')
         onShowCalendar(cb);
       } else if (type === 'onRenderConfirmation') {
         onRenderConfirmation(cb);
+      } else if (type === 'onHowThisWorks') {
+        onHowThisWorks(cb);
       }
     }
 
@@ -131,6 +133,13 @@ angular.module('RoomBaby')
     function onRenderConfirmation(cb) {
       var dashboardOverlay = angular.element(document.getElementById('dashboard-overlay'));
       dashboardOverlay.velocity({ height: 619 })
+      cb();
+    }
+
+    function onHowThisWorks(cb) {
+      var workSubtitle = angular.element(document.getElementById('work-subtitle')); 
+      var opts = { duration: 750, delay: 500 };
+      workSubtitle.velocity("transition.slideLeftIn", opts);
       cb();
     }
 
