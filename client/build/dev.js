@@ -37,10 +37,10 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
-      .state('works', {
+      .state('work', {
         url: '/how-this-works',
-        templateUrl: 'views/works.html',
-        controller: 'WorksCtrl as workCtrl'
+        templateUrl: 'views/work.html',
+        controller: 'WorkCtrl as workCtrl'
       })
 
     localStorageServiceProvider
@@ -322,8 +322,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.createBroadcast = function() {
     SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
-      // var url = SessionApi.generateBroadcastUrl(response.data._id);
-      var url = 'localhost:3001/' + response.data._id;
+      var url = SessionApi.generateBroadcastUrl(response.data._id);
+      // var url = 'localhost:3001/' + response.data._id;
       window.open(url, '_blank');
     })
   };
@@ -764,7 +764,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.onHowThisWorks = function() {
-    $state.go('works');
+    $state.go('work');
   };
 
   ctrl.grantAccess = function(opts) {
@@ -1356,16 +1356,16 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 'use strict';
 
 angular.module('RoomBaby')
-  .controller('WorksCtrl', WorksCtrl);
+  .controller('WorkCtrl', WorkCtrl);
 
-function WorksCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
+function WorkCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
 
   var ctrl = this;
 
   console.log('how this works controller');
 
 
-  WorksCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+  WorkCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
 }
 
 

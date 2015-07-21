@@ -207,7 +207,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.onHowThisWorks = function() {
-    $state.go('works');
+    $state.go('work');
   };
 
   ctrl.grantAccess = function(opts) {
