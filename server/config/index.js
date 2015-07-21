@@ -94,6 +94,6 @@ module.exports = {
     videoStatus: process.env.VIDEO_STATUS_API || env.VIDEO_STATUS_API
   },
   newRelic: {
-    key: process.env.NEW_RELIC_KEY || env.NEW_RELIC_KEY
+    key: process.env.NEW_RELIC_LICENSE_KEY || env.NEW_RELIC_LICENSE_KEY
   }
 };

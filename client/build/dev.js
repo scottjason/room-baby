@@ -37,6 +37,11 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
+      .state('works', {
+        url: '/how-this-works',
+        templateUrl: 'views/works.html',
+        controller: 'WorksCtrl as workCtrl'
+      })
 
     localStorageServiceProvider
       .setPrefix('RoomBaby')
@@ -621,6 +626,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       ctrl.reset();
+    } else if (optSelected === 'works') {
+      ctrl.onHowThisWorks();
     }
   };
 
@@ -754,6 +761,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     }, function(err) {
       ctrl.reset(true);
     });
+  };
+
+  ctrl.onHowThisWorks = function() {
+    $state.go('works');
   };
 
   ctrl.grantAccess = function(opts) {
@@ -1342,6 +1353,20 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 }
 
 
+'use strict';
+
+angular.module('RoomBaby')
+  .controller('WorksCtrl', WorksCtrl);
+
+function WorksCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
+
+  var ctrl = this;
+
+  console.log('how this works controller');
+
+
+  WorksCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+}
 
 
 angular.module('RoomBaby')
@@ -1378,11 +1403,17 @@ angular.module('RoomBaby')
 
     function onLanding(hasAnimated) {
       var roomBaby = angular.element(document.getElementById('room-baby'));
+      var howThisWorks = angular.element(document.getElementById('how-this-works'));
       var opts;
       if (!hasAnimated) opts = { duration: 1200, delay: 250 };
-      if (!opts) return document.getElementById('room-baby').style.opacity = 1;
+      if (!opts) {
+        document.getElementById('room-baby').style.opacity = 1;
+        document.getElementById('how-this-works').style.opacity = 1;
+        return;
+      };
 
       roomBaby.velocity('transition.slideDownIn', opts);
+      howThisWorks.velocity('transition.slideDownIn', opts);
     }
 
     function onDashboard() {

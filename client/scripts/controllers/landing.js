@@ -69,6 +69,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       $scope.showForgotPassword = true;
     } else if (optSelected === 'roomBaby') {
       ctrl.reset();
+    } else if (optSelected === 'works') {
+      ctrl.onHowThisWorks();
     }
   };
 
@@ -202,6 +204,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     }, function(err) {
       ctrl.reset(true);
     });
+  };
+
+  ctrl.onHowThisWorks = function() {
+    $state.go('works');
   };
 
   ctrl.grantAccess = function(opts) {

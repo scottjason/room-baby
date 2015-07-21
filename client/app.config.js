@@ -24,6 +24,11 @@ angular.module('RoomBaby')
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
       })
+      .state('works', {
+        url: '/how-this-works',
+        templateUrl: 'views/works.html',
+        controller: 'WorksCtrl as workCtrl'
+      })
 
     localStorageServiceProvider
       .setPrefix('RoomBaby')
