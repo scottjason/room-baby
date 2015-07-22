@@ -6,7 +6,10 @@
           <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
           <hr class="landing-line">
           <div class="landing-sub-text-container">
-            <p class="text-inverse slogan-text">a room for every occassion</p>
+            <p ng-hide='landingCtrl.isMobile()' class="text-inverse slogan-text">a room for every occassion</p>
+          </div>
+          <div ng-show='landingCtrl.isMobile()'>
+          <p class='is-mobile'>Room Baby is not compatible with mobile or tablet at this time.</p>
           </div>
           <div ng-hide="showLogin || showRegister || landingCtrl.isMobile()" class="landing-sub-text-container">
             <div class="landing-btn-container">

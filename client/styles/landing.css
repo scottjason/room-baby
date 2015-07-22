@@ -1,3 +1,12 @@
+.is-mobile {
+  color: white;
+  font-size: 16px;
+  white-space: normal;
+  text-align: center;
+  position: relative;
+  top: 40px;
+  padding: 0 20px;
+}
 
 p.how-this-works-landing {
   position: relative;
