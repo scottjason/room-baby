@@ -8,7 +8,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   var ctrl = this;
 
   this.isMobile = function() {
-    $scope.isMobile = DeviceService.isMobile();
+    return DeviceService.isMobile();
   };
 
   this.onReady = function() {
