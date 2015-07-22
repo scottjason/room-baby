@@ -1443,7 +1443,7 @@ angular.module('RoomBaby')
       };
 
       roomBaby.velocity('transition.slideDownIn', opts);
-      howThisWorks.velocity('transition.slideDownIn', opts);
+      howThisWorks.velocity('transition.slideUpIn', opts);
     }
 
     function onDashboard() {

@@ -4,7 +4,6 @@
       <div class="row vertical-align-landing">
         <div class="cover">
           <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
-            <p ng-hide='showLogin || showRegister' id='how-this-works' class='how-this-works' ng-click="landingCtrl.onOptSelected('works');">- how this works -</p>
           <hr class="landing-line">
           <div class="landing-sub-text-container">
             <p class="text-inverse slogan-text">a room for every occassion</p>
@@ -20,6 +19,8 @@
           </div>
           <div ng-show="showLogin" ng-include src="'views/includes/login.html'"></div>
           <div ng-show="showRegister" ng-include src="'views/includes/register.html'"></div>
+          <hr class="landing-line-btm">
+          <p ng-hide='showLogin || showRegister' id='how-this-works' class='how-this-works-landing' ng-click="landingCtrl.onOptSelected('works');">how this works</p>
         </div>
       </div>
     </div>
