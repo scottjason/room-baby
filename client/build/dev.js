@@ -601,6 +601,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 
   var ctrl = this;
 
+  this.isMobile = function() {
+    $scope.isMobile = DeviceService.isMobile();
+  };
 
   this.onReady = function() {
     PubSub.trigger('toggleOverflow', null);
