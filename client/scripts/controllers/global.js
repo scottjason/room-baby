@@ -6,7 +6,7 @@ angular.module('RoomBaby')
 function GlobalCtrl($scope, PubSub, DeviceService) {
 
   $scope.isMobile = function() {
-    // return DeviceService.isMobile();
+    return DeviceService.isMobile();
   };
 
   $scope.registerEvents = function() {
