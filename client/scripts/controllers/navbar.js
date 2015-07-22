@@ -3,13 +3,14 @@
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
   var ctrl = this;
 
   $scope.user = localStorageService.get('user');
 
   this.registerEvents = function() {
+    $scope.fadeToBlack = false;
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('onBroadcast', ctrl.onBroadcast);
@@ -68,6 +69,15 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     }
   };
 
+  this.getUserName = function() {
+    if (localStorageService.get('user')) {
+      return localStorageService.get('user').username;
+    } else {
+      return '';
+    }
+  };
+
+
   this.collectUpload = function() {
 
     if (!$scope.fileUpload) {
@@ -124,12 +134,12 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   };
 
   ctrl.logout = function(user_id) {
-
-    localStorageService.clearAll();
+    PubSub.trigger('logout');
     UserApi.logout(user_id).then(function(response) {
+      localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
 }

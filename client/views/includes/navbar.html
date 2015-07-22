@@ -14,7 +14,7 @@
   </div>
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav navbar-right ">
-      <p class='welcome-username'>Welcome {{ user.username | capitalize }}!</p>
+      <p class='welcome-username'>Welcome {{ navBarCtrl.getUserName() | capitalize }}!</p>
       <li class="dropdown-toggle menu col-sm-pull-2">
         <a class="dropdown-toggle" data-toggle="dropdown">
           <img class="media-object img-circle-navbar" ng-src="{{ navBarCtrl.getProfileImg() | trusted}}">

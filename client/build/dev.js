@@ -107,6 +107,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     PubSub.on('setUserName', ctrl.setUserName);
     PubSub.on('renderTable', ctrl.renderTable);
     PubSub.on('createRoomOpt', ctrl.onCreateRoomOpt);
+    PubSub.on('logout', ctrl.onLogout);
     PubSub.on('createRoom:renderMessage', ctrl.renderMessage);
     PubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
@@ -267,6 +268,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     Animator.run(opts, function() {
       $scope.showConfirmation = true;
     });
+  };
+
+  ctrl.onLogout = function() {
+    $scope.isLogout = true;
   };
 
   ctrl.onCreateRoomOpt = function(isNow) {
@@ -764,8 +769,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     UserApi.login(opts).then(function(response) {
       if (response.status == 200) {
         localStorageService.set('user', response.data.user);
-        localStorageService.set('sessions', response.data.sessions);
-        localStorageService.set('archives', response.data.archives);
+        localStorageService.set('sessions', response.data.sessions || []);
+        localStorageService.set('archives', response.data.archives || []);
         var accessOpts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
@@ -784,6 +789,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       if (response.status === 200) {
         localStorageService.set('user', response.data.user);
         localStorageService.set('sessions', response.data.sessions);
+        localStorageService.set('archives', response.data.archives || []);
         var accessOpts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
@@ -829,13 +835,14 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 angular.module('RoomBaby')
   .controller('NavBarCtrl', NavBarCtrl);
 
-function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
+function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
   var ctrl = this;
 
   $scope.user = localStorageService.get('user');
 
   this.registerEvents = function() {
+    $scope.fadeToBlack = false;
     PubSub.on('toggleNavBar', ctrl.toggleNavBar);
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('onBroadcast', ctrl.onBroadcast);
@@ -894,6 +901,15 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
     }
   };
 
+  this.getUserName = function() {
+    if (localStorageService.get('user')) {
+      return localStorageService.get('user').username;
+    } else {
+      return '';
+    }
+  };
+
+
   this.collectUpload = function() {
 
     if (!$scope.fileUpload) {
@@ -950,14 +966,14 @@ function NavBarCtrl($scope, $rootScope, $state, $window, StateService, UserApi, 
   };
 
   ctrl.logout = function(user_id) {
-
-    localStorageService.clearAll();
+    PubSub.trigger('logout');
     UserApi.logout(user_id).then(function(response) {
+      localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;
     });
   };
 
-  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
+  NavBarCtrl.$inject['$scope', '$rootScope', '$state', '$timeout', '$window', 'StateService', 'UserApi', 'PubSub', 'ngDialog', 'localStorageService'];
 }
 
 

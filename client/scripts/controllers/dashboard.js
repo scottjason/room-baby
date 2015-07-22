@@ -45,6 +45,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     PubSub.on('setUserName', ctrl.setUserName);
     PubSub.on('renderTable', ctrl.renderTable);
     PubSub.on('createRoomOpt', ctrl.onCreateRoomOpt);
+    PubSub.on('logout', ctrl.onLogout);
     PubSub.on('createRoom:renderMessage', ctrl.renderMessage);
     PubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
@@ -205,6 +206,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     Animator.run(opts, function() {
       $scope.showConfirmation = true;
     });
+  };
+
+  ctrl.onLogout = function() {
+    $scope.isLogout = true;
   };
 
   ctrl.onCreateRoomOpt = function(isNow) {

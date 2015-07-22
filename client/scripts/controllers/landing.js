@@ -175,8 +175,8 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     UserApi.login(opts).then(function(response) {
       if (response.status == 200) {
         localStorageService.set('user', response.data.user);
-        localStorageService.set('sessions', response.data.sessions);
-        localStorageService.set('archives', response.data.archives);
+        localStorageService.set('sessions', response.data.sessions || []);
+        localStorageService.set('archives', response.data.archives || []);
         var accessOpts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
@@ -195,6 +195,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       if (response.status === 200) {
         localStorageService.set('user', response.data.user);
         localStorageService.set('sessions', response.data.sessions);
+        localStorageService.set('archives', response.data.archives || []);
         var accessOpts = UserApi.generateOpts(response.data.user);
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
