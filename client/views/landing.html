@@ -23,7 +23,7 @@
           <div ng-show="showLogin" ng-include src="'views/includes/login.html'"></div>
           <div ng-show="showRegister" ng-include src="'views/includes/register.html'"></div>
           <hr ng-hide='showLogin || showRegister' class="landing-line-btm">
-          <p ng-hide='showLogin || showRegister' id='how-this-works' class='how-this-works-landing' ng-click="landingCtrl.onOptSelected('works');">how this works</p>
+          <p ng-hide='showLogin || showRegister landingCtrl.isMobile()' id='how-this-works' class='how-this-works-landing' ng-click="landingCtrl.onOptSelected('works');">how this works</p>
         </div>
       </div>
     </div>
