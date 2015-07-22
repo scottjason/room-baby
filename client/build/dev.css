@@ -898,6 +898,10 @@ li {
   bottom: 0;
 }
 
+.global.set-width-320 {
+  width: 320px !important;
+}
+
 .global.overflow-y {
   overflow-y: scroll;
   overflow-x: hidden;
