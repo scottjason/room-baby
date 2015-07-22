@@ -111,6 +111,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     PubSub.on('createRoom:renderConfirmation', ctrl.renderConfirmation);
   };
 
+  this.getState = function(type) {
+    return StateService.data[type];
+  };
+
   /* on dashboard option selected */
   this.onOptSelected = function($event, otSession) {
     if ($event.currentTarget.name === 'connect') {
@@ -126,7 +130,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
-    (otSession.status === 'ready') ? ctrl.connect(otSession) : ctrl.showOverlay(otSession.status);
+    (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
   };
 
   /* date timepicker config */
@@ -187,6 +191,15 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     $scope.room = {};
   };
 
+  this.showTable = function() {
+    var sessions = localStorageService.get('sessions');
+    var archives = localStorageService.get('archives');
+    if (!sessions && !archives || ((sessions && !sessions.length) && (archives && !archives.length))) {
+      return false;
+    }
+    return true;
+  };
+
   /* recursive method to get statuses of room */
   function getStatus() {
     if ($state.current.name === 'dashboard') {
@@ -216,6 +229,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       PubSub.trigger('setUser', localStorageService.get('user'));
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
+      $scope.isLoaded = true;
       ctrl.renderTable();
     }
   };
@@ -321,7 +335,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.createBroadcast = function() {
-    SessionApi.createBroadcast(localStorageService.get('user')).then(function(response){
+    SessionApi.createBroadcast(localStorageService.get('user')).then(function(response) {
       var url = SessionApi.generateBroadcastUrl(response.data._id);
       // var url = 'localhost:3001/' + response.data._id;
       window.open(url, '_blank');
@@ -372,6 +386,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
           var obj = {};
           obj.type = 'onDashboard';
           Animator.run(obj);
+          $scope.isLoaded = true;
           ctrl.renderTable();
         }
       } else {
@@ -415,6 +430,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     ctrl.isExpired();
     ngDialog.closeAll();
     $timeout(function() {
+      $scope.isLoaded = true;
       PubSub.trigger('toggleNavBar', true);
       var obj = {};
       obj.type = 'onDashboard';
@@ -580,7 +596,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 
   var ctrl = this;
 
+
   this.onReady = function() {
+    PubSub.trigger('toggleOverflow', null);
     PubSub.on('enterBtn:forgotPassword', this.onForgotPassword);
     StateService.data['Controllers'].Landing.isReady = true;
   };
@@ -1487,6 +1505,8 @@ angular.module('RoomBaby')
           dashboardOverlay.velocity({ height: 344 })
       var dashboardContainer = angular.element(document.getElementById('dashboard-container'));
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
+      var noSessionsContainer = angular.element(document.getElementById('no-session-container'));
+
       var sequence = [
         { e: dashboardContainer, p: 'fadeOut', o: { duration: 200, opacity: 0 } }, 
         { e: dashboardTable, p: 'fadeOut', o: { duration: 200,  opacity: 0, sequenceQueue: false } },

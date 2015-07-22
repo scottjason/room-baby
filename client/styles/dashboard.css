@@ -1,3 +1,34 @@
+.no-sessions-container {
+  text-align: center;
+  color: white;
+  margin-top: 30px;
+  position: relative;
+}
+
+p.no-sessions {
+  font-weight: 300;
+  font-size: 18px;
+  top: 16px;
+  position: relative;
+  z-index: 2;
+}
+p#no-sessions-options {
+  font-weight: 300;
+  font-size: 24px;
+  top: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.no-sessions-line {
+  border-color: #d0314f;
+  width: 680px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+}
+
 #dashboard-overlay > div:nth-child(2) > div > p {
   position: relative;
   left: 0;
@@ -71,7 +102,6 @@ div.form-container {
   z-index: 10;
 }
 
-
 .dashboard-overlay {
   position: fixed;
   width: 600px;
@@ -85,6 +115,7 @@ div.form-container {
   border-radius: 15px;
   opacity: 0;
 }
+
 .fa.fa-circle-o-notch.fa-spin {
   font-size: 34px;
   margin-top: 20px;

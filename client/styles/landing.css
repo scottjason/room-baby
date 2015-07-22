@@ -7,7 +7,7 @@ p.how-this-works-landing {
   left: 0;
   right: 0;
   margin: auto;
-  top: 100px;
+  top: 99px;
   font-size: 26px;
   font-family: 'Bad Script', cursive;
   color: #fff;
@@ -283,7 +283,7 @@ a.logo-text:active {
   cursor: pointer;
   text-decoration: none;
   position: relative;
-  top: 20px;
+  top: 22px;
 }
 
 .landing-line {

@@ -7,7 +7,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 
   var ctrl = this;
 
+
   this.onReady = function() {
+    PubSub.trigger('toggleOverflow', null);
     PubSub.on('enterBtn:forgotPassword', this.onForgotPassword);
     StateService.data['Controllers'].Landing.isReady = true;
   };

@@ -20,5 +20,6 @@
       </div>
     </div>
   </div>
-  <div ng-include src="'views/includes/dashboard-sessions.html'"></div>
+  <div ng-show='dashCtrl.showTable()' ng-include src="'views/includes/dashboard-sessions.html'"></div>
+  <div ng-hide='!isLoaded || dashCtrl.showTable() || dashCtrl.getState("overlay").isOpen' ng-include src="'views/includes/no-sessions.html'"></div>
 </div ng-overlay>

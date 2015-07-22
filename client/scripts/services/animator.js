@@ -88,6 +88,8 @@ angular.module('RoomBaby')
           dashboardOverlay.velocity({ height: 344 })
       var dashboardContainer = angular.element(document.getElementById('dashboard-container'));
       var dashboardTable = angular.element(document.getElementById('dashboard-table'));
+      var noSessionsContainer = angular.element(document.getElementById('no-session-container'));
+
       var sequence = [
         { e: dashboardContainer, p: 'fadeOut', o: { duration: 200, opacity: 0 } }, 
         { e: dashboardTable, p: 'fadeOut', o: { duration: 200,  opacity: 0, sequenceQueue: false } },
