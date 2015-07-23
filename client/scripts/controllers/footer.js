@@ -3,7 +3,7 @@
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, StateService, localStorageService) {
+function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi, Animator, StateService, localStorageService) {
 
   var ctrl = this;
 
@@ -29,8 +29,21 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
   };
 
   this.onUserName = function() {
-    PubSub.trigger('setUserName', $scope.user.username);
+    if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
+      PubSub.trigger('setUserName', $scope.user.username);
+    } else {
+      $timeout(function() {
+        $scope.showUserNameErr = true
+        $timeout(function() {
+          $scope.showUserNameErr = false;
+        }, 1200);
+      });
+    }
   };
+
+  ctrl.isValid = function(isValid) {
+    console.log('isValid', isValid);
+  }
 
   this.onRegister = function() {
     console.log('onRegister', $scope.user);
@@ -98,6 +111,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
       obj.type = 'onFooterOverlay';
       obj.callback = onSuccess;
       Animator.run(obj)
+
       function onSuccess() {
         if (!$scope.$$phase) {
           $scope.$apply();
@@ -122,5 +136,5 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     $scope.showGeneratingVideo = _bool;
   }
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'Validator', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
 }
