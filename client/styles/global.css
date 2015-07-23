@@ -262,15 +262,17 @@ button#details.btn.btn-md.members {
   width: 100px;
   font-weight: 300;
   text-decoration: none;
-  top: 11px;
-  height: 30px;
-  border-radius: 9px;
+  height: 32px;
+  border-radius: 15px;
   text-align: center;
-  padding-top: 3px;
+  padding-top: 5px;
   cursor: pointer;
-  color: #337ab7;
-  background: #efefef;
+  border: 1px solid #337ab7;
+  background: 0 0;
   margin: auto;
+  color: #fff;
+  bottom: 1px;
+  position: relative;
 }
 
 .btn-custom-login,

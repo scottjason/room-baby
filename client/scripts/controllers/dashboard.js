@@ -321,6 +321,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         localStorageService.set('archives', response.data.archives || []);
         PubSub.trigger('setUser', $scope.user);
         if (!$scope.user.username) {
+          console.log($scope.user);
           ctrl.getUserName();
         } else {
           ctrl.getSessions();

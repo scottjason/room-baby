@@ -24,6 +24,10 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
     StateService.data['Controllers'].Footer.isReady = true;
   };
 
+  this.getEmail = function() {
+    return localStorageService.get('user').email || localStorageService.get('user').facebook.email
+  };
+
   this.onUserName = function() {
     PubSub.trigger('setUserName', $scope.user.username);
   };
@@ -77,6 +81,10 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, SessionApi, Animator, 
         console.error(err);
       });
     }
+  };
+
+  this.getEmail = function() {
+    return localStorageService.get('user').email || localStorageService.get('user').facebook.email;
   };
 
   ctrl.setUser = function(user) {

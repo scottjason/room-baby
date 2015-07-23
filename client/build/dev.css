@@ -294,6 +294,7 @@ p.no-sessions {
   position: relative;
   z-index: 2;
 }
+
 p#no-sessions-options {
   font-weight: 300;
   font-size: 24px;
@@ -462,11 +463,25 @@ p.enter-username {
   outline: 0;
   position: absolute;
   color: #fff;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 300;
   left: 0;
   right: 0;
   top: 234px;
+  bottom: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+p.welcome {
+  outline: 0;
+  position: absolute;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  left: 0;
+  right: 0;
+  top: 190px;
   bottom: 0;
   text-align: center;
   white-space: nowrap;
@@ -477,12 +492,11 @@ p.enter-username {
   background: rgba(0, 0, 0, .7);
   -webkit-backface-visibility: hidden;
   animation: ngdialog-fadein .5s;
-  width: 54%;
-  min-width: 540px;
+  width: 680px;
   height: 300px;
   border: 1px solid #fff;
   margin: auto;
-  top: 150px;
+  top: 165px;
 }
 
 .ngdialog-content {
@@ -1124,15 +1138,17 @@ button#details.btn.btn-md.members {
   width: 100px;
   font-weight: 300;
   text-decoration: none;
-  top: 11px;
-  height: 30px;
-  border-radius: 9px;
+  height: 32px;
+  border-radius: 15px;
   text-align: center;
-  padding-top: 3px;
+  padding-top: 5px;
   cursor: pointer;
-  color: #337ab7;
-  background: #efefef;
+  border: 1px solid #337ab7;
+  background: 0 0;
   margin: auto;
+  color: #fff;
+  bottom: 1px;
+  position: relative;
 }
 
 .btn-custom-login,
@@ -1434,6 +1450,73 @@ li {
   cursor: pointer;
 }
 
+
+.username-line {
+  width: 370px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, .6);
+  text-align: center;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 7px;
+}
+
+.complete-registration {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, .8);
+  white-space: normal;
+  position: relative;
+  bottom: 0;
+  top: 53px;
+  text-align: center;
+}
+
+.on-file {
+  font-size: 15px;
+  font-weight: 300;
+  color: #fff;
+  white-space: normal;
+  position: relative;
+  bottom: 0;
+  top: 33px;
+  text-align: center;
+}
+
+.sent-off {
+  font-size: 15px;
+  font-weight: 300;
+  color: #fff;
+  white-space: normal;
+  position: relative;
+  bottom: 0;
+  top: 32px;
+  text-align: center;
+}
+
+.on-file > span {
+  color: orange;
+}
+
+.registration-error {
+  position: absolute;
+  color: orange;
+  left: 0;
+  right: 0;
+  bottom: 120px;
+  text-align: center;
+  font-size: 14px;
+}
+
+input#landing-input-username {
+  background: transparent;
+  border: 1px solid #337ab7;
+  border-radius: 15px;
+  width: 200px;
+  padding-left: 13px;
+}
 
 .is-mobile {
   color: white;
@@ -2282,8 +2365,13 @@ p.file-text {
   top: 11px;
 }
 
+.fa-times.works {
+  left: 320px;
+  top: 9px;
+}
+
 .top-opts.add-blue {
-  color: #7EB1DC;
+  color: #79DFB6;
   -o-transition: 1.0s;
   -ms-transition: 1.0s;
   -moz-transition: 1.0s;
@@ -2292,7 +2380,6 @@ p.file-text {
 }
 
 .exit-work-btn.add-green {
-  /*border-color: #79DFB6;*/
   border-color: #7EB1DC;
   -o-transition: 1.0s;
   -ms-transition: 1.0s;

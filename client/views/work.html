@@ -1,8 +1,6 @@
 <div class='work-body'>
-  <div class='top-container'>
-    <div ng-click='workCtrl.onExit();' ng-class='{ "add-green" : (toggleColors) }' class='exit-work-btn'><p ng-click='workCtrl.onExit();'>exit</p>
-    </div>
-    <p class='work-room-baby'>Room Baby</p>
+
+    <p class='work-room-baby'>Room Baby<span><i id='exit-font' ng-click='workCtrl.onExit();' class="fa fa-times works"></i></span></p>
     <div class='work-btn-container'>
       <div ng-class='{ "add-blue" : (toggleColors) }' class='top-opts'>create a room now<span class='circle'></span></div>
       <div ng-class='{ "add-blue" : (toggleColors) }' class='top-opts'>schedule a room<span class='circle'></span></div>

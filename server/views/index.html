@@ -44,6 +44,7 @@
 </head>
 
 <body ng-app="RoomBaby">
+
   <div class='global' ng-controller='GlobalCtrl' ng-init='registerEvents();' ng-class='{ "overflow-y" : (showOverflow), "set-width-320" : isMobile() }'>
     <div ng-include src="'views/includes/navbar.html'"></div>
     <div id="fb-root"></div>
@@ -54,6 +55,7 @@
   <script src="/scripts/lib/opentok-min.js"></script>
   <script src="/scripts/lib/opentok-layout.min.js"></script>
   <script src="/build/dev.min.js"></script>
+
 </body>
 
 </html>

@@ -55,8 +55,13 @@
   top: 11px;
 }
 
+.fa-times.works {
+  left: 320px;
+  top: 9px;
+}
+
 .top-opts.add-blue {
-  color: #7EB1DC;
+  color: #79DFB6;
   -o-transition: 1.0s;
   -ms-transition: 1.0s;
   -moz-transition: 1.0s;
@@ -65,7 +70,6 @@
 }
 
 .exit-work-btn.add-green {
-  /*border-color: #79DFB6;*/
   border-color: #7EB1DC;
   -o-transition: 1.0s;
   -ms-transition: 1.0s;

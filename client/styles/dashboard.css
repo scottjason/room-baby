@@ -12,6 +12,7 @@ p.no-sessions {
   position: relative;
   z-index: 2;
 }
+
 p#no-sessions-options {
   font-weight: 300;
   font-size: 24px;
@@ -180,11 +181,25 @@ p.enter-username {
   outline: 0;
   position: absolute;
   color: #fff;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 300;
   left: 0;
   right: 0;
   top: 234px;
+  bottom: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+p.welcome {
+  outline: 0;
+  position: absolute;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  left: 0;
+  right: 0;
+  top: 190px;
   bottom: 0;
   text-align: center;
   white-space: nowrap;
@@ -195,12 +210,11 @@ p.enter-username {
   background: rgba(0, 0, 0, .7);
   -webkit-backface-visibility: hidden;
   animation: ngdialog-fadein .5s;
-  width: 54%;
-  min-width: 540px;
+  width: 680px;
   height: 300px;
   border: 1px solid #fff;
   margin: auto;
-  top: 150px;
+  top: 165px;
 }
 
 .ngdialog-content {
