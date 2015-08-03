@@ -15,6 +15,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('onBroadcast', ctrl.onBroadcast);
     PubSub.on('setUser', ctrl.setUser);
+    PubSub.on('cancelUsername', ctrl.logout);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
     StateService.data['Controllers'].Navbar.isReady = true;
   };

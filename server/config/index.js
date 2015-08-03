@@ -95,5 +95,9 @@ module.exports = {
   },
   newRelic: {
     key: process.env.NEW_RELIC_LICENSE_KEY || env.NEW_RELIC_LICENSE_KEY
+  },
+  mailgun: {
+    apiKey: process.env.MAILGUN_API_KEY || env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN || env.MAILGUN_DOMAIN
   }
 };

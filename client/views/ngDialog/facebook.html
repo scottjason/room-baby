@@ -1,5 +1,6 @@
 <div class='overlay' ng-controller='FooterCtrl as footerCtrl'>
   <p class='welcome'>Welcome to Room Baby!</p>
+  <i ng-click='footerCtrl.onCancelUsername();' class="fa fa-times connect-acct"></i>
   <p ng-hide='showUserNameErr' class='enter-username'>please enter a username</p>
   <p ng-show='showUserNameErr' class='username-error'>invalid username</p>
   <form id="userNameForm" name="authForm" class="form-inline" ng-submit="footerCtrl.onUserName();">

@@ -6,26 +6,27 @@
 
 var config = require('../');
 var nodemailer = require('nodemailer');
+var path = require('path');
 
 module.exports = {
   transporter: function() {
     var transport = nodemailer.createTransport({
       service: 'gmail',
-        auth: {
-          user: config.transport.email,
-          pass: config.transport.password
-        }
-      });
+      auth: {
+        user: config.transport.email,
+        pass: config.transport.password
+      }
+    });
     return transport;
   },
-  generateTemplate: function(type, user, callback){
-    if(type === 'email') {
+  generateTemplate: function(type, user, callback) {
+    if (type === 'email') {
       return callback(this.emails.subject.updatePasswordSuccess, this.emails.content.updateEmailSuccess(user.email, user.oldEmail));
     }
-    if(type === 'password') {
+    if (type === 'password') {
       return callback(this.emails.subject.updatePasswordSuccess, this.emails.content.updatePasswordSuccess(user.email));
     }
-    if(type === 'username') {
+    if (type === 'username') {
       return callback(this.emails.subject.updateUserNameSuccess, this.emails.content.updateUserNameSuccess(user.email, user.username));
     }
   },
@@ -74,7 +75,7 @@ module.exports = {
           "<br>" +
           "~ Room Baby"
       },
-      resetPassword: function(host, token){
+      resetPassword: function(host, token) {
         return "You are receiving this because you (or someone else) has requested to reset the password for your account at Room Baby." +
           "<br>" +
           "<br>" +
@@ -118,7 +119,7 @@ module.exports = {
           "~ Room Baby"
       },
       updatePasswordSuccess: function(email) {
-      return "This is a confirmation that the password for your account " + email + " has been successfully updated." +
+        return "This is a confirmation that the password for your account " + email + " has been successfully updated." +
           "<br>" +
           "<br>" +
           "~ Room Baby"

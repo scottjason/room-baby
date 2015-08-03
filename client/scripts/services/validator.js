@@ -23,7 +23,7 @@ angular.module('RoomBaby')
     }
 
     function validateUserName(obj, cb) {
-      if (obj.username.length >= 3 || obj.username.length <= 8) {
+      if (obj.username.length >= 3 && obj.username.length <= 8) {
         cb(true);
       } else {
         cb(false);

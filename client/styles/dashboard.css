@@ -1,3 +1,18 @@
+.fa.fa-times.connect-acct {
+    position: absolute;
+    color: #efefef;
+    top: 180px;
+    margin: auto;
+    cursor: pointer;
+    z-index: 10;
+    left: 587px;
+    font-size: 21px;
+    right: -30px;
+    margin: auto;
+    text-align: center;
+    width: 30px;
+}
+
 .no-sessions-container {
   text-align: center;
   color: white;
@@ -203,7 +218,6 @@ p.username-error {
   bottom: 0;
   text-align: center;
   white-space: nowrap;
-
 }
 
 p.welcome {

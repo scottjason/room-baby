@@ -462,7 +462,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 angular.module('RoomBaby')
   .controller('FooterCtrl', FooterCtrl);
 
-function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi, Animator, StateService, localStorageService) {
+function FooterCtrl($scope, $rootScope, $window, $timeout, PubSub, Validator, SessionApi, Animator, StateService, localStorageService) {
 
   var ctrl = this;
 
@@ -492,6 +492,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi,
       PubSub.trigger('setUserName', $scope.user.username);
     } else {
       $timeout(function() {
+        $scope.user.username = '';
         $scope.showUserNameErr = true
         $timeout(function() {
           $scope.showUserNameErr = false;
@@ -499,10 +500,6 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi,
       });
     }
   };
-
-  ctrl.isValid = function(isValid) {
-    console.log('isValid', isValid);
-  }
 
   this.onRegister = function() {
     console.log('onRegister', $scope.user);
@@ -563,6 +560,10 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi,
     $scope.user = user;
   };
 
+  this.onCancelUsername = function() {
+    PubSub.trigger('cancelUsername', localStorageService.get('user')._id);
+  };
+
   ctrl.toggleFooter = function(showFooter) {
     $scope.showFooter = showFooter;
     if (showFooter) {
@@ -595,7 +596,7 @@ function FooterCtrl($scope, $rootScope, $timeout, PubSub, Validator, SessionApi,
     $scope.showGeneratingVideo = _bool;
   }
 
-  FooterCtrl.$inject['$scope', '$rootScope', '$timeout', 'PubSub', 'Validator', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
+  FooterCtrl.$inject['$scope', '$rootScope', '$window', '$timeout', 'PubSub', 'Validator', 'SessionApi', 'Animator', 'StateService', 'localStorageService'];
 }
 
 
@@ -877,6 +878,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     PubSub.on('toggleOverlay', ctrl.toggleOverlay);
     PubSub.on('onBroadcast', ctrl.onBroadcast);
     PubSub.on('setUser', ctrl.setUser);
+    PubSub.on('cancelUsername', ctrl.logout);
     PubSub.on('timeLeft', ctrl.setTimeLeft);
     StateService.data['Controllers'].Navbar.isReady = true;
   };
@@ -2523,7 +2525,7 @@ angular.module('RoomBaby')
     }
 
     function validateUserName(obj, cb) {
-      if (obj.username.length >= 3 || obj.username.length <= 8) {
+      if (obj.username.length >= 3 && obj.username.length <= 8) {
         cb(true);
       } else {
         cb(false);
