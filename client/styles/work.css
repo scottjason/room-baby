@@ -53,6 +53,7 @@
   position: relative;
   text-align: center;
   top: 11px;
+  z-index: 20;
 }
 
 .fa-times.works {
@@ -149,7 +150,6 @@
 }
 
 .work-room-baby {
-  /*font-family: 'brandon_grotesquethin';*/
   font-size: 36px;
   color: rgba(255, 255, 255, .8);
   text-align: center;
@@ -175,7 +175,6 @@
 
 .work-body {
   position: absolute;
-  z-index: 1000;
   width: 100%;
   height: 100%;
   margin: auto;
@@ -216,4 +215,36 @@
 h3.work-heading {
   font-size: 24px;
   color: #79DFB6
+}
+
+@media (min-width: 320px) and (max-width: 580px) {
+  .work-right {
+    display: none;
+  }
+  .header-container {
+    display: none;
+  }
+  .work-btn-container {
+    display: none;
+  }
+  .work-room-baby {
+    padding-top: 50px;
+  }
+  .work-subtitle {
+    padding: 60px 15px 0 15px;
+  }
+  .fa-times.works {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: auto;
+    right: 0;
+  }
+  h3.work-heading {
+    text-align: center;
+    font-size: 18px;
+  }
+  .work-container p {
+    text-align: center;
+  }
 }
