@@ -888,7 +888,6 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   this.dropdown = function(opt) {
-    console.log('opt', opt)
     if (opt === 'logout') {
       var userId = localStorageService.get('user')._id;
       ctrl.logout(userId);
@@ -980,6 +979,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
       ngDialog.closeAll();
     }
   };
+
 
   ctrl.onBroadcast = function() {
     $scope.showBroadcast = true;

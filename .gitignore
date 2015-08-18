@@ -3,7 +3,7 @@ client/bower_components/
 server/uploads/
 node_modules/
 .DS_STORE
-.log
+*.log
 .env
 env.js
 env.json

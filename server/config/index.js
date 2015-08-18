@@ -7,8 +7,6 @@
 var env = {};
 var path = require('path');
 
-console.log('#####', process.env.NODE_ENV);
-
 if (process.env.NODE_ENV !== 'production') {
   env = require('../../env.js');
 }
@@ -82,7 +80,6 @@ module.exports = {
     username: process.env.BITLY_LOGIN || env.BITLY_LOGIN,
     key: process.env.BITLY_KEY || env.BITLY_KEY
   },
-
   facebook: {
     clientID: process.env.FACEBOOK_ID || env.FACEBOOK_ID,
     clientSecret: process.env.FACEBOOK_SECRET || env.FACEBOOK_SECRET,

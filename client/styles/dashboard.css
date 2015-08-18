@@ -1,16 +1,16 @@
 .fa.fa-times.connect-acct {
-    position: absolute;
-    color: #efefef;
-    top: 180px;
-    margin: auto;
-    cursor: pointer;
-    z-index: 10;
-    left: 587px;
-    font-size: 21px;
-    right: -30px;
-    margin: auto;
-    text-align: center;
-    width: 30px;
+  position: absolute;
+  color: #efefef;
+  top: 180px;
+  margin: auto;
+  cursor: pointer;
+  z-index: 10;
+  left: 587px;
+  font-size: 21px;
+  right: -30px;
+  margin: auto;
+  text-align: center;
+  width: 30px;
 }
 
 .no-sessions-container {
@@ -236,7 +236,7 @@ p.welcome {
 
 .ngdialog-overlay {
   position: relative;
-  background: rgba(0, 0, 0, .7);
+  background: black;
   -webkit-backface-visibility: hidden;
   animation: ngdialog-fadein .5s;
   width: 680px;

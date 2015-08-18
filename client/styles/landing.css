@@ -1,3 +1,14 @@
+.landing-container-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  text-align: center;
+  padding-top: 200px;
+}
+
 .username-line {
   width: 370px;
   height: 1px;
@@ -280,6 +291,8 @@ form.login-form {
   bottom: 140px;
 }
 
+
+
 p.auth-options-copy {
   color: white;
   position: absolute;
@@ -472,3 +485,10 @@ a#email {
   color: #efefef;
   font-weight: 300;
 }
+
+/*@media (min-width: 320px) and (max-width: 580px) {
+  .landing-container {
+    bottom: 0;
+  }
+}
+*/
