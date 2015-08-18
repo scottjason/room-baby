@@ -130,7 +130,7 @@ angular.module('RoomBaby')
           '<h4 class="media-heading">' +
           '<span class="session-started"> Request To Record Granted</span>' +
           '</h4>' +
-          '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp; Recording Started At' + '</p>' +
+          '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp; Recording Started' + '</p>' +
           '</div>' +
           '</div>' +
           '</div>' +
@@ -168,6 +168,8 @@ angular.module('RoomBaby')
         '<li id="permission-granted">Yes!' +
         '</li>' +
         '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
+        '</li>' +
+        '<li id="confirm">OK!' +
         '</li>' +
         '</ul>' +
         '</div>' +

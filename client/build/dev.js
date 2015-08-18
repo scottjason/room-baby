@@ -1293,6 +1293,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.onPermissionResponse = function(event) {
+
+    document.getElementById('permission-granted').style.display = 'none';
+    document.getElementById('permission-denied').style.display = 'none';
+    document.getElementById('confirm').style.display = 'block';
+
     if (event.target.id === 'permission-granted') {
       ctrl.broadcast('permissionResponse', 'granted');
       var otSessionId = localStorageService.get('otSession').sessionId;
@@ -2245,7 +2250,7 @@ angular.module('RoomBaby')
           '<h4 class="media-heading">' +
           '<span class="session-started"> Request To Record Granted</span>' +
           '</h4>' +
-          '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp; Recording Started At' + '</p>' +
+          '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp; Recording Started' + '</p>' +
           '</div>' +
           '</div>' +
           '</div>' +
@@ -2283,6 +2288,8 @@ angular.module('RoomBaby')
         '<li id="permission-granted">Yes!' +
         '</li>' +
         '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
+        '</li>' +
+        '<li id="confirm">OK!' +
         '</li>' +
         '</ul>' +
         '</div>' +

@@ -282,6 +282,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   ctrl.onPermissionResponse = function(event) {
+
+    document.getElementById('permission-granted').style.display = 'none';
+    document.getElementById('permission-denied').style.display = 'none';
+    document.getElementById('confirm').style.display = 'block';
+
     if (event.target.id === 'permission-granted') {
       ctrl.broadcast('permissionResponse', 'granted');
       var otSessionId = localStorageService.get('otSession').sessionId;

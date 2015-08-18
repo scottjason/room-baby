@@ -11,6 +11,15 @@
   color: #16a085;
 }
 
+#confirm {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #16a085;
+  display: none;
+  cursor: default;
+  margin-right: 38px;
+}
+
 .media-object.img-circle {
   width: 35px;
   height: 35px;
@@ -1492,7 +1501,7 @@ li {
   bottom: 0;
   margin: auto;
   text-align: center;
-  padding-top: 200px;
+  height: 330px;
 }
 
 .username-line {
@@ -1770,14 +1779,13 @@ form.login-form {
   font-size: 19px;
 }
 
-.landing-container {
+
+/*.landing-container {
   min-width: 300px;
   position: relative;
   height: 500px;
   bottom: 140px;
-}
-
-
+}*/
 
 p.auth-options-copy {
   color: white;
@@ -1972,12 +1980,12 @@ a#email {
   font-weight: 300;
 }
 
-/*@media (min-width: 320px) and (max-width: 580px) {
-  .landing-container {
-    bottom: 0;
+@media (min-width: 320px) and (max-width: 580px) {
+  .slogan-text {
+    font-size: 28px;
   }
 }
-*/
+
 
 span.time-left {
   position: absolute;
