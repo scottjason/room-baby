@@ -60,7 +60,7 @@ function FooterCtrl($scope, $rootScope, $window, $timeout, PubSub, Validator, Se
       PubSub.trigger('toggleOverlay');
       PubSub.trigger('toggleUpload', true);
     } else if (optSelected === 'stop') {
-      PubSub.trigger('stopRecording');
+
     }
   };
 

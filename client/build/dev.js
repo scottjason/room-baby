@@ -519,7 +519,7 @@ function FooterCtrl($scope, $rootScope, $window, $timeout, PubSub, Validator, Se
       PubSub.trigger('toggleOverlay');
       PubSub.trigger('toggleUpload', true);
     } else if (optSelected === 'stop') {
-      PubSub.trigger('stopRecording');
+
     }
   };
 
@@ -915,7 +915,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
       return false;
     } else if ($rootScope.isRecording && $scope.twentySecondsLeft) {
       $rootScope.isRecording = false;
-      PubSub.trigger('stopRecording');
+      // PubSub.trigger('stopRecording');
       return true;
     } else if ($scope.twentySecondsLeft) {
       return true;
@@ -1202,11 +1202,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
 
     $scope.session.on('signal:startRecording', function() {
-      $rootScope.isRecording = true;
       PubSub.trigger('isRecording', true);
     });
 
-    $scope.session.on('signal:stopRecording', function() {
+    $scope.session.on('signal:stopRecording', function(event) {
+      $rootScope.isRecording = true;
       PubSub.trigger('isRecording', false);
       PubSub.trigger('generatingVideo', true);
     });
@@ -1318,6 +1318,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
   };
 
+
   ctrl.stopRecording = function() {
     ctrl.broadcast('stopRecording', '');
     var archiveId = localStorageService.get('archive').id;
@@ -1362,7 +1363,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ArchiveService.getAll(user_id).then(function(response) {
       localStorageService.set('archives', response.data);
     });
-  }
+  };
 
   ctrl.openShareDialog = function() {
     StateService.data['Facebook'].shareDialog.isOpen = true;

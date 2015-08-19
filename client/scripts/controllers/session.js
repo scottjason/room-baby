@@ -191,11 +191,11 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
 
     $scope.session.on('signal:startRecording', function() {
-      $rootScope.isRecording = true;
       PubSub.trigger('isRecording', true);
     });
 
-    $scope.session.on('signal:stopRecording', function() {
+    $scope.session.on('signal:stopRecording', function(event) {
+      $rootScope.isRecording = true;
       PubSub.trigger('isRecording', false);
       PubSub.trigger('generatingVideo', true);
     });
@@ -307,6 +307,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     });
   };
 
+
   ctrl.stopRecording = function() {
     ctrl.broadcast('stopRecording', '');
     var archiveId = localStorageService.get('archive').id;
@@ -351,7 +352,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ArchiveService.getAll(user_id).then(function(response) {
       localStorageService.set('archives', response.data);
     });
-  }
+  };
 
   ctrl.openShareDialog = function() {
     StateService.data['Facebook'].shareDialog.isOpen = true;

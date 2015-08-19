@@ -52,7 +52,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
       return false;
     } else if ($rootScope.isRecording && $scope.twentySecondsLeft) {
       $rootScope.isRecording = false;
-      PubSub.trigger('stopRecording');
+      // PubSub.trigger('stopRecording');
       return true;
     } else if ($scope.twentySecondsLeft) {
       return true;
