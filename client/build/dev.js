@@ -241,6 +241,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.getSessions = function() {
 
+    if (!$scope.user) {
+      localStorageService.clearAll();
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      return;
+    }
+
     if (!localStorageService.get('sessions')) {
       localStorageService.set('sessions', []);
     }
@@ -1179,17 +1185,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     $scope.session.on('signal:requestPermission', function(event) {
       var isSelf = (event.data === $scope.user.username)
       if (!isSelf) {
-        var opts = Transport.generateOpts('requestPermission', event.data);
-        Transport.generateHtml(opts, function(html) {
-          chatbox.append(html);
-          Transport.scroll('down');
-          $timeout(bindListeners, 100);
-
-          function bindListeners() {
-            document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
-            document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
-          };
-        });
+        $scope.requestingUser = event.data;
+        $scope.showPermission = true;
       }
     });
 
@@ -1292,13 +1289,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ctrl.broadcast('requestPermission', permissionRequestedBy);
   };
 
-  ctrl.onPermissionResponse = function(event) {
-
-    document.getElementById('permission-granted').style.display = 'none';
-    document.getElementById('permission-denied').style.display = 'none';
-    document.getElementById('confirm').style.display = 'block';
-
-    if (event.target.id === 'permission-granted') {
+  this.onPermissionResponse = function(isGranted) {
+    if (isGranted) {
       ctrl.broadcast('permissionResponse', 'granted');
       var otSessionId = localStorageService.get('otSession').sessionId;
       ctrl.startRecording(otSessionId);
@@ -2274,7 +2266,8 @@ angular.module('RoomBaby')
       callback(html);
     }
 
-    function requestPermission(requestedBy, callback) {
+    function requestPermission(obj, callback) {
+      console.log('obj', obj)
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -2282,13 +2275,13 @@ angular.module('RoomBaby')
         '<h4 class="media-heading">' +
         '<span class="session-started"> Room Baby Notice</span>' +
         '</h4>' +
-        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + requestedBy.capitalize() + ' Would Like To Record This Session' + '</p>' +
+        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;Would Like To Record This Session' + '</p>' +
         '<p class="recording-permission">Is this ok?' +
         '</p>' +
         '<ul class="permision-copy-container">' +
-        '<li id="permission-granted">Yes!' +
+        '<li class="permission-granted" id="{{ obj.permissionGranted + "-isGranted" }}">Yes!' +
         '</li>' +
-        '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
+        '<li class="permission-denied" id="{{ obj.permissionDenined + "-isDenied" }}">&nbsp;&nbsp; No Thanks!' +
         '</li>' +
         '<li id="confirm">OK!' +
         '</li>' +

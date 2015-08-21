@@ -168,17 +168,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     $scope.session.on('signal:requestPermission', function(event) {
       var isSelf = (event.data === $scope.user.username)
       if (!isSelf) {
-        var opts = Transport.generateOpts('requestPermission', event.data);
-        Transport.generateHtml(opts, function(html) {
-          chatbox.append(html);
-          Transport.scroll('down');
-          $timeout(bindListeners, 100);
-
-          function bindListeners() {
-            document.getElementById('permission-granted').addEventListener('click', ctrl.onPermissionResponse, false);
-            document.getElementById('permission-denied').addEventListener('click', ctrl.onPermissionResponse, false);
-          };
-        });
+        $scope.requestingUser = event.data;
+        $scope.showPermission = true;
       }
     });
 
@@ -281,13 +272,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
     ctrl.broadcast('requestPermission', permissionRequestedBy);
   };
 
-  ctrl.onPermissionResponse = function(event) {
-
-    document.getElementById('permission-granted').style.display = 'none';
-    document.getElementById('permission-denied').style.display = 'none';
-    document.getElementById('confirm').style.display = 'block';
-
-    if (event.target.id === 'permission-granted') {
+  this.onPermissionResponse = function(isGranted) {
+    if (isGranted) {
       ctrl.broadcast('permissionResponse', 'granted');
       var otSessionId = localStorageService.get('otSession').sessionId;
       ctrl.startRecording(otSessionId);

@@ -1,3 +1,50 @@
+.permission-overlay {
+  background-color: black;
+  z-index: 1;
+  position: fixed;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+  left: 0;
+  right: 0;
+  top: 200px;
+  border: 1px solid white;
+  padding: 10px;
+}
+
+.record-permission {
+  color: white;
+  font-size: 14px;
+}
+
+.is-ok {
+  font-size: 24px;
+  color: #79DFB6;
+}
+
+.is-granted-btn,
+.is-denied-btn {
+  display: inline-block;
+  width: 120px;
+  border-radius: 15px;
+  height: 33px;
+  position: relative;
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+.is-granted-btn p {
+  position: relative;
+  top: 5px;
+  color: green;
+}
+
+.is-denied-btn p {
+  position: relative;
+  top: 5px;
+  color: red;
+}
+
 #permission-granted {
   margin-left: -41px;
   font-family: 'Open Sans', sans-serif;

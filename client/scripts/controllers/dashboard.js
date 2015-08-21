@@ -179,6 +179,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   ctrl.getSessions = function() {
 
+    if (!$scope.user) {
+      localStorageService.clearAll();
+      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      return;
+    }
+
     if (!localStorageService.get('sessions')) {
       localStorageService.set('sessions', []);
     }

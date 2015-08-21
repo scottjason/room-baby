@@ -153,7 +153,8 @@ angular.module('RoomBaby')
       callback(html);
     }
 
-    function requestPermission(requestedBy, callback) {
+    function requestPermission(obj, callback) {
+      console.log('obj', obj)
       var html = '<div class="row">' +
         '<div class="col-lg-12">' +
         '<div class="media">' +
@@ -161,13 +162,13 @@ angular.module('RoomBaby')
         '<h4 class="media-heading">' +
         '<span class="session-started"> Room Baby Notice</span>' +
         '</h4>' +
-        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;' + requestedBy.capitalize() + ' Would Like To Record This Session' + '</p>' +
+        '<p class="connected-with"><i class="fa fa-child"></i>' + '&nbsp;Would Like To Record This Session' + '</p>' +
         '<p class="recording-permission">Is this ok?' +
         '</p>' +
         '<ul class="permision-copy-container">' +
-        '<li id="permission-granted">Yes!' +
+        '<li class="permission-granted" id="{{ obj.permissionGranted + "-isGranted" }}">Yes!' +
         '</li>' +
-        '<li id="permission-denied" class="permission-no">&nbsp;&nbsp; No Thanks!' +
+        '<li class="permission-denied" id="{{ obj.permissionDenined + "-isDenied" }}">&nbsp;&nbsp; No Thanks!' +
         '</li>' +
         '<li id="confirm">OK!' +
         '</li>' +
