@@ -1,3 +1,22 @@
+.fa.fa-circle-o-notch.fa-spin.generating {
+  font-size: 21px;
+  position: absolute;
+  margin: 0;
+  top: 2px;
+  margin-left: 14px;
+}
+
+.generating-copy {
+  position: absolute;
+  margin: auto;
+  top: 17px;
+  font-size: 19px;
+  color: #fff;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
 .permission-overlay {
   background-color: black;
   z-index: 1;
@@ -9,7 +28,7 @@
   right: 0;
   top: 200px;
   border: 1px solid white;
-  padding: 10px;
+  padding: 30px;
 }
 
 .record-permission {
@@ -20,9 +39,10 @@
 .is-ok {
   font-size: 24px;
   color: #79DFB6;
+  position: relative;
+  bottom: 4px;
 }
 
-.is-granted-btn,
 .is-denied-btn {
   display: inline-block;
   width: 120px;
@@ -31,18 +51,28 @@
   position: relative;
   background-color: transparent;
   border: 1px solid white;
+  cursor: pointer;
 }
 
-.is-granted-btn p {
+.is-granted-btn {
+  display: inline-block;
+  width: 120px;
+  border-radius: 15px;
+  height: 33px;
   position: relative;
-  top: 5px;
-  color: green;
+  background-color: transparent;
+  border: 1px solid white;
+  cursor: pointer;
 }
 
+.is-granted-btn p,
 .is-denied-btn p {
+  font-size: 14px;
+  font-weight: 300;
   position: relative;
   top: 5px;
-  color: red;
+  color: white;
+  top: 6px;
 }
 
 #permission-granted {

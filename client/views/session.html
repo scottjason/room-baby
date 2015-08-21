@@ -2,8 +2,8 @@
   <p class='record-permission'> {{ requestingUser }} would like to record this session</p>
   <p class='is-ok'>Is this ok?</p>
   <div class='permission-btn-container'>
-    <div class='is-granted-btn'><p>OK</p></div>
-    <div class='is-denied-btn'><p>No Thanks</p></div>
+    <div ng-click='sessionCtrl.onPermissionResponse(true);' class='is-granted-btn'><p>OK</p></div>
+    <div ng-click='sessionCtrl.onPermissionResponse(null);' class='is-denied-btn'><p>No Thanks</p></div>
   </div>
 </div>
 

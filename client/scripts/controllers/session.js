@@ -209,8 +209,8 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
         chatbox.append(html);
         Transport.scroll('down');
         var isFacebookLogin = StateService.data['Auth'].isFacebook;
-        var isOpen = StateService.data['Facebook'].shareDialog.isOpen;
-        if (isFacebookLogin && !isOpen) {
+        // var isOpen = StateService.data['Facebook'].shareDialog.isOpen;
+        if (isFacebookLogin) {
           ctrl.openShareDialog();
         } else {
           console.log('user not logged in through facebook');
@@ -273,6 +273,7 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   this.onPermissionResponse = function(isGranted) {
+    $scope.showPermission = false;
     if (isGranted) {
       ctrl.broadcast('permissionResponse', 'granted');
       var otSessionId = localStorageService.get('otSession').sessionId;
