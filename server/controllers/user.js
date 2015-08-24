@@ -16,6 +16,7 @@ var dialog = require('../config/utils/dialog');
 var uploader = require('../config/utils/uploader');
 var config = require('../config');
 var utils = require('../config/utils');
+var generatePassword = require('password-generator');
 
 var transporter = mailer.transporter();
 AWS.config.update(config.aws.credens);
@@ -24,7 +25,6 @@ var s3Bucket = new AWS.S3();
 exports.upload = function(req, res, next) {
   async.waterfall([
       function(callback) {
-        console.log(req.files);
         if (req.files.file.extension !== 'jpg' && req.files.file.extension !== 'jpeg' && req.files.file.extension !== 'png' && req.files.file.extension !== 'gif') return res.status(401).send(dialog.badFileType);
         if (req.files.file.size > 5e+6) return res.status(401).send(dialog.maxSizeExceeded);
         callback(null);
@@ -81,7 +81,6 @@ exports.upload = function(req, res, next) {
 
 exports.connectAccts = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
-    console.log('user', user);
     if (err) return next(err);
     user.username = req.body.username;
     user.password = req.body.password;
@@ -99,16 +98,35 @@ exports.connectAccts = function(req, res, next) {
 exports.saveUserName = function(req, res, next) {
   User.findById(req.body._id, function(err, user) {
     user.username = req.body.username;
+    user.password = generatePassword();
+    var password = user.password;
     user.save(function(err, savedUser) {
       if (err) return next(err);
-      savedUser.password = null;
       req.session.user = savedUser;
-      res.json({
-        user: savedUser
-      });
-    })
-  })
-}
+
+      function sendMail(user) {
+        mailer.generateTemplate('username', user, function(subject, html) {
+          var mailOpts = {
+            to: user.email,
+            from: config.transport.email,
+            subject: subject,
+            html: html
+          };
+          transporter.sendMail(mailOpts, function(err, result) {
+            if (err) return next(err);
+            user.password = null;
+            res.json({
+              user: user
+            });
+          });
+        });
+      }
+      savedUser.password = password;
+      sendMail(savedUser);
+    });
+  });
+};
+
 
 exports.getOne = function(req, res, next) {
   User.findById(req.params.user_id, function(err, user) {

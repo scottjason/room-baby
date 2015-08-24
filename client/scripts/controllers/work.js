@@ -17,7 +17,7 @@ function WorkCtrl($scope, $state, $timeout, PubSub, Animator) {
   });
 
   this.onExit = function() {
-  	 PubSub.trigger('toggleOverflow', false);
+  	PubSub.trigger('toggleOverflow', false);
   	$state.go('landing', { reload: true });
   };
 

@@ -24,7 +24,7 @@ angular.module('RoomBaby')
     function saveUserName(params) {
       var request = $http({
         method: 'POST',
-        url: '/user/save-user-name',
+        url: 'user/save-user-name',
         data: params
       });
       return (request.then(successHandler, errorHandler));

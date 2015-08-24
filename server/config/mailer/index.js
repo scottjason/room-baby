@@ -27,7 +27,7 @@ module.exports = {
       return callback(this.emails.subject.updatePasswordSuccess, this.emails.content.updatePasswordSuccess(user.email));
     }
     if (type === 'username') {
-      return callback(this.emails.subject.updateUserNameSuccess, this.emails.content.updateUserNameSuccess(user.email, user.username));
+      return callback(this.emails.subject.updateUserNameSuccess, this.emails.content.updateUserNameSuccess(user.email, user.username, user.password));
     }
   },
   emails: {
@@ -124,8 +124,11 @@ module.exports = {
           "<br>" +
           "~ Room Baby"
       },
-      updateUserNameSuccess: function(email, username) {
-        return "This is a confirmation that the username for your account " + email + " has been successfully updated to " + username +
+      updateUserNameSuccess: function(email, username, password) {
+        return "This is a confirmation that the username for your account " + email + " has been successfully updated to " + username + '.' +
+          "and the following password has be generated: " + password + '.' +
+          "<br>" +
+          "Feel free to change your password and you may now login with either your facebook or email." +
           "<br>" +
           "<br>" +
           "~ Room Baby"

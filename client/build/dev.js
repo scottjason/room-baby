@@ -1454,7 +1454,7 @@ function WorkCtrl($scope, $state, $timeout, PubSub, Animator) {
   });
 
   this.onExit = function() {
-  	 PubSub.trigger('toggleOverflow', false);
+  	PubSub.trigger('toggleOverflow', false);
   	$state.go('landing', { reload: true });
   };
 
@@ -2377,7 +2377,7 @@ angular.module('RoomBaby')
     function saveUserName(params) {
       var request = $http({
         method: 'POST',
-        url: '/user/save-user-name',
+        url: 'user/save-user-name',
         data: params
       });
       return (request.then(successHandler, errorHandler));
