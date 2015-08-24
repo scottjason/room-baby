@@ -354,7 +354,7 @@ exports.resetPassCallback = function(req, res, next) {
     if (err) return next(err);
     var currentTime = new Date().getTime();
     var expiresAt = user.utils.resetPassExpires;
-    if (currentTime >= expiresAt) {
+    if (currentTime >= expiresAt || !user) {
       res.render('reset-password-expired');
     } else {
       res.render('reset-password');

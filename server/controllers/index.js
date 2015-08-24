@@ -10,7 +10,6 @@ exports.render = function(req, res, next) {
   var isFacebookBroadcast = (req.query.fb_ref === 'Default');
   if (!isFacebookBroadcast) {
     res.sendFile(config.root + 'server/views/index.html');
-     // res.render('reset-password-success');
   } else {
     var redirectLink = req.params.broadcast_id;
     res.redirect(redirectLink);
