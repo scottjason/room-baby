@@ -356,8 +356,9 @@ exports.resetPassCallback = function(req, res, next) {
     var expiresAt = user.utils.resetPassExpires;
     if (currentTime >= expiresAt) {
       res.render('reset-password-expired');
+    } else {
+      res.render('reset-password');
     }
-    res.render('reset-password');
   });
 };
 
@@ -373,6 +374,7 @@ exports.resetPassSubmit = function(req, res, next) {
             'utils.resetPassToken': token
           }, function(err, user) {
             if (err) return callback(err);
+            if (!user) return res.redirect('/');
 
             user.password = req.body.password;
             user.utils.resetPassToken = null;
@@ -399,6 +401,6 @@ exports.resetPassSubmit = function(req, res, next) {
     ],
     function(err) {
       if (err) return next(err);
-      res.redirect('/');
+      res.render('reset-password-success');
     });
 };
