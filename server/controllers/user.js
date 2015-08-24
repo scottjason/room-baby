@@ -320,7 +320,7 @@ exports.resetPass = function(req, res, next) {
           if (!user) return res.status(401).send(dialog.noEmailFound);
 
           user.utils.resetPassToken = token;
-          user.utils.resetPassExpires = Date.now() + 3600000; /* 1 hour */
+          user.utils.resetPassExpires = new Date().getTime() + 3600000; /* 1 hour */
           user.save(function(err, savedUser) {
             if (err) return callback(err);
             callback(null, token, savedUser);
@@ -350,11 +350,13 @@ exports.resetPass = function(req, res, next) {
 exports.resetPassCallback = function(req, res, next) {
   User.findOne({
     'utils.resetPassToken': req.params.token,
-    'utils.resetPassExpires': {
-      $gt: Date.now()
-    }
   }, function(err, user) {
     if (err) return next(err);
+    var currentTime = new Date().getTime();
+    var expiresAt = user.utils.resetPassExpires;
+    if (currentTime >= expiresAt) {
+      res.render('reset-password-expired');
+    }
     res.render('reset-password');
   });
 };

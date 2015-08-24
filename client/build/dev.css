@@ -2359,6 +2359,98 @@ p.confirmation-data {
 }
 
 
+.server-reset-pass.first {
+  color: white;
+  font-weight: 300;
+  text-align: center;
+  font-size: 24px;
+  margin: 0;
+  padding: 60px 0 10px 0;
+}
+
+.server-reset-pass {
+  color: white;
+  font-weight: 300;
+  text-align: center;
+  font-size: 18px;
+  margin: 0;
+  padding: 0 0 20px 0;
+}
+
+.server-reset-password-success-container {
+  position: relative;
+  text-align: center;
+}
+
+.sever-reset-password-form {
+  position: relative;
+  text-align: center;
+}
+
+.server-reset-pass-container {
+  width: 400px;
+  text-align: center;
+  position: relative;
+  margin: auto;
+  padding-top: 20px;
+  font-weight: 300;
+  color: orange;
+}
+
+.server-reset-pass-input {
+  background: transparent;
+  border: 1px solid white;
+  width: 200px;
+  color: white;
+  outline: 0;
+}
+
+.server-enter-password {
+  font-size: 16px;
+  padding: 0 0 10px 0;
+  margin: 0;
+  color: #fff;
+}
+
+.server-reset-pass-line {
+  width: 400px;
+  height: 1px;
+  background: #d0314f;
+  position: relative;
+  margin: auto;
+}
+
+.server-reset-pass-btn {
+  text-align: center;
+  position: relative;
+  margin: auto;
+  width: 200px;
+  height: 30px;
+  background: 0 0;
+  border: 1px solid #d0314f;
+  font-size: 14px;
+  font-weight: 300;
+  color: white;
+  margin-top: 15px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.server-reset-pass-btn p {
+  position: relative;
+  font-size: 14px;
+  bottom: 9px;
+  cursor: pointer;
+}
+
+.server-go-to {
+  color: white;
+  font-size: 16px;
+  margin: 0;
+  padding: 10px 0 0 0;
+}
+
+
 .thirty-left {
   position: absolute;
   width: 100%;
