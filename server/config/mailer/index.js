@@ -141,6 +141,7 @@ module.exports = {
           "<br>" +
           "<br>" +
           "-------------------------------------------" +
+          "<br>" +
           "your username: " + username +
           "<br>" +
           "<br>" +
@@ -148,6 +149,7 @@ module.exports = {
           "<br>" +
           "<br>" +
           "and the following password has been generated: " + password +
+          "<br>" +
           "-------------------------------------------" +
           "<br>" +
           "<br>" +
