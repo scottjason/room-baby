@@ -15,46 +15,39 @@ module.exports = function(passport) {
 
       var profileImage;
 
-      FB.api('/me?fields=picture.type(small)&access_token=' + token, function(response) {
-        if (response.picture && response.picture.data.url) {
-          profileImage = response.picture.data.url;
-        } else {
-          profileImage = null;
-        }
-        User.findOne({
-          email: profile._json.email
-        }, function(err, user) {
-          if (err) return callback(err);
-          if (user) {
-            user.facebook.id = profile.id;
-            user.facebook.email = user.email;
-            user.facebook.firstName = profile._json.first_name;
-            user.facebook.lastName = profile._json.lastame;
-            user.facebook.token = token;
-            if (profileImage) {
-              user.profileImage = profileImage;
-            }
-            user.save(function(err, savedUser) {
-              if (err) return callback(err);
-              callback(null, savedUser);
-            })
-          } else {
-            var newUser = new User();
-            newUser.email = profile._json.email;
-            if (profileImage) {
-              newUser.profileImage = profileImage;
-            }
-            newUser.facebook.id = profile.id;
-            newUser.facebook.email = newUser.email
-            newUser.facebook.firstName = profile._json.first_name
-            newUser.facebook.lastName = profile._json.lastame
-            newUser.facebook.token = token;
-            newUser.save(function(err, savedUser) {
-              if (err) return callback(err);
-              callback(null, savedUser);
-            });
+      process.nextTick(function() {
+
+        FB.api('/me?fields=picture.type(small)&access_token=' + token, function(response) {
+          if (response.picture && response.picture.data.url) {
+            profileImage = response.picture.data.url;
           }
-        })
+          User.findOne({
+            email: profile._json.email
+          }, function(err, user) {
+            if (err) return callback(err);
+            if (user) {
+              user.facebook.email = user.email;
+              if (profileImage) {
+                user.profileImage = profileImage;
+              }
+              user.save(function(err, savedUser) {
+                if (err) return callback(err);
+                callback(null, savedUser);
+              })
+            } else {
+              var newUser = new User();
+              newUser.email = profile._json.email;
+              if (profileImage) {
+                newUser.profileImage = profileImage;
+              }
+              newUser.facebook.email = newUser.email
+              newUser.save(function(err, savedUser) {
+                if (err) return callback(err);
+                callback(null, savedUser);
+              });
+            }
+          })
+        });
       });
     }));
 };
