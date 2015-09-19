@@ -1,3 +1,8 @@
+<div class="disabled-container" ng-show='isDisabled'>
+  <div class="disabled-copy-container">
+    <p>DISABLED</p>
+  </div>
+</div>
 <div ng-overlay clear-form='dashCtrl.clearForm()' ng-init='dashCtrl.isAuthenticated(); dashCtrl.registerEvents();' class='dashboard-overlay-container'>
   <div id='dashboard-overlay' class='dashboard-overlay'>
     <i id='dash-overlay-exit-btn' class="fa fa-times"></i>

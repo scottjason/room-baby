@@ -73,6 +73,20 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   $scope.room = {};
 
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
+
+
   StateService.data['Facebook'].shareDialog.isOpen = false;
   StateService.data['Dashboard'].isOnLoad = true;
 
@@ -635,6 +649,19 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 
   var ctrl = this;
 
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+    $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
+
   this.isMobile = function() {
     return DeviceService.isMobile();
   };
@@ -874,9 +901,24 @@ angular.module('RoomBaby')
 
 function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
+
   var ctrl = this;
 
   $scope.user = localStorageService.get('user');
+
+  $rootScope.$on('isDisabled', function() {
+    console.log('Navbar isDisabled');
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
 
   this.registerEvents = function() {
     $scope.fadeToBlack = false;
@@ -1026,6 +1068,19 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   var now = moment(new Date()).calendar();
 
   $rootScope.connectionCount = 0;
+
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
 
   var chatbox = angular.element(document.getElementById('chatbox'));
   var layoutContainer = document.getElementById('layout-container');
@@ -3098,6 +3153,32 @@ angular.module('RoomBaby')
   };
   ngUpload.$inject('$parse');
 });
+
+
+angular.module('RoomBaby')
+  .directive('ngWindow', function($rootScope, $window) {
+    return {
+      restrict: 'A',
+
+      link: function(scope, element, attrs) {
+        scope.onResize = function() {
+          var isDisabled = ($window.innerWidth <= 900);
+          if (isDisabled) {
+            console.log('isDisabled');
+            $rootScope.$broadcast('isDisabled');
+          } else {
+            console.log('isEnabled');
+            $rootScope.$broadcast('isEnabled');
+          }
+        }
+        scope.onResize();
+        angular.element($window).bind('resize', function() {
+          scope.onResize();
+        })
+      }
+    };
+    ngWindow.$inject('$rootScope', '$window');
+  });
 
 
 angular.module('RoomBaby')

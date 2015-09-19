@@ -5,9 +5,24 @@ angular.module('RoomBaby')
 
 function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService, UserApi, PubSub, ngDialog, localStorageService) {
 
+
   var ctrl = this;
 
   $scope.user = localStorageService.get('user');
+
+  $rootScope.$on('isDisabled', function() {
+    console.log('Navbar isDisabled');
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
 
   this.registerEvents = function() {
     $scope.fadeToBlack = false;

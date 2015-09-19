@@ -1,6 +1,11 @@
-
 <nav ng-hide='showBroadcast' ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
   <div ng-class="{ 'body-overlay' : ( showOverlay ) }"></div>
+<div class="disabled-container" ng-show='isDisabled'>
+  <div class="disabled-copy-container">
+    <p>DISABLED</p>
+  </div>
+</div>
+
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
       <span class="sr-only">Toggle navigation</span>

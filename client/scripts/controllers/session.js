@@ -10,6 +10,19 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
 
   $rootScope.connectionCount = 0;
 
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
+
   var chatbox = angular.element(document.getElementById('chatbox'));
   var layoutContainer = document.getElementById('layout-container');
   var layoutOpts = ConstantService.generateOpts('layout');

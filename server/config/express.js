@@ -12,8 +12,10 @@ var bodyParser = require('body-parser');
 var multer  = require('multer')
 var methodOverride = require('method-override');
 var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
+var uuid = require('node-uuid');
 var seedDb = require('./seed');
 var config = require('./');
 
@@ -35,7 +37,7 @@ module.exports = function(app, passport){
 
   if ('development' === app.get('env')) {
     app.use(logger('dev'));
-    // seedDb.init();
+    seedDb.init();
   }
 
   app.use(bodyParser.json());
@@ -50,9 +52,25 @@ module.exports = function(app, passport){
     }
   }));
 
+  var secret = uuid.v4();
+
+    var opts = {
+    saveUninitialized: true,
+    resave: true,
+    secret: secret,
+    cookie: {
+      maxAge: new Date(Date.now() + 1209600000),
+      expires: new Date(Date.now() + 1209600000)
+    },
+    store: new mongoStore({
+      url: config.db.uri,
+      collection : 'sessions'
+    })
+  };
+
   app.use(cors());
-  app.use(cookieParser(config.sessionOpts.secret));
-  app.use(session(config.sessionOpts));
+  app.use(cookieParser(secret));
+  app.use(session(opts));
   app.use(passport.initialize());
   app.use(passport.session());
 }

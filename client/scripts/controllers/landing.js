@@ -7,6 +7,19 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
 
   var ctrl = this;
 
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+    $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
+
   this.isMobile = function() {
     return DeviceService.isMobile();
   };

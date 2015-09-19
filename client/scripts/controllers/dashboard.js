@@ -11,6 +11,20 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   $scope.room = {};
 
+  $rootScope.$on('isDisabled', function() {
+    $timeout(function() {
+      $scope.isEnabled = false;
+      $scope.isDisabled = true;
+    });
+  });
+  $rootScope.$on('isEnabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = false;
+      $scope.isEnabled = true;
+    });
+  });
+
+
   StateService.data['Facebook'].shareDialog.isOpen = false;
   StateService.data['Dashboard'].isOnLoad = true;
 

@@ -1,5 +1,13 @@
+<div class="disabled-container" ng-show='isDisabled'>
+  <div class="disabled-copy-container">
+    <p>DISABLED</p>
+  </div>
+</div>
 <ng-enter on-forgot-password-='onForgotPassword()'>
   <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.getState(); landingCtrl.isAuthenticated(); landingCtrl.onReady();">
+    
+    <div class="disabled-container" ng-show='isDisabled'></div>
+
     <div class='landing-container-body'>
       <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
       <hr class="landing-line">

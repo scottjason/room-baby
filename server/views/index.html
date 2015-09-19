@@ -43,8 +43,7 @@
   </script>
 </head>
 
-<body ng-app="RoomBaby">
-
+<body ng-window ng-app="RoomBaby">
   <div class='global' ng-controller='GlobalCtrl' ng-init='registerEvents();' ng-class='{ "overflow-y" : (showOverflow), "set-width-320" : isMobile() }'>
     <div ng-include src="'views/includes/navbar.html'"></div>
     <div id="fb-root"></div>
