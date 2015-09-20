@@ -20,11 +20,11 @@ angular.module('RoomBaby')
       if (type === 'invalidDate') {
         return 'you cannot schedule a room for a date in the past';
       } else if (type === 'invalidUserName') {
-        return 'please enter a valid username, minimum three characters';
+        return 'invalid username';
       } else if (type === 'invalidEmail') {
-        return 'please enter a valid email';
+        return 'invalid email';
       } else if (type === 'invalidPassword') {
-        return 'please enter a valid password, minimum six characters';
+        return 'invalid password';
       } else if (type === 'invalidTitle') {
         return 'please enter a valid room title, between three and twenty six characters';
       } else if (type === 'dateReset') {

@@ -93,6 +93,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
         StateService.data['Animator']['login'].hasAnimated = true;
         var opts = Animator.generateOpts('onLogin');
         Animator.run(opts);
+        $timeout(function() {
+          var elem = angular.element(document.getElementById('login-input-email'));
+          elem.focus();
+        }, 200);
       }
     } else if (optSelected === 'register') {
       $scope.showLogin = false;
@@ -128,10 +132,12 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
           $scope.showErr = true;
           $scope.errMessage = errMessage;
           $timeout(function() {
-            $scope.errMessage = '';
             $scope.showErr = false;
+            $scope.errMessage = '';
+            var elem = angular.element(document.getElementById('login-input-email'));
+            elem.focus();
             StateService.data['Auth'].Login.inProgress = false;
-          }, 1200);
+          }, 2000);
         }
       });
     }

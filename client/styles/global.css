@@ -286,22 +286,50 @@ button#details.btn.btn-md.members {
 }
 
 .btn-custom-login,
-.btn-custom-login:hover,
 .btn-custom-login:active,
 .btn-custom-login:focus {
-  width: 100px;
+  outline: 0;
+  margin-top: 20px;
+  display: block;
+  width: 175px;
   font-weight: 300;
   text-decoration: none;
-  height: 30px;
-  border-radius: 9px;
-  text-align: center;
+  height: 35px;
+  border-radius: 0;
   cursor: pointer;
-  color: #EFEFEF;
-  border: 1px solid #EFEFEF;
-  background: transparent none repeat scroll 0px 0px;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
   margin: auto;
   position: relative;
-  padding-top: 3px;
+  padding-top: 5px;
+  top: 17px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  bottom: 1px;
+}
+
+.btn-custom-login:hover {
+  box-shadow: inset 0px 0px 30px 2px #1485CC;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.btn-custom-login > p {
+  position: relative;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  top: 1px;
+  margin: auto;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .btn-custom-back,
@@ -322,7 +350,6 @@ button#details.btn.btn-md.members {
   text-align: center;
   padding-top: 4px;
   cursor: pointer;
-  color: #EFEFEF;
   background-color: transparent;
   margin: auto;
 }

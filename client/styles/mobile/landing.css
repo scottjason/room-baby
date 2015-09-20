@@ -73,6 +73,10 @@
    .overlay-body {
      width: 320px;
      opacity: 0;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
    }
    .exit-btn {
      left: 0;
@@ -108,6 +112,6 @@
    }
    .logo-text-overlay {
      padding-left: 52px !important;
-
+     
    }
  }

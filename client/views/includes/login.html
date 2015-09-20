@@ -1,9 +1,18 @@
 <div class='login-container' class='auth-container'>
   <form ng-hide='showForgotPassword' id="loginForm" name="authForm" class="form-inline" ng-submit="landingCtrl.validateLogin();">
-    <input id="login-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-    <input id="login-input" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
-    <button type="submit" class="btn btn-custom-login">Login</button>
+    <input id="login-input-email" class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
+    <input id="login-input-password" class="input-small" ng-model="user.password" type="password" name="password" placeholder="Password">
+    <button ng-hide='showErr' type="submit" class="btn btn-custom-login">
+      <p>Login</p>
+    </button>
     <br>
+    <div ng-show='showErr'>
+      <div  class='tooltip-container login'>
+        <div class='tooltip-content'>
+          <p>{{ errMessage }}</p>
+        </div>
+      </div>
+    </div>
     <div class='login-subtext-container'>
       <p id='need-account' ng-click="landingCtrl.onOptSelected('register');">need an account?</p>
       <p id='forgot-password' ng-click="landingCtrl.onOptSelected('forgotPassword');"> forgot password?</p>
@@ -23,8 +32,5 @@
       <button title="cancel" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(true);">Cancel</button>
       <button type="submit" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(null);">Submit</button>
     </form>
-  </div >
-  <div ng-show='showErr' class='login-btn-container'>
-    <p class='landing-err-message'>{{ errMessage }}</p>
   </div>
 </div>
