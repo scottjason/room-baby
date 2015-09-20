@@ -21,7 +21,6 @@
   width: 175px;
   height: 35px;
   border-radius: 15px;
-  border-radius: 15px;
   border: 1px solid #1485CC;
   margin: auto;
   position: relative;
@@ -92,14 +91,6 @@ h1.overlay-header.first {
   bottom: 7px;
   z-index: 3;
   background-color: transparent;
-}
-
-.icon-container {
-  position: relative;
-  cursor: pointer;
-  background: green;
-  height: auto;
-  width: auto;
 }
 
 .landing-line.overlay {
@@ -184,6 +175,7 @@ a.logo-text-overlay:active {
 
 .overlay-body {
   overflow: auto;
+  overflow-x: hidden;
   width: 820px;
   height: 100%;
   position: relative;

@@ -1607,6 +1607,7 @@ li {
 }
 
 
+
 .how-it-works-bottom {
   opacity: 0;
   -webkit-transition: .1s;
@@ -1720,23 +1721,6 @@ input#landing-input-username {
   position: relative;
   top: 40px;
   padding: 0 20px;
-}
-
-p.how-this-works-landing {
-  position: relative;
-  color: #FF9400;
-  white-space: nowrap;
-  cursor: pointer;
-  text-align: center;
-  left: 0;
-  right: 0;
-  margin: auto;
-  top: 99px;
-  font-size: 26px;
-  font-family: 'Bad Script', cursive;
-  color: #fff;
-  text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
-  opacity: 0;
 }
 
 .container {
@@ -2000,10 +1984,6 @@ a.logo-text:active {
   text-decoration: none;
   position: relative;
   top: 22px;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
 }
 
 .landing-line {
@@ -2253,7 +2233,6 @@ div.collapse.navbar-collapse > ul > li > a:hover {
   width: 175px;
   height: 35px;
   border-radius: 15px;
-  border-radius: 15px;
   border: 1px solid #1485CC;
   margin: auto;
   position: relative;
@@ -2324,14 +2303,6 @@ h1.overlay-header.first {
   bottom: 7px;
   z-index: 3;
   background-color: transparent;
-}
-
-.icon-container {
-  position: relative;
-  cursor: pointer;
-  background: green;
-  height: auto;
-  width: auto;
 }
 
 .landing-line.overlay {
@@ -2416,6 +2387,7 @@ a.logo-text-overlay:active {
 
 .overlay-body {
   overflow: auto;
+  overflow-x: hidden;
   width: 820px;
   height: 100%;
   position: relative;
@@ -3127,6 +3099,56 @@ h3.work-heading {
    .landing-btn-container {
      top: 10px;
    }
+   .overlay-container {
+     border: none;
+   }
+   .overlay-container.expand {
+     max-width: 300px;
+     -webkit-transition: 0.5s;
+     -moz-transition: 0.5s;
+     -o-transition: 0.5s;
+     transition: 0.5s;
+   }
+   .overlay-body {
+     width: 320px;
+     opacity: 0;
+   }
+   .exit-btn {
+     left: 0;
+     right: 0;
+     margin: auto;
+     margin-bottom: 10px;
+     position: relative;
+   }
+   p.overlay-copy {
+     position: relative;
+     text-align: left;
+     width: 280px;
+     padding: 0;
+     left: 12px;
+   }
+   h1.overlay-header.first {
+     padding-top: 61px;
+   }
+   h1.overlay-header.first,
+   h1.overlay-header {
+     font-size: 21px;
+     padding-left: 0;
+     left: 11px;
+   }
+   .header-copy {
+     position: relative;
+     right: 0;
+     font-size: 14px;
+     top: 60px;
+     width: 100%;
+     text-align: center;
+     font-weight: 400;
+   }
+   .logo-text-overlay {
+     padding-left: 52px !important;
+
+   }
  }
 
 
@@ -3191,5 +3213,61 @@ h3.work-heading {
   }
   .landing-btn-container {
     top: 10px;
+  }
+  .overlay-container.expand {
+    max-width: 580px;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
+  }
+  .overlay-body {
+    width: 600px;
+    opacity: 0;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .exit-btn {
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  p.overlay-copy {
+    position: relative;
+    text-align: left;
+    width: 580px;
+    padding: 0 30px;
+    left: 12px;
+  }
+  h1.overlay-header.first {
+    padding-top: 61px;
+  }
+  h1.overlay-header.first,
+  h1.overlay-header {
+    font-size: 21px;
+    padding-left: 0;
+    left: 41px;
+  }
+  .header-copy {
+    position: relative;
+    right: 0;
+    font-size: 14px;
+    top: 60px;
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
+  }
+  .logo-text-overlay {
+    padding-left: 52px !important;
+  }
+  a.logo-text-overlay,
+  a.logo-text-overlay:active,
+  a.logo-text-overlay:focus,
+  a.logo-text-overlay:hover {
+    left: 141px;
   }
 }

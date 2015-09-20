@@ -1581,17 +1581,14 @@ angular.module('RoomBaby')
 
     function onLanding(hasAnimated) {
       var roomBaby = angular.element(document.getElementById('room-baby'));
-      var howThisWorks = angular.element(document.getElementById('how-this-works'));
       var opts;
-      if (!hasAnimated) opts = { duration: 1200, delay: 250 };
+      if (!hasAnimated) opts = { duration: 600, delay: 50 };
       if (!opts) {
         document.getElementById('room-baby').style.opacity = 1;
-        document.getElementById('how-this-works').style.opacity = 1;
         return;
       };
 
       roomBaby.velocity('transition.slideDownIn', opts);
-      howThisWorks.velocity('transition.slideUpIn', opts);
     }
 
     function onDashboard() {

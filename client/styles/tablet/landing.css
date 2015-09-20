@@ -60,4 +60,60 @@
   .landing-btn-container {
     top: 10px;
   }
+  .overlay-container.expand {
+    max-width: 580px;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
+  }
+  .overlay-body {
+    width: 600px;
+    opacity: 0;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .exit-btn {
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  p.overlay-copy {
+    position: relative;
+    text-align: left;
+    width: 580px;
+    padding: 0 30px;
+    left: 12px;
+  }
+  h1.overlay-header.first {
+    padding-top: 61px;
+  }
+  h1.overlay-header.first,
+  h1.overlay-header {
+    font-size: 21px;
+    padding-left: 0;
+    left: 41px;
+  }
+  .header-copy {
+    position: relative;
+    right: 0;
+    font-size: 14px;
+    top: 60px;
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
+  }
+  .logo-text-overlay {
+    padding-left: 52px !important;
+  }
+  a.logo-text-overlay,
+  a.logo-text-overlay:active,
+  a.logo-text-overlay:focus,
+  a.logo-text-overlay:hover {
+    left: 141px;
+  }
 }

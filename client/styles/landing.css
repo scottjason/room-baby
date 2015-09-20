@@ -1,3 +1,4 @@
+
 .how-it-works-bottom {
   opacity: 0;
   -webkit-transition: .1s;
@@ -111,23 +112,6 @@ input#landing-input-username {
   position: relative;
   top: 40px;
   padding: 0 20px;
-}
-
-p.how-this-works-landing {
-  position: relative;
-  color: #FF9400;
-  white-space: nowrap;
-  cursor: pointer;
-  text-align: center;
-  left: 0;
-  right: 0;
-  margin: auto;
-  top: 99px;
-  font-size: 26px;
-  font-family: 'Bad Script', cursive;
-  color: #fff;
-  text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.1);
-  opacity: 0;
 }
 
 .container {
@@ -391,10 +375,6 @@ a.logo-text:active {
   text-decoration: none;
   position: relative;
   top: 22px;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
 }
 
 .landing-line {
