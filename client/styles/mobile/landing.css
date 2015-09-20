@@ -1,0 +1,63 @@
+ @media (min-width: 321px) and (max-width: 667px) {
+   .landing-line {
+     width: 280px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   a.logo-text,
+   a.logo-text:active,
+   a.logo-text:focus,
+   a.logo-text:hover {
+     font-size: 48px;
+     top: 16px;
+     font-size: 51px;
+     top: 18px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   .slogan-text {
+     font-size: 24px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   .btn-custom-facebook,
+   .btn-custom-facebook:active,
+   .btn-custom-facebook:focus,
+   .btn-custom-facebook:hover,
+   .btn-custom-email,
+   .btn-custom-email:active,
+   .btn-custom-email:focus,
+   .btn-custom-email:hover {
+     right: 5px;
+   }
+   .how-it-works {
+     opacity: 0;
+     -webkit-transition: 0.2s;
+     -moz-transition: 0.2s;
+     -o-transition: 0.2s;
+     transition: 0.2s;
+   }
+   .how-it-works-bottom {
+     opacity: 1;
+     position: relative;
+     font-family: 'brandon_grotesquethin';
+     font-size: 24px;
+     font-weight: 600;
+     cursor: pointer;
+     color: #1485CC;
+     top: 30px;
+     -webkit-transition: .1s;
+     -moz-transition: .1s;
+     -o-transition: .1s;
+     transition: .1s;
+   }
+   .landing-btn-container {
+     top: 10px;
+   }
+ }

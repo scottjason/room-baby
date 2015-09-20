@@ -1,3 +1,211 @@
+.exit-btn {
+  width: 175px;
+  height: 35px;
+  border-radius: 15px;
+  right: 74px;
+  top: 23px;
+  background: transparent;
+  border: 1px solid #1485CC;
+  z-index: 5;
+  position: absolute;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn-bottom {
+  width: 175px;
+  height: 35px;
+  border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  margin-bottom: 30px;
+  cursor: pointer;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn:hover,
+.exit-btn-bottom:hover {
+  box-shadow: inset 0px 0px 30px 5px #1485CC;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn > p,
+.exit-btn-bottom > p {
+  position: relative;
+  color: #fff;
+  font-weight: 300;
+  font-size: 15px;
+  top: 6px;
+  margin: auto;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+p.overlay-copy {
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  padding: 0 80px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+
+p.overlay-copy.last {
+  padding-bottom: 30px;
+}
+
+h1.overlay-header {
+  position: relative;
+  color: #1485CC;
+  text-align: left;
+  padding-top: 20px;
+  font-size: 24px;
+  padding-left: 64px;
+  font-weight: 300;
+  font-family: 'Open Sans', sans-serif;
+  text-transform: lowercase;
+}
+
+h1.overlay-header.first {
+  padding-top: 50px;
+}
+
+.icon-cancel.overlay {
+  color: #fff;
+  position: absolute;
+  font-size: 36px;
+  right: 40px;
+  bottom: 7px;
+  z-index: 3;
+  background-color: transparent;
+}
+
+.icon-container {
+  position: relative;
+  cursor: pointer;
+  background: green;
+  height: auto;
+  width: auto;
+}
+
+.landing-line.overlay {
+  top: 100px;
+}
+
+.overlay-title {
+  position: relative;
+  width: 100%;
+  height: auto;
+  text-align: left;
+}
+
+a.logo-text-overlay,
+a.logo-text-overlay:hover,
+a.logo-text-overlay:focus,
+a.logo-text-overlay:active {
+  font-family: 'brandon_grotesquethin';
+  font-size: 48px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  -webkit-transition: .3s;
+  -moz-transition: .3s;
+  -o-transition: .3s;
+  transition: .3s;
+  top: 50px;
+  z-index: 2;
+  padding-left: 80px;
+}
+
+.overlay-container {
+  position: fixed;
+  height: 100%;
+  top: 100%;
+  margin: auto;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  width: 2px;
+  background: black;
+  border: 1px solid white;
+  border-bottom: none;
+  border-top: none;
+  z-index: 3;
+  opacity: 0;
+  -webkit-transition: 0.1s;
+  -moz-transition: 0.1s;
+  -o-transition: 0.1s;
+  transition: 0.1s;
+}
+
+.header-copy {
+  display: inline-block;
+  color: white;
+  position: absolute;
+  right: 76px;
+  font-size: 16px;
+  top: 83px;
+  font-weight: 400;
+}
+
+.overlay-container.slide-up-in {
+  top: 0;
+  bottom: 0;
+  opacity: 1;
+  -webkit-transition: 0.1s;
+  -moz-transition: 0.1s;
+  -o-transition: 0.1s;
+  transition: 0.1s;
+}
+
+.overlay-container.expand {
+  max-width: 800px;
+  width: 100%;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.overlay-body {
+  overflow: auto;
+  width: 820px;
+  height: 100%;
+  position: relative;
+  z-index: 3;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.overlay-body.fade-in {
+  opacity: 1;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+
+/* -----------  OLD CSS ------------ */
+
 .confirmation-copy-container {
   position: relative;
 }
@@ -96,8 +304,6 @@ p.create-room-start-copy.on-time-set {
   color: #16a085;
   text-transform: uppercase;
 }
-
-
 
 .confirmation-line {
   background-color: #fff;

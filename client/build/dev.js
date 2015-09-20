@@ -648,6 +648,7 @@ angular.module('RoomBaby')
 function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, StateService, ConstantService, DeviceService, UserApi, PubSub, Animator, localStorageService) {
 
   var ctrl = this;
+  $scope.overlay = {};
 
   $rootScope.$on('isDisabled', function() {
     $timeout(function() {
@@ -655,12 +656,34 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       $scope.isDisabled = true;
     });
   });
-    $rootScope.$on('isEnabled', function() {
+
+  $rootScope.$on('isEnabled', function() {
     $timeout(function() {
       $scope.isDisabled = false;
       $scope.isEnabled = true;
     });
   });
+
+  this.openOverlay = function() {
+    $rootScope.$broadcast('hideNavBar');
+    $scope.showOverlay = true;
+    $timeout(function() {
+      $scope.overlay.slideUpIn = true;
+      $timeout(function() {
+        $scope.overlay.expand = true;
+        $timeout(function() {
+          $scope.showBody = true;
+        }, 250);
+      }, 200);
+    }, 20);
+  };
+
+  this.closeOverlay = function() {
+    $scope.overlay.expand = false;
+    $scope.overlay.slideUpIn = false;
+    $scope.showOverlay = false;
+    $scope.showBody = false;
+  };
 
   this.isMobile = function() {
     return DeviceService.isMobile();
@@ -905,6 +928,11 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   var ctrl = this;
 
   $scope.user = localStorageService.get('user');
+
+  $rootScope.$on('hideNavBar', function(){
+    console.log('hiding nav bar');
+    $scope.hideNavBar = true;
+  });
 
   $rootScope.$on('isDisabled', function() {
     console.log('Navbar isDisabled');

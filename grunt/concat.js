@@ -39,7 +39,7 @@ module.exports = {
     dest: 'client/build/vendor.js'
   },
   dev_styles: {
-    src: ['client/styles/*.css'],
+    src: ['client/styles/*.css','client/styles/mobile/*.css','client/styles/tablet/*.css'],
     dest: 'client/build/dev.css'
   },
   vendor_styles: {

@@ -1,35 +1,29 @@
-<div class="disabled-container" ng-show='isDisabled'>
-  <div class="disabled-copy-container">
-    <p>DISABLED</p>
-  </div>
-</div>
-<ng-enter on-forgot-password-='onForgotPassword()'>
-  <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.getState(); landingCtrl.isAuthenticated(); landingCtrl.onReady();">
-    
-    <div class="disabled-container" ng-show='isDisabled'></div>
-
-    <div class='landing-container-body'>
-      <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
-      <hr class="landing-line">
-      <div class="landing-sub-text-container">
-        <p ng-hide='landingCtrl.isMobile()' class="text-inverse slogan-text">a room for every occassion</p>
-      </div>
-      <div ng-show='landingCtrl.isMobile()'>
-        <p class='is-mobile'>Room Baby is not compatible with mobile or tablet at this time.</p>
-      </div>
-      <div ng-hide="showLogin || showRegister || landingCtrl.isMobile()" class="landing-sub-text-container">
-        <div class="landing-btn-container">
-          <div class="facebook-btn-container">
-            <a id='facebook' ng-click="landingCtrl.onOptSelected('facebook');" class="btn btn-md btn-custom-facebook"><i class="fa fa-facebook"></i>Connect With Facebook</a>
-            <span class="or-copy">or</span>
-            <a id='email' ng-click="landingCtrl.onOptSelected('login');" class="btn btn-md btn-custom-email"><i class="fa fa-envelope"></i>Connect With Email</a>
+  <ng-enter on-forgot-password-='onForgotPassword()'>
+    <div ng-show='showLanding' class="container landing-container" ng-init="landingCtrl.getState(); landingCtrl.isAuthenticated(); landingCtrl.onReady();">
+      <div class="disabled-container" ng-show='isDisabled'></div>
+      <div class='landing-container-body'>
+        <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text">room baby</a>
+        <p ng-click="landingCtrl.openOverlay();" class="how-it-works bottom">how it works</p>
+        <hr class="landing-line">
+        <div class="landing-sub-text-container">
+          <p ng-hide='landingCtrl.isMobile()' class="text-inverse slogan-text">a room for every occassion</p>
+        </div>
+        <div ng-show='landingCtrl.isMobile()'>
+          <p class='is-mobile'>Room Baby is not compatible with mobile or tablet at this time.</p>
+        </div>
+        <div ng-hide="showLogin || showRegister || landingCtrl.isMobile()" class="landing-sub-text-container">
+          <p ng-click="landingCtrl.openOverlay();" class="how-it-works-bottom">how it works</p>
+          <div class="landing-btn-container">
+            <div class="facebook-btn-container">
+              <a id='facebook' ng-click="landingCtrl.onOptSelected('facebook');" class="btn btn-md btn-custom-facebook"><i class="fa fa-facebook"></i>Connect With Facebook</a>
+              <span class="or-copy">or</span>
+              <a id='email' ng-click="landingCtrl.onOptSelected('login');" class="btn btn-md btn-custom-email"><i class="fa fa-envelope"></i>Connect With Email</a>
+            </div>
           </div>
         </div>
+        <div ng-show="showOverlay" ng-include src="'views/includes/overlay-work.html'"></div>
+        <div ng-show="showLogin" ng-include src="'views/includes/login.html'"></div>
+        <div ng-show="showRegister" ng-include src="'views/includes/register.html'"></div>
       </div>
-      <div ng-show="showLogin" ng-include src="'views/includes/login.html'"></div>
-      <div ng-show="showRegister" ng-include src="'views/includes/register.html'"></div>
-      <hr ng-hide='showLogin || showRegister' class="landing-line-btm">
-      <p ng-hide='showLogin || showRegister || landingCtrl.isMobile()' id='how-this-works' class='how-this-works-landing' ng-click="landingCtrl.onOptSelected('works');">how this works</p>
-    </div>
-  </div>
-</ng-enter>
+  </ng-enter>
+

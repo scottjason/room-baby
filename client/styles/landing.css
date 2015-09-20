@@ -1,9 +1,36 @@
+.how-it-works-bottom {
+  opacity: 0;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.how-it-works {
+  position: absolute;
+  color: #1485CC;
+  left: 535px;
+  right: 0;
+  top: 60px;
+  bottom: 0;
+  margin: auto;
+  font-family: 'brandon_grotesquethin';
+  font-size: 26px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 135px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
 .landing-container-body {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
+  bottom: 55px;
   margin: auto;
   text-align: center;
   height: 330px;
@@ -284,14 +311,6 @@ form.login-form {
   font-size: 19px;
 }
 
-
-/*.landing-container {
-  min-width: 300px;
-  position: relative;
-  height: 500px;
-  bottom: 140px;
-}*/
-
 p.auth-options-copy {
   color: white;
   position: absolute;
@@ -318,23 +337,22 @@ p.auth-options-copy {
 }
 
 .landing-btn-container {
-  position: absolute;
-  width: 100%;
+  position: relative;
+  width: 280px;
   height: 107px;
+  background-color: transparent;
+  bottom: 20px;
+  margin: auto;
   left: 0;
   right: 0;
-  top: -20px;
-  background-color: transparent;
   margin: auto;
+  text-align: center;
 }
 
 .facebook-btn-container {
-  position: absolute;
+  position: relative;
   width: 240px;
   height: 50px;
-  top: 0;
-  left: 0;
-  right: 0;
   margin: auto;
   background-color: transparent;
 }
@@ -373,6 +391,10 @@ a.logo-text:active {
   text-decoration: none;
   position: relative;
   top: 22px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .landing-line {
@@ -382,16 +404,10 @@ a.logo-text:active {
   margin: auto;
   left: 0;
   right: 0;
-}
-
-.landing-line-btm {
-  border-color: #d0314f;
-  width: 300px;
-  position: relative;
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 128px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .slogan-text {
@@ -400,16 +416,16 @@ a.logo-text:active {
   font-weight: 300;
   color: rgba(255, 255, 255, .8);
   position: relative;
-  top: -15px;
   bottom: 0;
   left: 0;
   right: 0;
+  top: 9px;
   margin: auto;
 }
 
 .landing-sub-text-container {
   position: relative;
-  margin-top: 18px;
+  text-align: center;
 }
 
 div.auth-container {
@@ -483,10 +499,4 @@ a#email {
   margin: auto;
   color: #efefef;
   font-weight: 300;
-}
-
-@media (min-width: 320px) and (max-width: 580px) {
-  .slogan-text {
-    font-size: 28px;
-  }
 }

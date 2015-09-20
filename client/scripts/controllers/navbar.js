@@ -10,6 +10,11 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
 
   $scope.user = localStorageService.get('user');
 
+  $rootScope.$on('hideNavBar', function(){
+    console.log('hiding nav bar');
+    $scope.hideNavBar = true;
+  });
+
   $rootScope.$on('isDisabled', function() {
     console.log('Navbar isDisabled');
     $timeout(function() {

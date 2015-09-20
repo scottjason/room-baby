@@ -10,7 +10,7 @@ module.exports = {
     },
   },
   styles: {
-    files: ['client/styles/*.css', '!client/styles/lib/**/*.css'],
+    files: ['client/styles/*.css', 'client/styles/mobile/*.css', 'client/styles/tablet/*.css', '!client/styles/lib/**/*.css'],
     tasks: ['concat:dev_styles', 'cssmin'],
     options: {
       spawn: false,

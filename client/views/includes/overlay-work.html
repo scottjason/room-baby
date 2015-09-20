@@ -1,0 +1,27 @@
+<div ng-class="{ 'slide-up-in' : (overlay.slideUpIn), 'expand' : (overlay.expand) }" class="overlay-container">
+  <div ng-class="{ 'fade-in' : (showBody) }" class="overlay-body">
+  <div ng-click='landingCtrl.closeOverlay();' class="exit-btn"><p>exit</p></div>
+    <div class="overlay-title">
+      <a href='' ng-click='landingCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text-overlay">room baby</a>
+      <p class="header-copy">create and schedule rooms and broadcasts</p>
+      <hr class="landing-line overlay">
+    </div>
+  
+    <h1 class="overlay-header first">What's a room?</h1>
+    <p class="overlay-copy">A room is just like a video chat. You can see and hear them and they can see and hear you. Only these rooms come with a few extra features geared towards live-broadcasting, social-sharing, collaborating and archiving.</p>
+    <p class="overlay-copy">Once connected to a room, you can share files and record a high-def mp4 video of the session. The recorded video can optionally be posted to your facebook timeline (as long as you logged in with facebook) or you can share the video with the provided link. Once a session is over, any recorded videos will be available in your dashboard under 'archives'.</p>
+    <p class="overlay-copy">To create a room, simply login and select, 'create a room'. You'll have the option to create a room that you and your guest can connect to now as well as the option to schedule a room for later. In either case, the room you create will be in your dashboard and your guest will be notifed immediately via email.</p>
+    <p class="overlay-copy">If you schedule a room for later, we'll send all parties a reminder-email an hour before the room is active.</p>
+ 
+    <h1 class="overlay-header">What's a broadcast?</h1>
+    <p class="overlay-copy">As far as Room Baby is concerned, a broadcast is a live audio/video stream of one person. Other people can view the broadcast, but they can't actually join the room as they would in a shared room, sorta like watching tv - only it's a live stream capable of being created by and shared with anyone.</p>
+    <p class="overlay-copy">To create a broadcast, login and click 'create a broadcast'. This will open a new tab with Room Baby's broadcast interface, which includes a real-time count of the amount of viewers. If you've logged in through facebook, you can post a link to this broadcast directly to your facebook wall. Your friends can click the link and watch your broadcast live, their interface will also show the amount of viewers in real-time.</p>
+    <p class="overlay-copy">In the case that you don't wish to share your broadcast on facebook, there's also a 'copy link' button. Share the link with anyone you like and they'll be directed to your broadcast.</p>
+    
+    <h1 class="overlay-header">Login with Facebook or Email?</h1>
+    <p class="overlay-copy">You can register and login with your email address or you can login with your facebook. If it's your first visit and you login through facebook, a prompt will show asking you for your username. This will complete the registration process such that you may now login to your account with either your email or your facebook.</p>
+    <p class="overlay-copy last">In order to share recorded videos and broadcasts to your facebook timeline, you must login with facebook. That said, regardless of how you login, you can share your archived rooms as well as your broadcasts anywhere you choose via the provided link.</p>
+  	<div ng-click='landingCtrl.closeOverlay();' class="exit-btn-bottom"><p>exit</p></div>
+ 
+  </div>
+</div>

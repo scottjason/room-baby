@@ -890,6 +890,7 @@ i.glyphicon.glyphicon-arrow-right {
   width: 100%;
   height: 100%;
   text-align: center;
+  display: none;
 }
 
 .disabled-copy-container {
@@ -1606,12 +1607,39 @@ li {
 }
 
 
+.how-it-works-bottom {
+  opacity: 0;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.how-it-works {
+  position: absolute;
+  color: #1485CC;
+  left: 535px;
+  right: 0;
+  top: 60px;
+  bottom: 0;
+  margin: auto;
+  font-family: 'brandon_grotesquethin';
+  font-size: 26px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 135px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
 .landing-container-body {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
+  bottom: 55px;
   margin: auto;
   text-align: center;
   height: 330px;
@@ -1892,14 +1920,6 @@ form.login-form {
   font-size: 19px;
 }
 
-
-/*.landing-container {
-  min-width: 300px;
-  position: relative;
-  height: 500px;
-  bottom: 140px;
-}*/
-
 p.auth-options-copy {
   color: white;
   position: absolute;
@@ -1926,23 +1946,22 @@ p.auth-options-copy {
 }
 
 .landing-btn-container {
-  position: absolute;
-  width: 100%;
+  position: relative;
+  width: 280px;
   height: 107px;
+  background-color: transparent;
+  bottom: 20px;
+  margin: auto;
   left: 0;
   right: 0;
-  top: -20px;
-  background-color: transparent;
   margin: auto;
+  text-align: center;
 }
 
 .facebook-btn-container {
-  position: absolute;
+  position: relative;
   width: 240px;
   height: 50px;
-  top: 0;
-  left: 0;
-  right: 0;
   margin: auto;
   background-color: transparent;
 }
@@ -1981,6 +2000,10 @@ a.logo-text:active {
   text-decoration: none;
   position: relative;
   top: 22px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .landing-line {
@@ -1990,16 +2013,10 @@ a.logo-text:active {
   margin: auto;
   left: 0;
   right: 0;
-}
-
-.landing-line-btm {
-  border-color: #d0314f;
-  width: 300px;
-  position: relative;
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 128px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .slogan-text {
@@ -2008,16 +2025,16 @@ a.logo-text:active {
   font-weight: 300;
   color: rgba(255, 255, 255, .8);
   position: relative;
-  top: -15px;
   bottom: 0;
   left: 0;
   right: 0;
+  top: 9px;
   margin: auto;
 }
 
 .landing-sub-text-container {
   position: relative;
-  margin-top: 18px;
+  text-align: center;
 }
 
 div.auth-container {
@@ -2091,12 +2108,6 @@ a#email {
   margin: auto;
   color: #efefef;
   font-weight: 300;
-}
-
-@media (min-width: 320px) and (max-width: 580px) {
-  .slogan-text {
-    font-size: 28px;
-  }
 }
 
 
@@ -2219,6 +2230,214 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 }
 
 
+.exit-btn {
+  width: 175px;
+  height: 35px;
+  border-radius: 15px;
+  right: 74px;
+  top: 23px;
+  background: transparent;
+  border: 1px solid #1485CC;
+  z-index: 5;
+  position: absolute;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn-bottom {
+  width: 175px;
+  height: 35px;
+  border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  margin-bottom: 30px;
+  cursor: pointer;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn:hover,
+.exit-btn-bottom:hover {
+  box-shadow: inset 0px 0px 30px 5px #1485CC;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.exit-btn > p,
+.exit-btn-bottom > p {
+  position: relative;
+  color: #fff;
+  font-weight: 300;
+  font-size: 15px;
+  top: 6px;
+  margin: auto;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+p.overlay-copy {
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  padding: 0 80px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+
+p.overlay-copy.last {
+  padding-bottom: 30px;
+}
+
+h1.overlay-header {
+  position: relative;
+  color: #1485CC;
+  text-align: left;
+  padding-top: 20px;
+  font-size: 24px;
+  padding-left: 64px;
+  font-weight: 300;
+  font-family: 'Open Sans', sans-serif;
+  text-transform: lowercase;
+}
+
+h1.overlay-header.first {
+  padding-top: 50px;
+}
+
+.icon-cancel.overlay {
+  color: #fff;
+  position: absolute;
+  font-size: 36px;
+  right: 40px;
+  bottom: 7px;
+  z-index: 3;
+  background-color: transparent;
+}
+
+.icon-container {
+  position: relative;
+  cursor: pointer;
+  background: green;
+  height: auto;
+  width: auto;
+}
+
+.landing-line.overlay {
+  top: 100px;
+}
+
+.overlay-title {
+  position: relative;
+  width: 100%;
+  height: auto;
+  text-align: left;
+}
+
+a.logo-text-overlay,
+a.logo-text-overlay:hover,
+a.logo-text-overlay:focus,
+a.logo-text-overlay:active {
+  font-family: 'brandon_grotesquethin';
+  font-size: 48px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  -webkit-transition: .3s;
+  -moz-transition: .3s;
+  -o-transition: .3s;
+  transition: .3s;
+  top: 50px;
+  z-index: 2;
+  padding-left: 80px;
+}
+
+.overlay-container {
+  position: fixed;
+  height: 100%;
+  top: 100%;
+  margin: auto;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  width: 2px;
+  background: black;
+  border: 1px solid white;
+  border-bottom: none;
+  border-top: none;
+  z-index: 3;
+  opacity: 0;
+  -webkit-transition: 0.1s;
+  -moz-transition: 0.1s;
+  -o-transition: 0.1s;
+  transition: 0.1s;
+}
+
+.header-copy {
+  display: inline-block;
+  color: white;
+  position: absolute;
+  right: 76px;
+  font-size: 16px;
+  top: 83px;
+  font-weight: 400;
+}
+
+.overlay-container.slide-up-in {
+  top: 0;
+  bottom: 0;
+  opacity: 1;
+  -webkit-transition: 0.1s;
+  -moz-transition: 0.1s;
+  -o-transition: 0.1s;
+  transition: 0.1s;
+}
+
+.overlay-container.expand {
+  max-width: 800px;
+  width: 100%;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.overlay-body {
+  overflow: auto;
+  width: 820px;
+  height: 100%;
+  position: relative;
+  z-index: 3;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.overlay-body.fade-in {
+  opacity: 1;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+
+/* -----------  OLD CSS ------------ */
+
 .confirmation-copy-container {
   position: relative;
 }
@@ -2317,8 +2536,6 @@ p.create-room-start-copy.on-time-set {
   color: #16a085;
   text-transform: uppercase;
 }
-
-
 
 .confirmation-line {
   background-color: #fff;
@@ -2844,5 +3061,135 @@ h3.work-heading {
   }
   .work-container p {
     text-align: center;
+  }
+}
+
+
+ @media (min-width: 321px) and (max-width: 667px) {
+   .landing-line {
+     width: 280px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   a.logo-text,
+   a.logo-text:active,
+   a.logo-text:focus,
+   a.logo-text:hover {
+     font-size: 48px;
+     top: 16px;
+     font-size: 51px;
+     top: 18px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   .slogan-text {
+     font-size: 24px;
+     -webkit-transition: 0.3s;
+     -moz-transition: 0.3s;
+     -o-transition: 0.3s;
+     transition: 0.3s;
+   }
+   .btn-custom-facebook,
+   .btn-custom-facebook:active,
+   .btn-custom-facebook:focus,
+   .btn-custom-facebook:hover,
+   .btn-custom-email,
+   .btn-custom-email:active,
+   .btn-custom-email:focus,
+   .btn-custom-email:hover {
+     right: 5px;
+   }
+   .how-it-works {
+     opacity: 0;
+     -webkit-transition: 0.2s;
+     -moz-transition: 0.2s;
+     -o-transition: 0.2s;
+     transition: 0.2s;
+   }
+   .how-it-works-bottom {
+     opacity: 1;
+     position: relative;
+     font-family: 'brandon_grotesquethin';
+     font-size: 24px;
+     font-weight: 600;
+     cursor: pointer;
+     color: #1485CC;
+     top: 30px;
+     -webkit-transition: .1s;
+     -moz-transition: .1s;
+     -o-transition: .1s;
+     transition: .1s;
+   }
+   .landing-btn-container {
+     top: 10px;
+   }
+ }
+
+
+@media (min-width: 668px) and (max-width: 1024px) {
+  .landing-line {
+    width: 320px;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  a.logo-text,
+  a.logo-text:active,
+  a.logo-text:focus,
+  a.logo-text:hover {
+    top: 16px;
+    font-size: 56px;
+    top: 18px;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .slogan-text {
+    font-size: 28px;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .btn-custom-facebook,
+  .btn-custom-facebook:active,
+  .btn-custom-facebook:focus,
+  .btn-custom-facebook:hover,
+  .btn-custom-email,
+  .btn-custom-email:active,
+  .btn-custom-email:focus,
+  .btn-custom-email:hover {
+    position: relative;
+    right: 5px;
+  }
+  .how-it-works {
+    opacity: 0;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+  }
+  .how-it-works-bottom {
+    opacity: 1;
+    position: relative;
+    font-family: 'brandon_grotesquethin';
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #1485CC;
+    top: 30px;
+    -webkit-transition: .1s;
+    -moz-transition: .1s;
+    -o-transition: .1s;
+    transition: .1s;
+  }
+  .landing-btn-container {
+    top: 10px;
   }
 }
