@@ -37,7 +37,8 @@ module.exports = function(app, passport){
 
   if ('development' === app.get('env')) {
     app.use(logger('dev'));
-    seedDb.init();
+    seedDb.clearDb(true);
+    // seedDb.init();
   }
 
   app.use(bodyParser.json());

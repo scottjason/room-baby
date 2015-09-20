@@ -28,20 +28,6 @@ function FooterCtrl($scope, $rootScope, $window, $timeout, PubSub, Validator, Se
     return localStorageService.get('user').email || localStorageService.get('user').facebook.email
   };
 
-  this.onUserName = function() {
-    if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
-      PubSub.trigger('setUserName', $scope.user.username);
-    } else {
-      $timeout(function() {
-        $scope.user.username = '';
-        $scope.showUserNameErr = true
-        $timeout(function() {
-          $scope.showUserNameErr = false;
-        }, 1200);
-      });
-    }
-  };
-
   this.onRegister = function() {
     console.log('onRegister', $scope.user);
   };

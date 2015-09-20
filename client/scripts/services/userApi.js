@@ -30,6 +30,14 @@ angular.module('RoomBaby')
       return (request.then(successHandler, errorHandler));
     }
 
+    function cancelAcct(userId) {
+      var request = $http({
+        method: 'GET',
+        url: 'user/cancel-acct/' + userId
+      });
+      return (request.then(successHandler, errorHandler));
+    }
+
     function upload(params) {
       var request = $http({
         method: 'POST',
@@ -139,6 +147,7 @@ angular.module('RoomBaby')
       getOne: getOne,
       getAll: getAll,
       upload: upload,
+      cancelAcct: cancelAcct,
       saveUserName: saveUserName,
       resetPassword: resetPassword,
       isAuthenticated: isAuthenticated,

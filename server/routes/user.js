@@ -17,6 +17,7 @@ module.exports = function(app, passport) {
 
   /* Not Protected EndPoints */
   router.post('/reset', userCtrl.resetPass);
+  router.get('/cancel-acct/:user_id', userCtrl.cancelAcct);
   router.post('/save-user-name', userCtrl.saveUserName);
   router.post('/upload', userCtrl.upload);
   router.get('/reset/:token', userCtrl.resetPassCallback)

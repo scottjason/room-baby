@@ -23,7 +23,8 @@ var currentMsUtc = dateTime.getMsUtc();
 
 var inThirtySeconds = dateTime.addSeconds(currentMsUtc, 30);
 
-var clearDb = function clearDb() {
+var clearDb = function clearDb(clearOnly) {
+  console.log('clearDb called')
   async.parallel({
       clearUsers: function(callback) {
         promise.clearUsers().then(function(err, status) {
@@ -38,9 +39,16 @@ var clearDb = function clearDb() {
     },
     function(err) {
       if (err) return console.log(err);
-      createUsers()
+      if (!clearOnly) {
+        console.log('cleared .. now creating users');
+        createUsers();
+      } else {
+        console.log('cleared only');
+      }
     });
 };
+
+exports.clearDb = clearDb;
 
 var createUsers = function createUsers() {
   async.parallel({
@@ -213,7 +221,7 @@ var createArchiveTwo = function createArchiveTwo(savedArchive) {
   archive.name = 'JS Review';
   archive.shortUrl = 'http://wwww.amazon.com/';
   archive.longUrl = 'http://wwww.netflix.com/';
-  archive.save(function(err, archiveTwo){
+  archive.save(function(err, archiveTwo) {
     if (err) console.log('err', err);
     console.log('saved archive two', archiveTwo);
   });

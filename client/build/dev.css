@@ -1340,9 +1340,36 @@ button#details.btn.btn-md.members {
   text-transform: uppercase;
   bottom: 1px;
 }
+.btn-custom-username,
+.btn-custom-username:active,
+.btn-custom-username:focus {
+  outline: 0;
+  display: block;
+  width: 175px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  position: relative;
+  padding-top: 5px;
+    top: 55px;
+  left: 80px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  bottom: 1px;
+}
 
 .btn-custom-login:hover,
-.btn-custom-login.register:hover {
+.btn-custom-login.register:hover,
+.btn-custom-username:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
   -webkit-transition: .1s;
   -moz-transition: .1s;
@@ -1350,10 +1377,11 @@ button#details.btn.btn-md.members {
   transition: .1s;
 }
 
-.btn-custom-login > p {
+.btn-custom-login > p,
+.btn-custom-username > p {
   position: relative;
   color: #fff;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 14px;
   top: 1px;
   margin: auto;
@@ -2248,6 +2276,17 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 }
 
 
+#login-input-username {
+  width: 250px;
+  position: absolute;
+  left: 82px;
+  margin-top: -3px;
+}
+
+#username-form {
+  padding-top: 14px;
+}
+
 .exit-btn {
   width: 175px;
   height: 35px;
@@ -2304,7 +2343,6 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 }
 
 p.overlay-copy {
-  font-weight: 400;
   font-family: 'Open Sans', sans-serif;
   color: white;
   padding: 0 80px;
@@ -2402,6 +2440,7 @@ a.logo-text-overlay:active {
   font-size: 16px;
   top: 83px;
   font-weight: 400;
+  z-index: 4;
 }
 
 .overlay-container.slide-up-in {
@@ -2443,6 +2482,52 @@ a.logo-text-overlay:active {
   -moz-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
+}
+
+.complete-registration {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin: auto;
+  margin-top: 30px;
+  color: white;
+}
+
+.complete-reg-header {
+  font-size: 20px;
+  font-weight: 400;
+  color: #1485CC;
+  text-align: left;
+  padding-left: 82px;
+}
+
+.complete-reg-copy.first {
+  padding-top: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  padding-left: 83px;
+  padding-bottom: 0;
+  margin-bottom: 5px;
+}
+
+.complete-reg-copy.last {
+  position: relative;
+  top: 50px;
+  font-weight: 300;
+}
+
+.complete-reg-copy {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  padding-left: 83px;
+}
+
+.complete-reg-copy span {
+  color: #1485CC;
 }
 
 
@@ -2776,6 +2861,17 @@ p.file-text {
 .tooltip-container.login {
   margin-top: 15px;
   margin-bottom: 5px;
+}
+
+.tooltip-container.username {
+    width: 100%;
+    max-width: 300px;
+    top: 29px;
+    left: 81px;
+    padding-top: 0;
+    margin-top: 0;
+    position: relative;
+    padding-top: 4px;
 }
 
 .tooltip-container.register {

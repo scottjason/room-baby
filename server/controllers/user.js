@@ -192,8 +192,9 @@ exports.getAll = function(req, res, next) {
 };
 
 exports.logout = function(req, res, next) {
-  req.session.destroy();
-  res.status(401).end();
+  req.session.destroy(function(err){
+    res.status(401).end();
+  });
 };
 
 exports.update = function(req, res, next) {
@@ -402,5 +403,27 @@ exports.resetPassSubmit = function(req, res, next) {
     function(err) {
       if (err) return next(err);
       res.render('reset-password-success');
+    });
+};
+
+exports.cancelAcct = function(req, res, next) {
+  async.waterfall([
+      function(cb) {
+        User.find({
+          _id: req.params.user_id
+        }).remove().exec(cb);
+      },
+      function(numAffected, status, cb) {
+        console.log('Account Canceled, Num Affected', numAffected);
+        cb(null);
+      }
+    ],
+    function(err, results) {
+      if (err) return next(err);
+      req.session.destroy(function(err) {
+        if (err) console.log('error destroying session', err);
+        if (!err) console.log('session destroyed successfuly');
+        res.status(200).end();
+      });
     });
 };

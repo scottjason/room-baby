@@ -1,0 +1,31 @@
+<div ng-class="{ 'slide-up-in' : (overlay.slideUpIn), 'expand' : (overlay.expand) }" class="overlay-container">
+  <div ng-class="{ 'fade-in' : (showBody) }" class="overlay-body">
+  <div ng-click='dashCtrl.onCancel();' class="exit-btn"><p>cancel</p></div>
+    <div class="overlay-title">
+      <a href='' ng-click='dashCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text-overlay">room baby</a>
+      <p class="header-copy">create a username to complete your registration</p>
+      <hr class="landing-line overlay">
+    </div>
+    <div class="complete-registration">
+      <p class="complete-reg-header">complete your registration</p>
+      <p class="complete-reg-copy first">the email address we have on file for you is <span>{{ user.email }}</span></p>
+      <p  class='complete-reg-copy'>please enter a username to complete the registration process
+      <form id="username-form" name="authForm" >
+        <input id="login-input-username" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
+        <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-username">
+          <p>Submit</p>
+        </button>
+    <br>
+
+    <div ng-show='showErr'>
+      <div  class='tooltip-container username'>
+        <div class='tooltip-content'>
+          <p>{{ errMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </form>
+    <p class='complete-reg-copy last'>a password will be emailed to you and you may now login with either facebook or email
+    </div>
+  </div>
+</div>

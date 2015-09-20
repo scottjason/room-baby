@@ -144,7 +144,6 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   this.validateRegistration = function() {
-    console.log('reg called');
     var inProgress = StateService.data['Auth'].Registration.inProgress;
     if (!inProgress) {
       StateService.data['Auth'].Registration.inProgress = true;

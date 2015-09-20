@@ -10,6 +10,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   var ctrl = this;
 
   $scope.room = {};
+  $scope.overlay = {};
+  $scope.isProcessing = {};
 
   $rootScope.$on('isDisabled', function() {
     $timeout(function() {
@@ -56,7 +58,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.registerEvents = function() {
-    PubSub.on('setUserName', ctrl.setUserName);
     PubSub.on('renderTable', ctrl.renderTable);
     PubSub.on('createRoomOpt', ctrl.onCreateRoomOpt);
     PubSub.on('logout', ctrl.onLogout);
@@ -147,12 +148,46 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.showTable = function() {
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
-    if (!sessions && !archives || ((sessions && !sessions.length) && (archives && !archives.length))) {
-      return false;
-    }
-    return true;
+    return (!sessions && !archives || ((sessions && !sessions.length) && (archives && !archives.length)));
   };
 
+  this.collectUserName = function() {
+    if (!$scope.isProcessing.userName)
+      $scope.isProcessing.userName = true;
+    if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
+      var payload = {};
+      payload._id = $scope.user._id;
+      payload.username = $scope.user.username;
+      ctrl.saveUserName(payload);
+    } else {
+      $timeout(function() {
+        $scope.user.username = '';
+        $scope.errMessage = 'invalid username';
+        $scope.showErr = true;
+        $timeout(function() {
+          $scope.errMessage = '';
+          $scope.showErr = false;
+        }, 1800);
+
+      });
+      $scope.isProcessing.userName = false;
+    }
+  };
+
+  this.onCancel = function() {
+    if (!$scope.isProcessing.username) {
+      $scope.isProcessing.userName = true;
+      UserApi.cancelAcct($scope.user._id).then(function(response) {
+        $scope.isProcessing.userName = false;
+        localStorageService.clearAll();
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      }, function(err) {
+        $scope.isProcessing.userName = false;
+        localStorageService.clearAll();
+        $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      });
+    }
+  };
   /* recursive method to get statuses of room */
   function getStatus() {
     if ($state.current.name === 'dashboard') {
@@ -179,6 +214,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       ctrl.getSessions();
       ctrl.isExpired();
       PubSub.trigger('toggleNavBar', true);
+      $rootScope.$broadcast('showNavBar');
       PubSub.trigger('setUser', localStorageService.get('user'));
       var opts = Animator.generateOpts('onDashboard');
       Animator.run(opts);
@@ -341,11 +377,11 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         localStorageService.set('archives', response.data.archives || []);
         PubSub.trigger('setUser', $scope.user);
         if (!$scope.user.username) {
-          console.log($scope.user);
           ctrl.getUserName();
         } else {
           ctrl.getSessions();
           ctrl.isExpired();
+          $rootScope.$broadcast('showNavBar');
           PubSub.trigger('toggleNavBar', true);
           var obj = {};
           obj.type = 'onDashboard';
@@ -354,6 +390,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
           ctrl.renderTable();
         }
       } else {
+        $rootScope.$broadcast('hideNavBar');
         PubSub.trigger('toggleNavBar', null);
         PubSub.trigger('toggleFooter', null);
         localStorageService.clearAll();
@@ -365,17 +402,18 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.getUserName = function(callback) {
-    ngDialog.openConfirm({
-      template: '../../views/ngDialog/facebook.html',
-      controller: 'FooterCtrl'
-    });
-  };
-
-  ctrl.setUserName = function(username) {
-    var payload = {};
-    payload._id = $scope.user._id;
-    payload.username = username;
-    ctrl.saveUserName(payload);
+    $scope.showOverlay = true;
+    $rootScope.$broadcast('hideNavBar');
+    $scope.showOverlay = true;
+    $timeout(function() {
+      $scope.overlay.slideUpIn = true;
+      $timeout(function() {
+        $scope.overlay.expand = true;
+        $timeout(function() {
+          $scope.showBody = true;
+        }, 250);
+      }, 200);
+    }, 20);
   };
 
   ctrl.saveUserName = function(payload) {
@@ -386,14 +424,19 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       $scope.user = user;
       localStorageService.set('user', user);
       ctrl.onUserNameSuccess();
+      $scope.isProcessing.userName = false;
     });
   };
 
   ctrl.onUserNameSuccess = function() {
     ctrl.getSessions();
     ctrl.isExpired();
-    ngDialog.closeAll();
+    $scope.showOverlay = false;
+    $scope.overlay.slideUpIn = false;
+    $scope.overlay.expand = false;
+    $scope.showBody = false;
     $timeout(function() {
+      $rootScope.$broadcast('showNavBar');
       $scope.isLoaded = true;
       PubSub.trigger('toggleNavBar', true);
       var obj = {};
