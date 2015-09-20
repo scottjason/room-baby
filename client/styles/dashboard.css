@@ -1,3 +1,15 @@
+.create-broadcast-container {
+  position: relative;
+  height: 120px;
+  top: 90px;
+}
+
+.session-container {
+  position: relative;
+  top: 70px;
+}
+
+
 .fa.fa-times.connect-acct {
   position: absolute;
   color: #efefef;

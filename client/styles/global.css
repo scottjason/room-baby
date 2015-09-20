@@ -318,6 +318,63 @@ button#details.btn.btn-md.members {
   text-transform: uppercase;
   bottom: 1px;
 }
+
+.btn-custom-create,
+.btn-custom-create:active,
+.btn-custom-create:focus {
+  outline: 0;
+  display: block;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  padding-top: 5px;
+  top: 17px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  
+}
+
+.btn-custom-broadcast,
+.btn-custom-broadcast:active,
+.btn-custom-broadcast:focus {
+  outline: 0;
+  display: block;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  padding-top: 5px;
+  top: 17px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  bottom: 1px;
+}
+
 .btn-custom-username,
 .btn-custom-username:active,
 .btn-custom-username:focus {
@@ -334,7 +391,7 @@ button#details.btn.btn-md.members {
   border: 1px solid #1485CC;
   position: relative;
   padding-top: 5px;
-    top: 55px;
+  top: 55px;
   left: 80px;
   text-align: center;
   -webkit-transition: .1s;
@@ -346,6 +403,8 @@ button#details.btn.btn-md.members {
 }
 
 .btn-custom-login:hover,
+.btn-custom-create:hover,
+.btn-custom-broadcast:hover,
 .btn-custom-login.register:hover,
 .btn-custom-username:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
@@ -355,6 +414,8 @@ button#details.btn.btn-md.members {
   transition: .1s;
 }
 
+.btn-custom-create > p,
+.btn-custom-broadcast > p,
 .btn-custom-login > p,
 .btn-custom-username > p {
   position: relative;

@@ -126,6 +126,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
       var opts = Validator.generateOpts('login', $scope.user);
       Validator.validate(opts, function(isValid, badInput, errMessage) {
         if (isValid) {
+          $scope.showLoader = true;
           ctrl.login(opts);
         } else {
           $scope.user[badInput] = '';
@@ -223,14 +224,18 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
         localStorageService.set('sessions', response.data.sessions || []);
         localStorageService.set('archives', response.data.archives || []);
         var accessOpts = UserApi.generateOpts(response.data.user);
+        $scope.showLoader = false;
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
+        $scope.showLoader = false;
         $scope.user = {};
         ctrl.renderError(response.data.message)
       } else {
+        $scope.showLoader = false;
         ctrl.reset(true);
       }
     }, function(err) {
+      $scope.showLoader = false;
       ctrl.reset(true);
     });
   };

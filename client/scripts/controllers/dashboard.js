@@ -148,7 +148,9 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   this.showTable = function() {
     var sessions = localStorageService.get('sessions');
     var archives = localStorageService.get('archives');
-    return (!sessions && !archives || ((sessions && !sessions.length) && (archives && !archives.length)));
+    var hasSessions = sessions && sessions.length;
+    var hasArchives = archives && archives.length;
+    return (hasSessions || hasArchives);
   };
 
   this.collectUserName = function() {
@@ -172,6 +174,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       });
       $scope.isProcessing.userName = false;
     }
+  };
+
+  this.createRoomOpt = function() {
+    $scope.overlay.createRoom = true;
   };
 
   this.onCancel = function() {

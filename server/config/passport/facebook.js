@@ -14,15 +14,18 @@ module.exports = function(passport) {
     function(token, refreshToken, profile, callback) {
 
       var profileImage;
-
+      
       process.nextTick(function() {
 
-        FB.api('/me?fields=picture.type(small)&access_token=' + token, function(response) {
+        FB.api('/me?fields=picture.type(small),email&access_token=' + token, function(response) {
+
+          var email = response.email;
+
           if (response.picture && response.picture.data.url) {
             profileImage = response.picture.data.url;
           }
           User.findOne({
-            email: profile._json.email
+            email: email
           }, function(err, user) {
             if (err) return callback(err);
             if (user) {
@@ -36,7 +39,7 @@ module.exports = function(passport) {
               })
             } else {
               var newUser = new User();
-              newUser.email = profile._json.email;
+              newUser.email = email;
               if (profileImage) {
                 newUser.profileImage = profileImage;
               }

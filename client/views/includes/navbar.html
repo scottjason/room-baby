@@ -1,4 +1,10 @@
-<nav ng-hide='showBroadcast || hideNavBar' ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
+<div ng-hide='showBroadcast || hideNavBar' ng-class="{'add-opacity': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar-container">
+  <span ng-click='navBarCtrl.dropdown("logout")'><a href="">Logout</a></span>
+</div>
+
+
+
+<!-- <nav ng-hide='showBroadcast || hideNavBar' ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
   <div ng-class="{ 'body-overlay' : ( showOverlay ) }"></div>
 <div class="disabled-container" ng-show='isDisabled'>
   <div class="disabled-copy-container">

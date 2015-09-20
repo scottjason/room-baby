@@ -1,4 +1,17 @@
-span.time-left {
+.navbar-container {
+  position: fixed;
+  background: black;
+  width: 100%;
+  height: 60px;
+  opacity: 0;
+  /*border-bottom: 1px solid white;*/
+}
+
+.navbar-container.add-opacity{
+  opacity: .1;
+}
+
+/*span.time-left {
   position: absolute;
   width: 300px;
   display: inline-block;
@@ -115,3 +128,4 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 .navbar-custom .icon-bar {
   background-color: #33aa33;
 }
+*/

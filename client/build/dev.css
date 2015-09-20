@@ -366,6 +366,18 @@ div.panel-body > p > span {
 }
 
 
+.create-broadcast-container {
+  position: relative;
+  height: 120px;
+  top: 90px;
+}
+
+.session-container {
+  position: relative;
+  top: 70px;
+}
+
+
 .fa.fa-times.connect-acct {
   position: absolute;
   color: #efefef;
@@ -1340,6 +1352,63 @@ button#details.btn.btn-md.members {
   text-transform: uppercase;
   bottom: 1px;
 }
+
+.btn-custom-create,
+.btn-custom-create:active,
+.btn-custom-create:focus {
+  outline: 0;
+  display: block;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  padding-top: 5px;
+  top: 17px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  
+}
+
+.btn-custom-broadcast,
+.btn-custom-broadcast:active,
+.btn-custom-broadcast:focus {
+  outline: 0;
+  display: block;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  padding-top: 5px;
+  top: 17px;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  bottom: 1px;
+}
+
 .btn-custom-username,
 .btn-custom-username:active,
 .btn-custom-username:focus {
@@ -1356,7 +1425,7 @@ button#details.btn.btn-md.members {
   border: 1px solid #1485CC;
   position: relative;
   padding-top: 5px;
-    top: 55px;
+  top: 55px;
   left: 80px;
   text-align: center;
   -webkit-transition: .1s;
@@ -1368,6 +1437,8 @@ button#details.btn.btn-md.members {
 }
 
 .btn-custom-login:hover,
+.btn-custom-create:hover,
+.btn-custom-broadcast:hover,
 .btn-custom-login.register:hover,
 .btn-custom-username:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
@@ -1377,6 +1448,8 @@ button#details.btn.btn-md.members {
   transition: .1s;
 }
 
+.btn-custom-create > p,
+.btn-custom-broadcast > p,
 .btn-custom-login > p,
 .btn-custom-username > p {
   position: relative;
@@ -2157,7 +2230,89 @@ a#email {
 }
 
 
-span.time-left {
+.loader {
+  font-size: 10px;
+  margin: 50px auto;
+  text-indent: -9999em;
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  background: #1485CC;
+  background: -moz-linear-gradient(left, #1485CC 10%, rgba(0, 0, 0, 0) 42%);
+  background: -webkit-linear-gradient(left, #1485CC 10%, rgba(0, 0, 0, 0) 42%);
+  background: -o-linear-gradient(left, #1485CC 10%, rgba(0, 0, 0, 0) 42%);
+  background: -ms-linear-gradient(left, #1485CC 10%, rgba(0, 0, 0, 0) 42%);
+  background: linear-gradient(to right, #1485CC 10%, rgba(0, 0, 0, 0) 42%);
+  position: relative;
+  -webkit-animation: loaderFrames 0.9s infinite linear;
+  animation: loaderFrames 0.9s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.loader:before {
+  width: 50%;
+  height: 50%;
+  background: #1485CC;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+
+.loader:after {
+  background: #000;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+@-webkit-keyframes loaderFrames {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderFrames {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+
+.navbar-container {
+  position: fixed;
+  background: black;
+  width: 100%;
+  height: 60px;
+  opacity: 0;
+  /*border-bottom: 1px solid white;*/
+}
+
+.navbar-container.add-opacity{
+  opacity: .1;
+}
+
+/*span.time-left {
   position: absolute;
   width: 300px;
   display: inline-block;
@@ -2274,7 +2429,7 @@ div.collapse.navbar-collapse > ul > li > a:hover {
 .navbar-custom .icon-bar {
   background-color: #33aa33;
 }
-
+*/
 
 #login-input-username {
   width: 250px;
