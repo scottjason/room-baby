@@ -285,6 +285,12 @@ button#details.btn.btn-md.members {
   position: relative;
 }
 
+.btn-custom-login.register,
+.btn-custom-login.register:active,
+.btn-custom-login.register:focus {
+  top: 17px;
+}
+
 .btn-custom-login,
 .btn-custom-login:active,
 .btn-custom-login:focus {
@@ -292,10 +298,10 @@ button#details.btn.btn-md.members {
   margin-top: 20px;
   display: block;
   width: 175px;
+  border-radius: 15px;
   font-weight: 300;
   text-decoration: none;
   height: 35px;
-  border-radius: 0;
   cursor: pointer;
   color: #fff;
   background: 0 0;
@@ -313,7 +319,8 @@ button#details.btn.btn-md.members {
   bottom: 1px;
 }
 
-.btn-custom-login:hover {
+.btn-custom-login:hover,
+.btn-custom-login.register:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
   -webkit-transition: .1s;
   -moz-transition: .1s;

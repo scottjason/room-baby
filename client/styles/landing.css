@@ -127,11 +127,14 @@ p.have-account {
   font-size: 14px;
   font-weight: 300;
   position: relative;
-  top: 28px;
+  top: 103px;
   line-height: 1.2;
   padding: 0 6px;
   cursor: pointer;
   color: rgba(255, 255, 255, .8);
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 #forgotPassword > input {
@@ -248,7 +251,7 @@ form.register-form {
   margin: auto;
   left: 0;
   right: 0;
-  top: 15px;
+  top: 0px;
   width: 100%;
 }
 

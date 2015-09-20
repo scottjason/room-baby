@@ -1,17 +1,19 @@
 <div class='register-container' ng-hide='showLoadingSpinner'>
-  <div class="register-animation">
-    <p id='register-copy'>please enter a username, email and password</p>
-  </div>
-  <form class='register-form' class="form-inline">
+  <form class='register-form' class="form-inline" ng-submit="landingCtrl.validateRegistration();">
     <input id="register-input" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
     <input id="register-input" class="input-small" ng-model="user.email" name="email" type="text" placeholder="email">
     <input id="register-input" class="input-small" ng-model="user.password" name="password" type="password" placeholder="password">
+  <button ng-hide='showErr' type="submit" class="btn btn-custom-login register">
+    <p>Register</p>
+  </button>
   </form>
-  <div ng-hide='showErr' class='register-btn-container'>
-    <a id='login' ng-click="landingCtrl.validateRegistration();" class="btn btn-md btn-custom-back">Register</a>
-    <p  ng-click="landingCtrl.onOptSelected('login');" class='have-account'>have an account?</p>
+
+  <div ng-show='showErr'>
+    <div class='tooltip-container register'>
+      <div class='tooltip-content'>
+        <p>{{ errMessage }}</p>
+      </div>
+    </div>
   </div>
-  <div ng-show='showErr' class='register-btn-container'>
-    <p class='landing-err-message'>{{ errMessage }}</p>
-  </div>
+  <p ng-click="landingCtrl.onOptSelected('login');" class='have-account'>have an account?</p>
 </div>
