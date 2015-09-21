@@ -11,11 +11,14 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   $scope.user = localStorageService.get('user');
 
   $rootScope.$on('hideNavBar', function() {
+    console.log('hideNavBar');
     $scope.hideNavBar = true;
   });
 
   $rootScope.$on('showNavBar', function() {
+    console.log('showNavBar');
     $scope.hideNavBar = false;
+    $scope.showNavBar = true;
   });
   $rootScope.$on('isDisabled', function() {
     console.log('Navbar isDisabled');
@@ -25,6 +28,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     });
   });
   $rootScope.$on('isEnabled', function() {
+    console.log('Navbar isEnabled');
     $timeout(function() {
       $scope.isDisabled = false;
       $scope.isEnabled = true;
@@ -55,6 +59,10 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     }
   };
 
+  this.toggleLogout = function(showLogout) {
+    $scope.showLogout =!$scope.showLogout;
+  }
+  
   this.setTimeLeft = function(timeLeft, thirtySecondsLeft, twentySecondsLeft) {
     $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
     $scope.thirtySecondsLeft = thirtySecondsLeft;
@@ -153,7 +161,10 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   ctrl.setUser = function(user) {
-    $scope.user = user;
+    console.log('set user', user)
+    $timeout(function(){
+      $scope.user = localStorageService.get('user');
+    });
   };
 
   ctrl.logout = function(user_id) {

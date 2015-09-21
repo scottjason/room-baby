@@ -4,32 +4,14 @@
   </div>
 </div>
 <div ng-init='dashCtrl.isAuthenticated(); dashCtrl.registerEvents();' class='dashboard-overlay-container'>
-  <!--   <div id='dashboard-overlay' class='dashboard-overlay'>
-    <i id='dash-overlay-exit-btn' class="fa fa-times"></i>
-    <div ng-hide="showConfirmation" ng-include src="'views/includes/create-room.html'"></div>
-    <div ng-show="showConfirmation" ng-include src="'views/includes/create-confirmation.html'"></div>
-  </div> -->
-  <!--   <div ng-show='user.username && !showOverlay' id='dashboard-container' class="container">
-    <div class="row-block">
-      <div id='opts-container' class='white-block'></div>
-      <div class="center-block btn-opts-container">
-        <div>
-          <div id="create-room-btn" ng-click='dashCtrl.onOptSelected($event, null);' class="btn-custom create-a-room">create a room</div>
-          <div id="create-broadcast-btn" ng-click='dashCtrl.onOptSelected($event, null);' class="btn-custom create-a-broadcast">create a broadcast</div>
-        </div>
-        <div ng-show='showLoading' class='create-a-room-container'>
-          <p class='room-option-copy'>creating room</p>
-          <hr class='room-option-line'>
-          <i class="fa fa-circle-o-notch fa-spin"></i>
-        </div>
-      </div>
-    </div>
-  </div> -->
+
+    <div ng-show="overlay.createRoom" ng-include src="'views/includes/create-room.html'"></div>
+
   <div ng-show='user.username && !showOverlay' class="create-broadcast-container">
-    <button  type="submit" class="btn btn-custom-create">
+    <button ng-click='dashCtrl.createRoomOpt();'  type="submit" class="btn btn-custom-create">
       <p>create a room</p>
     </button>
-    <button type="submit" class="btn btn-custom-broadcast ">
+    <button ng-click='dashCtrl.createBroadcastOpt();' type="submit" class="btn btn-custom-broadcast ">
       <p>create a broadcast</p>
     </button>
   </div>

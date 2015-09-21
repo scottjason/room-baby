@@ -82,6 +82,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     }
   };
 
+  this.createRoomOpt = function() {
+    ctrl.createRoom();
+  }
+
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
     (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
@@ -177,7 +181,28 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.createRoomOpt = function() {
+
+
     $scope.overlay.createRoom = true;
+    
+    // $rootScope.$broadcast('hideNavBar');
+    $timeout(function() {
+      $scope.overlay.slideUpIn = true;
+      $timeout(function() {
+        $scope.overlay.expand = true;
+        $timeout(function() {
+          $scope.showBody = true;
+        }, 250);
+      }, 200);
+    }, 20);
+
+  // this.closeOverlay = function() {
+  //   $scope.overlay.expand = false;
+  //   $scope.overlay.slideUpIn = false;
+  //   $scope.showOverlay = false;
+  //   $scope.showBody = false;
+  // };
+
   };
 
   this.onCancel = function() {

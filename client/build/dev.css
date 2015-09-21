@@ -369,7 +369,8 @@ div.panel-body > p > span {
 .create-broadcast-container {
   position: relative;
   height: 120px;
-  top: 90px;
+  top: 110px;
+  text-align: center;
 }
 
 .session-container {
@@ -1319,6 +1320,31 @@ button#details.btn.btn-md.members {
   position: relative;
 }
 
+.btn-custom-logout,
+.btn-custom-logout:active,
+.btn-custom-logout:focus {
+  outline: 0;
+  width: 100px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 25px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  right: 90px;
+  top: 25px;
+}
+
 .btn-custom-login.register,
 .btn-custom-login.register:active,
 .btn-custom-login.register:focus {
@@ -1357,7 +1383,6 @@ button#details.btn.btn-md.members {
 .btn-custom-create:active,
 .btn-custom-create:focus {
   outline: 0;
-  display: block;
   width: 250px;
   border-radius: 15px;
   font-weight: 300;
@@ -1370,7 +1395,7 @@ button#details.btn.btn-md.members {
   margin: auto;
   position: relative;
   padding-top: 5px;
-  top: 17px;
+  top: 25px;
   text-align: center;
   -webkit-transition: .1s;
   -moz-transition: .1s;
@@ -1378,14 +1403,14 @@ button#details.btn.btn-md.members {
   transition: .1s;
   text-transform: uppercase;
   margin-bottom: 15px;
-  
+  display: inline-block;
+  position: relative;
 }
 
 .btn-custom-broadcast,
 .btn-custom-broadcast:active,
 .btn-custom-broadcast:focus {
   outline: 0;
-  display: block;
   width: 250px;
   border-radius: 15px;
   font-weight: 300;
@@ -1398,15 +1423,16 @@ button#details.btn.btn-md.members {
   margin: auto;
   position: relative;
   padding-top: 5px;
-  top: 17px;
+  top: 25px;
   text-align: center;
   -webkit-transition: .1s;
   -moz-transition: .1s;
   -o-transition: .1s;
   transition: .1s;
   text-transform: uppercase;
-  margin-bottom: 30px;
-  bottom: 1px;
+  margin-bottom: 15px;
+  display: inline-block;
+  position: relative;
 }
 
 .btn-custom-username,
@@ -1440,6 +1466,7 @@ button#details.btn.btn-md.members {
 .btn-custom-create:hover,
 .btn-custom-broadcast:hover,
 .btn-custom-login.register:hover,
+.btn-custom-logout:hover,
 .btn-custom-username:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
   -webkit-transition: .1s;
@@ -1460,6 +1487,17 @@ button#details.btn.btn-md.members {
   margin: auto;
   letter-spacing: 2px;
   text-transform: uppercase;
+}
+
+.btn-custom-logout > p {
+  position: relative;
+  color: #fff;
+  font-weight: 600;
+  font-size: 11px;
+  margin: auto;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  bottom: 2px;
 }
 
 .btn-custom-back,
@@ -2305,131 +2343,68 @@ a#email {
   width: 100%;
   height: 60px;
   opacity: 0;
-  /*border-bottom: 1px solid white;*/
+  border-bottom: 1px solid rgba(225, 225, 225, .2);
 }
 
-.navbar-container.add-opacity{
-  opacity: .1;
-}
-
-/*span.time-left {
+.navbar-center {
   position: absolute;
-  width: 300px;
-  display: inline-block;
   left: 0;
   right: 0;
+  margin: auto;
+  top: 0;
   bottom: 0;
-  color: #79DFB6;
-  margin: auto;
   text-align: center;
+  width: 300px;
 }
 
-.nav .open>a,
-.nav .open>a:focus,
-.nav .open>a:hover {
-  background-color: transparent;
-  border-color: #337ab7;
-}
-
-.navbar-toggle {
-  display: none !important;
-}
-
-div.collapse.navbar-collapse > ul > li > a {
-  top: 4px;
-  right: 6px;
-}
-
-p.welcome-username {
-  font-size: 14px;
+.navbar-logo {
+  font-family: 'brandon_grotesquethin';
+  font-size: 50px;
+  color: #fff;
+  cursor: pointer;
   position: relative;
-  top: 18px;
-  right: 40px;
-  padding-right: 10px;
-  color: #efefef;
+  top: 6px;
 }
 
-.navbar-nav>li>.dropdown-menu {
-  margin-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  margin-right: 22px;
-  top: 50px;
-  background-color: #efefef;
-  border: 1px solid rgba(0, 0, 0, .8);
-  border-top: transparent;
-  position: fixed;
+.navbar-right {
+  width: auto;
+  height: 60px;
+  position: relative;
 }
 
-.media-object.img-circle-navbar {
-  width: 45px;
-  height: 45px;
-  background-color: transparent;
-  position: absolute;
-  top: 0px;
-  right: 0;
-  margin: auto;
+.navbar-welcome {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  right: 90px;
+  top: 32px;
+}
+
+.navbar-container.add-opacity {
+  opacity: 1;
+}
+
+.profile-img {
+  width: 47px;
+  height: 47px;
   border-radius: 50%;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  border: 1px solid rgba(0, 0, 0, .7);
+  position: absolute;
+  right: 30px;
+  top: 7px;
+  cursor: pointer;
 }
 
-.navbar.navbar-custom.navbar-static-top {
-  opacity: 0;
+.nav-opt {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: white;
+  position: relative;
 }
 
-.navbar.navbar-custom.navbar-static-top.show-nav-bar {
-  opacity: 1;
-}
-
-.navbar-custom {
-  background: rgba(0, 0, 0, .8);
-  border-bottom: 1px solid rgba(255, 255, 255, .6);
-}
-
-.navbar-custom .navbar-nav > li > a {
-  color: rgba(0, 0, 0, .7);
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-div.collapse.navbar-collapse > ul > li > a:hover {
-  text-decoration: none;
-  background: transparent;
-}
-
-.navbar-custom .navbar-nav > .active > a,
-.navbar-nav > .active > a:hover,
-.navbar-nav > .active > a:focus {
-  color: #ffffff;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-.navbar-custom .navbar-nav > li > a:hover,
-.nav > li > a:focus {
-  text-decoration: none;
-  background-color: #33aa33;
-}
-
-.navbar-custom .navbar-brand {
-  color: #7EB1DC;
-  font-family: 'brandon_grotesquethin';
-  font-size: 28px;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-
-.navbar-custom .navbar-toggle {
-  background-color: #eeeeee;
-}
-
-.navbar-custom .icon-bar {
-  background-color: #33aa33;
-}
-*/
 
 #login-input-username {
   width: 250px;
@@ -3120,258 +3095,6 @@ p.file-text {
   width: 25px;
   height: 27px;
   bottom: 112px;
-}
-
-
-.how-this-works {
-  position: absolute;
-  text-align: center;
-  color: #79DFB6;
-  right: 0;
-  bottom: 270px;
-  font-size: 18px;
-  font-weight: 400;
-  white-space: nowrap;
-  cursor: pointer;
-  opacity: 0;
-  left: 0;
-}
-
-.exit-work-btn {
-  width: 130px;
-  height: 30px;
-  position: absolute;
-  border: 1px solid #fff;
-  background-color: transparent;
-  left: 400px;
-  right: 0;
-  margin: auto;
-  top: 30px;
-  border-radius: 25px;
-  color: white;
-  text-align: center;
-  cursor: pointer;
-}
-
-.exit-work-btn > p {
-  font-size: 16px;
-  top: 2px;
-  position: relative;
-  font-weight: 300;
-  letter-spacing: 0.0655em;
-  cursor: pointer;
-}
-
-.work-right {
-  position: absolute;
-  right: 19px;
-  font-size: 14px;
-  top: 10px;
-  color: #FF9400;
-}
-
-.work-subtitle span {
-  color: #FF9400;
-}
-
-.work-btn-container {
-  position: relative;
-  text-align: center;
-  top: 11px;
-  z-index: 20;
-}
-
-.fa-times.works {
-  left: 320px;
-  top: 9px;
-}
-
-.top-opts.add-blue {
-  color: #79DFB6;
-  -o-transition: 1.0s;
-  -ms-transition: 1.0s;
-  -moz-transition: 1.0s;
-  -webkit-transition: 1.0s;
-  transition: 1.0s;
-}
-
-.exit-work-btn.add-green {
-  border-color: #7EB1DC;
-  -o-transition: 1.0s;
-  -ms-transition: 1.0s;
-  -moz-transition: 1.0s;
-  -webkit-transition: 1.0s;
-  transition: 1.0s;
-}
-
-.circle {
-  width: 8px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.7);
-  -moz-border-radius: 50px;
-  -webkit-border-radius: 50px;
-  border-radius: 50px;
-  position: relative;
-  display: inline-block;
-  left: 26px;
-}
-
-.header-container {
-  position: absolute;
-  background-color: rgba(0, 0, 0, .7);
-  left: 0;
-  right: 0;
-  width: 580px;
-  height: 70px;
-  margin: auto;
-  border-radius: 15px;
-  border: 1px solid white;
-}
-
-.top-opts {
-  width: 180px;
-  font-weight: 300;
-  font-size: 16px;
-  text-decoration: none;
-  height: 30px;
-  text-align: center;
-  color: #EFEFEF;
-  background: 0 0;
-  position: relative;
-  top: 32px;
-  display: inline-block;
-}
-
-.btn-custom-work,
-.btn-custom-work:active,
-.btn-custom-work:focus,
-.btn-custom-work:hover {
-  width: 180px;
-  font-weight: 300;
-  text-decoration: none;
-  height: 30px;
-  border-radius: 9px;
-  text-align: center;
-  color: #EFEFEF;
-  border: 1px solid #EFEFEF;
-  background: 0 0;
-  position: relative;
-  padding-top: 3px;
-  top: 20px;
-  display: inline-block;
-  margin: 0 5px;
-}
-
-.fa.fa-times.work {
-  color: #fff;
-  position: relative;
-  left: 0;
-  right: 0;
-  margin: auto;
-  text-align: center;
-  top: 0;
-  font-size: 14px;
-  display: none;
-}
-
-.work-room-baby {
-  font-size: 36px;
-  color: rgba(255, 255, 255, .8);
-  text-align: center;
-  position: relative;
-  font-weight: 300;
-  top: 15px;
-  z-index: 10000;
-  background-color: transparent;
-  width: 200px;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-
-.work-line {
-  top: 33px;
-  border: 1px solid #d0314f;
-  width: 680px;
-  position: relative;
-  margin: auto;
-  border-bottom: 0;
-}
-
-.work-body {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  top: 0;
-}
-
-.work-container {
-  position: relative;
-  left: 0;
-  right: 0;
-  margin: auto;
-  width: 80%;
-  background-color: rgba(0, 0, 0, .7);
-  color: white;
-  font-size: 14px;
-  font-weight: 300;
-  padding: 10px 30px;
-  margin: 20px auto;
-  border-radius: 15px;
-  border: 1px solid white;
-}
-
-.work-container p {
-  font-size: 16px;
-}
-
-.work-subtitle {
-  position: relative;
-  color: #fff;
-  text-align: center;
-  font-size: 18px;
-  padding-top: 80px;
-  padding-left: 110px;
-  padding-right: 100px;
-  opacity: 0;
-}
-
-h3.work-heading {
-  font-size: 24px;
-  color: #79DFB6
-}
-
-@media (min-width: 320px) and (max-width: 580px) {
-  .work-right {
-    display: none;
-  }
-  .header-container {
-    display: none;
-  }
-  .work-btn-container {
-    display: none;
-  }
-  .work-room-baby {
-    padding-top: 50px;
-  }
-  .work-subtitle {
-    padding: 60px 15px 0 15px;
-  }
-  .fa-times.works {
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin: auto;
-    right: 0;
-  }
-  h3.work-heading {
-    text-align: center;
-    font-size: 18px;
-  }
-  .work-container p {
-    text-align: center;
-  }
 }
 
 

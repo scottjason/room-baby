@@ -16,7 +16,6 @@ angular
 angular.module('RoomBaby')
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, localStorageServiceProvider) {
 
-
     String.prototype.capitalize = function() {
       return this.charAt(0).toUpperCase() + this.slice(1);
     };
@@ -36,11 +35,6 @@ angular.module('RoomBaby')
         url: '/dashboard/:user_id/',
         templateUrl: 'views/session.html',
         controller: 'SessionCtrl as sessionCtrl'
-      })
-      .state('work', {
-        url: '/how-this-works',
-        templateUrl: 'views/work.html',
-        controller: 'WorkCtrl as workCtrl'
       })
 
     localStorageServiceProvider
@@ -144,6 +138,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     }
   };
 
+  this.createRoomOpt = function() {
+    ctrl.createRoom();
+  }
+
   /* on dashboard table row option selected */
   this.onRowSelected = function(otSession) {
     (otSession.status === 'ready') ? ctrl.connect(otSession): ctrl.showOverlay(otSession.status);
@@ -239,7 +237,28 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.createRoomOpt = function() {
+
+
     $scope.overlay.createRoom = true;
+    
+    // $rootScope.$broadcast('hideNavBar');
+    $timeout(function() {
+      $scope.overlay.slideUpIn = true;
+      $timeout(function() {
+        $scope.overlay.expand = true;
+        $timeout(function() {
+          $scope.showBody = true;
+        }, 250);
+      }, 200);
+    }, 20);
+
+  // this.closeOverlay = function() {
+  //   $scope.overlay.expand = false;
+  //   $scope.overlay.slideUpIn = false;
+  //   $scope.showOverlay = false;
+  //   $scope.showBody = false;
+  // };
+
   };
 
   this.onCancel = function() {
@@ -976,11 +995,14 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   $scope.user = localStorageService.get('user');
 
   $rootScope.$on('hideNavBar', function() {
+    console.log('hideNavBar');
     $scope.hideNavBar = true;
   });
 
   $rootScope.$on('showNavBar', function() {
+    console.log('showNavBar');
     $scope.hideNavBar = false;
+    $scope.showNavBar = true;
   });
   $rootScope.$on('isDisabled', function() {
     console.log('Navbar isDisabled');
@@ -990,6 +1012,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     });
   });
   $rootScope.$on('isEnabled', function() {
+    console.log('Navbar isEnabled');
     $timeout(function() {
       $scope.isDisabled = false;
       $scope.isEnabled = true;
@@ -1020,6 +1043,10 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
     }
   };
 
+  this.toggleLogout = function(showLogout) {
+    $scope.showLogout =!$scope.showLogout;
+  }
+  
   this.setTimeLeft = function(timeLeft, thirtySecondsLeft, twentySecondsLeft) {
     $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
     $scope.thirtySecondsLeft = thirtySecondsLeft;
@@ -1118,7 +1145,10 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   ctrl.setUser = function(user) {
-    $scope.user = user;
+    console.log('set user', user)
+    $timeout(function(){
+      $scope.user = localStorageService.get('user');
+    });
   };
 
   ctrl.logout = function(user_id) {
@@ -1563,33 +1593,6 @@ function SessionCtrl($scope, $rootScope, $state, $window, $timeout, FacebookServ
   };
 
   SessionCtrl.$inject['$scope', '$rootScope', '$state', '$window', '$timeout', 'FacebookService', 'StateService', 'ArchiveService', 'ConstantService', 'TimeService', 'ngDialog', 'UserApi', 'SessionApi', 'PubSub', 'Transport', 'localStorageService'];
-}
-
-
-'use strict';
-
-angular.module('RoomBaby')
-  .controller('WorkCtrl', WorkCtrl);
-
-function WorkCtrl($scope, $state, $timeout, PubSub, Animator) {
-
-  PubSub.trigger('toggleOverflow', true);
-
-  var obj = {};
-  obj.type = 'onHowThisWorks';
-
-  Animator.run(obj, function() {
-    $timeout(function() {
-      $scope.toggleColors = true;
-    }, 1200);
-  });
-
-  this.onExit = function() {
-  	PubSub.trigger('toggleOverflow', false);
-  	$state.go('landing', { reload: true });
-  };
-
-  WorkCtrl.$inject['$scope', '$state', '$timeout', 'PubSub', 'Animator'];
 }
 
 

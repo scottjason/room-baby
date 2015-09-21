@@ -1,3 +1,6 @@
+<div ng-class="{ 'slide-up-in' : (overlay.slideUpIn), 'expand' : (overlay.expand) }" class="overlay-container">
+  <div ng-class="{ 'fade-in' : (showBody) }" class="overlay-body">
+
 <div ng-invite on-time-set='room.isTimeSet' name='room.name' guest-email='room.guestEmail' class='form-container'>
   <form name="createRoom" id="create-a-room">
     <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
@@ -39,3 +42,5 @@
   <p class='create-room-err'>{{ createRoomErr }}</p>
   </div>
 </div ng-invite>
+</div>
+</div>

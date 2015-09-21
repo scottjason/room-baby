@@ -1,46 +1,13 @@
-<div ng-hide='showBroadcast || hideNavBar' ng-class="{'add-opacity': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar-container">
-  <span ng-click='navBarCtrl.dropdown("logout")'><a href="">Logout</a></span>
+<div ng-hide='hideNavBar' ng-class="{'add-opacity': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar-container">
+
+  <div class="navbar-center">
+    <p class="navbar-logo">room baby</p>
+  </div>
+  <div class="navbar-right">
+    <button ng-hide='!showLogout' ng-click="navBarCtrl.logout();"  type="submit" class="btn btn-custom-logout">
+      <p>Logout</p>
+      </button>
+    <p ng-hide='showLogout' class='navbar-welcome'>Welcome {{ navBarCtrl.getUserName() | capitalize }}!</p>
+    <div  ng-click='navBarCtrl.toggleLogout()' class="profile-img" ng-style="{'background-image': 'url(' + navBarCtrl.getProfileImg() + ')'}"></div>
+  </div> 
 </div>
-
-
-
-<!-- <nav ng-hide='showBroadcast || hideNavBar' ng-class="{'show-nav-bar': ( showNavBar )}" ng-controller='NavBarCtrl as navBarCtrl' ng-init='navBarCtrl.registerEvents();' class="navbar navbar-custom navbar-static-top">
-  <div ng-class="{ 'body-overlay' : ( showOverlay ) }"></div>
-<div class="disabled-container" ng-show='isDisabled'>
-  <div class="disabled-copy-container">
-    <p>DISABLED</p>
-  </div>
-</div>
-
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand">room baby</a>
-    <span ng-show="navBarCtrl.isTwentySecondsLeft();"class='thirty-left'>Please Stop Your Recording</span>
-    <span ng-show="navBarCtrl.isThirtySecondsLeft();"class='thirty-left'>Thirty Seconds Left Till Session Expiration</span>
-    <span class='time-left'> {{ navBarCtrl.getTimeLeft() }} </span>
-  </div>
-  <div class="collapse navbar-collapse">
-    <ul class="nav navbar-nav navbar-right ">
-      <p class='welcome-username'>Welcome {{ navBarCtrl.getUserName() | capitalize }}!</p>
-      <li class="dropdown-toggle menu col-sm-pull-2">
-        <a class="dropdown-toggle" data-toggle="dropdown">
-          <img class="media-object img-circle-navbar" ng-src="{{ navBarCtrl.getProfileImg() | trusted}}">
-        </a>
-        <ul class="dropdown-menu">
-          <li ng-click='navBarCtrl.dropdown("upload")'><a href="">Upload Profile Image</a></li>
-          <li ng-click='navBarCtrl.dropdown("logout")'><a href="">Logout</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-
-
-
-

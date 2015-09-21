@@ -1,7 +1,8 @@
 .create-broadcast-container {
   position: relative;
   height: 120px;
-  top: 90px;
+  top: 110px;
+  text-align: center;
 }
 
 .session-container {

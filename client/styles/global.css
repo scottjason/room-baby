@@ -285,6 +285,31 @@ button#details.btn.btn-md.members {
   position: relative;
 }
 
+.btn-custom-logout,
+.btn-custom-logout:active,
+.btn-custom-logout:focus {
+  outline: 0;
+  width: 100px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 25px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  right: 90px;
+  top: 25px;
+}
+
 .btn-custom-login.register,
 .btn-custom-login.register:active,
 .btn-custom-login.register:focus {
@@ -323,7 +348,6 @@ button#details.btn.btn-md.members {
 .btn-custom-create:active,
 .btn-custom-create:focus {
   outline: 0;
-  display: block;
   width: 250px;
   border-radius: 15px;
   font-weight: 300;
@@ -336,7 +360,7 @@ button#details.btn.btn-md.members {
   margin: auto;
   position: relative;
   padding-top: 5px;
-  top: 17px;
+  top: 25px;
   text-align: center;
   -webkit-transition: .1s;
   -moz-transition: .1s;
@@ -344,14 +368,14 @@ button#details.btn.btn-md.members {
   transition: .1s;
   text-transform: uppercase;
   margin-bottom: 15px;
-  
+  display: inline-block;
+  position: relative;
 }
 
 .btn-custom-broadcast,
 .btn-custom-broadcast:active,
 .btn-custom-broadcast:focus {
   outline: 0;
-  display: block;
   width: 250px;
   border-radius: 15px;
   font-weight: 300;
@@ -364,15 +388,16 @@ button#details.btn.btn-md.members {
   margin: auto;
   position: relative;
   padding-top: 5px;
-  top: 17px;
+  top: 25px;
   text-align: center;
   -webkit-transition: .1s;
   -moz-transition: .1s;
   -o-transition: .1s;
   transition: .1s;
   text-transform: uppercase;
-  margin-bottom: 30px;
-  bottom: 1px;
+  margin-bottom: 15px;
+  display: inline-block;
+  position: relative;
 }
 
 .btn-custom-username,
@@ -406,6 +431,7 @@ button#details.btn.btn-md.members {
 .btn-custom-create:hover,
 .btn-custom-broadcast:hover,
 .btn-custom-login.register:hover,
+.btn-custom-logout:hover,
 .btn-custom-username:hover {
   box-shadow: inset 0px 0px 30px 2px #1485CC;
   -webkit-transition: .1s;
@@ -426,6 +452,17 @@ button#details.btn.btn-md.members {
   margin: auto;
   letter-spacing: 2px;
   text-transform: uppercase;
+}
+
+.btn-custom-logout > p {
+  position: relative;
+  color: #fff;
+  font-weight: 600;
+  font-size: 11px;
+  margin: auto;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  bottom: 2px;
 }
 
 .btn-custom-back,
