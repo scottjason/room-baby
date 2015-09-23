@@ -1,46 +1,40 @@
 <div ng-class="{ 'slide-up-in' : (overlay.slideUpIn), 'expand' : (overlay.expand) }" class="overlay-container">
   <div ng-class="{ 'fade-in' : (showBody) }" class="overlay-body">
-
-<div ng-invite on-time-set='room.isTimeSet' name='room.name' guest-email='room.guestEmail' class='form-container'>
-  <form name="createRoom" id="create-a-room">
-    <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("name") )) }' class='create-room-title-copy'>{{ createRoomTitle || 'please enter a name for the room' }}
-      <span>
-        <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("name") ) }' class="fa fa-check"></i>
-        </span>
-    </p>
-    <input name='roomName' id="create-room-title" ng-model="room.name" class="input-small" type="text" placeholder="Monday Morning Meeting">
-    <p ng-class='{ "error-color" : (!( dashCtrl.isValidInput("guestEmail") )) }' class='create-room-email-copy'>{{ createRoomEmail || 'the email address of your guest' }}
-      <span>
-          <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("guestEmail") ) }' class="fa fa-check"></i>
-          </span>
-    </p>
-    <input name='guestEmail' id="create-room-email" ng-model="room.guestEmail" class="input-small" type="text" placeholder="guest@gmail.com">
-
-    <div ng-hide='showCalendar'>
-    <div id="on-create-room-now" class="btn-custom create-room-now-btn">Connect Now</div>
-    <p class='or-create-room'>or</p>
-    <div id="on-create-room-later" class="btn-custom create-room-later-btn">Schedule For Later</div>
+    <div ng-click='dashCtrl.onCancel();' class="exit-btn">
+      <p>cancel</p>
     </div>
-
-    <div ng-show='showCalendar'>
-    <p ng-hide='dashCtrl.isValidInput("startDate")' class='create-room-start-copy' ng-class='{ "error-color" : ( invalidDateErr ) }'>{{ invalidDateErr || 'and a start date and start time for the session' }}</p>
-    <p ng-show='dashCtrl.isValidInput("startDate")' class='create-room-start-copy'>Selected Start Time
-      <span>
-          <i ng-class='{ "add-opacity" : ( dashCtrl.markChecked("startDate") ) }' class="fa fa-check"></i>
-          </span>
-      <br>
-      <span class='starts-at-formatted'>{{ room.startsAtFormatted }}</span>
-    </p>
-    <div class "date-picker-container-custom">
-      <datetimepicker id="date-picker" data-ng-model="date.dates" data-before-render="dashCtrl.beforeRender($view, $dates, $leftDate, $upDate, $rightDate)" data-datetimepicker-config="dashCtrl.configDateTimePicker()" data-on-set-time="dashCtrl.onTimeSet(newDate, oldDate)">
-      </datetimepicker>
+    <div class="overlay-title">
+      <a href='' ng-click='dashCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text-overlay">room baby</a>
+      <p class="header-copy">create a room now or schedule for later</p>
+      <hr class="landing-line overlay">
+    </div>
+    <div class="complete-registration">
+      <p class="complete-reg-header">room details</p>
+      <p class="complete-reg-copy first">please enter a name for the room</p>
+      <form id="username-form" name="authForm">
+        <input id="room-name" class="input-small" ng-model="room.name" name="roomName" type="text" placeholder="Monday Morning Meeting">
+        <p class='complete-reg-copy guest-email'>please enter the email address of your guest</p>
+        <input id="room-guest-email" class="input-small" ng-model="room.guestEmail" name="guestEmail" type="text" placeholder="Guest Email">
+        <p class='connection-opts'>connect to your room now</p>
+        <div class='connect-opts-container'>
+           <button ng-click="dashCtrl.connectNow();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
+            <p>Connect Now</p>
+          </button>
+        </div>
+        <p class='connection-opts'>or schedule a room for later</p>
+        <div class='connect-opts-container'>
+           <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
+            <p>Connect Later</p>
+          </button>
+        </div>
+          <div ng-show='showErr'>
+            <div class='tooltip-container username'>
+              <div class='tooltip-content'>
+                <p>{{ errMessage }}</p>
+              </div>
+            </div>
+          </div>
+      </form>
     </div>
   </div>
-  </form>
-  <div ng-show='showCalendar'>
-  <div ng-hide='createRoomErr' id="on-create-room-submit" class="btn-custom create-room-submit-btn">Create Room</div>
-  <p class='create-room-err'>{{ createRoomErr }}</p>
-  </div>
-</div ng-invite>
-</div>
 </div>

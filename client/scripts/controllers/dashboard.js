@@ -69,6 +69,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
     return StateService.data[type];
   };
 
+  this.connectNow = function() {
+    var isValidName = $scope.room.name;
+    var isValidGuestEmail = $scope.room.guestEmail;
+    console.log(isValidName, isValidGuestEmail)
+  };
+
   /* on dashboard option selected */
   this.onOptSelected = function($event, otSession) {
     if ($event.currentTarget.name === 'connect') {

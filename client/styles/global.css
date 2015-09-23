@@ -20,6 +20,11 @@ body {
   outline: 0;
 }
 
+textarea:focus,
+input:focus {
+  outline: 0 !important;
+}
+
 dl,
 ol,
 ul {
@@ -62,6 +67,10 @@ div.body-overlay {
   height: 100%;
   background-color: rgba(0, 0, 0, .8);
   z-index: 2;
+}
+
+.btn {
+  outline: 0 !important;
 }
 
 .btn-custom.disconnect,
@@ -372,6 +381,58 @@ button#details.btn.btn-md.members {
   position: relative;
 }
 
+.btn-custom-connect-now,
+.btn-custom-connect-now:active,
+.btn-custom-connect-now:focus {
+  outline: 0;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  display: inline-block;
+  position: relative;
+}
+
+.btn-custom-connect-later,
+.btn-custom-connect-later:active,
+.btn-custom-connect-later:focus {
+  outline: 0;
+  width: 250px;
+  border-radius: 15px;
+  font-weight: 300;
+  text-decoration: none;
+  height: 35px;
+  cursor: pointer;
+  color: #fff;
+  background: 0 0;
+  border: 1px solid #1485CC;
+  margin: auto;
+  position: relative;
+  text-align: center;
+  -webkit-transition: .1s;
+  -moz-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  display: inline-block;
+  position: relative;
+}
+
 .btn-custom-broadcast,
 .btn-custom-broadcast:active,
 .btn-custom-broadcast:focus {
@@ -440,6 +501,8 @@ button#details.btn.btn-md.members {
   transition: .1s;
 }
 
+.btn-custom-connect-now > p,
+.btn-custom-connect-later > p,
 .btn-custom-create > p,
 .btn-custom-broadcast > p,
 .btn-custom-login > p,
