@@ -60,9 +60,9 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   this.toggleLogout = function(showLogout) {
-    $scope.showLogout =!$scope.showLogout;
+    $scope.showLogout = !$scope.showLogout;
   }
-  
+
   this.setTimeLeft = function(timeLeft, thirtySecondsLeft, twentySecondsLeft) {
     $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
     $scope.thirtySecondsLeft = thirtySecondsLeft;
@@ -162,16 +162,21 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
 
   ctrl.setUser = function(user) {
     console.log('set user', user)
-    $timeout(function(){
+    $timeout(function() {
       $scope.user = localStorageService.get('user');
     });
   };
 
   ctrl.logout = function(user_id) {
-    // PubSub.trigger('logout');
+    PubSub.trigger('logout');
     UserApi.logout(user_id).then(function(response) {
       localStorageService.clearAll();
-      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      var isProduction = ($window.location.host.indexOf('room-baby.com') !== -1);
+      if (isProduction) {
+        $window.location.href = 'http://www.room-baby.com';
+      } else {
+        $window.location.href = 'http://localhost:3000';
+      }
     });
   };
 

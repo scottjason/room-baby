@@ -903,7 +903,6 @@ i.glyphicon.glyphicon-arrow-right {
   width: 100%;
   height: 100%;
   text-align: center;
-  display: none;
 }
 
 .disabled-copy-container {
@@ -912,14 +911,16 @@ i.glyphicon.glyphicon-arrow-right {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 600px;
-  height: 400px;
+  width: auto;
+  height: 50px;
   margin: auto;
-  border: 1px solid white;
+  white-space: nowrap;
 }
 
 .disabled-copy {
+  font-size: 16px;
   position: relative;
+  color: white;
 }
 
 

@@ -166,10 +166,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.collectUserName = function() {
-    $scope.showLoader = true;
     if (!$scope.isProcessing.userName)
       $scope.isProcessing.userName = true;
     if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
+      $scope.showLoader = true;
       var payload = {};
       payload._id = $scope.user._id;
       payload.username = $scope.user.username;
@@ -457,6 +457,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.saveUserName = function(payload) {
+    console.log('saveUserName', payload);
+    console.log(payload);
     UserApi.saveUserName(payload).then(function(response) {
       localStorageService.remove('isFacebookLogin');
       var user = response.data.user;

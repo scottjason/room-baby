@@ -8,6 +8,12 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   var ctrl = this;
   $scope.overlay = {};
 
+  console.log('RootScope', $rootScope)
+  if ($rootScope.isDisabled) {
+    $scope.isEnabled = false;
+    $scope.isDisabled = true;
+  }
+
   $rootScope.$on('isDisabled', function() {
     console.log('Landing Ctrl, isDisabled');
     $timeout(function() {
@@ -20,6 +26,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     console.log('Landing Ctrl, isEnabled');
     $timeout(function() {
       $scope.isDisabled = false;
+      $rootScope.isDisabled = false;
       $scope.isEnabled = true;
     });
   });

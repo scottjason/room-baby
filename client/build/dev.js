@@ -51,7 +51,11 @@ angular.module('RoomBaby')
 'use strict';
 
 angular.module('RoomBaby')
-  .run(['TimeService', function(TimeService) {}]);
+  .run(['$rootScope', '$window', function($rootScope, $window) {
+    if ($window.innerWidth <= 900) {
+      $rootScope.isDisabled = true;
+    }
+  }]);
 
 
 'use strict';
@@ -222,10 +226,10 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.collectUserName = function() {
-    $scope.showLoader = true;
     if (!$scope.isProcessing.userName)
       $scope.isProcessing.userName = true;
     if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
+      $scope.showLoader = true;
       var payload = {};
       payload._id = $scope.user._id;
       payload.username = $scope.user.username;
@@ -513,6 +517,8 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   ctrl.saveUserName = function(payload) {
+    console.log('saveUserName', payload);
+    console.log(payload);
     UserApi.saveUserName(payload).then(function(response) {
       localStorageService.remove('isFacebookLogin');
       var user = response.data.user;
@@ -713,6 +719,12 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   var ctrl = this;
   $scope.overlay = {};
 
+  console.log('RootScope', $rootScope)
+  if ($rootScope.isDisabled) {
+    $scope.isEnabled = false;
+    $scope.isDisabled = true;
+  }
+
   $rootScope.$on('isDisabled', function() {
     console.log('Landing Ctrl, isDisabled');
     $timeout(function() {
@@ -725,6 +737,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     console.log('Landing Ctrl, isEnabled');
     $timeout(function() {
       $scope.isDisabled = false;
+      $rootScope.isDisabled = false;
       $scope.isEnabled = true;
     });
   });
@@ -1076,9 +1089,9 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   this.toggleLogout = function(showLogout) {
-    $scope.showLogout =!$scope.showLogout;
+    $scope.showLogout = !$scope.showLogout;
   }
-  
+
   this.setTimeLeft = function(timeLeft, thirtySecondsLeft, twentySecondsLeft) {
     $scope.timeLeft = ($rootScope.isDissconected || timeLeft === '0 minutes and 0 seconds left') ? '' : timeLeft;
     $scope.thirtySecondsLeft = thirtySecondsLeft;
@@ -1178,16 +1191,21 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
 
   ctrl.setUser = function(user) {
     console.log('set user', user)
-    $timeout(function(){
+    $timeout(function() {
       $scope.user = localStorageService.get('user');
     });
   };
 
   ctrl.logout = function(user_id) {
-    // PubSub.trigger('logout');
+    PubSub.trigger('logout');
     UserApi.logout(user_id).then(function(response) {
       localStorageService.clearAll();
-      $window.location.href = $window.location.protocol + '//' + $window.location.host;
+      var isProduction = ($window.location.host.indexOf('room-baby.com') !== -1);
+      if (isProduction) {
+        $window.location.href = 'http://www.room-baby.com';
+      } else {
+        $window.location.href = 'http://localhost:3000';
+      }
     });
   };
 

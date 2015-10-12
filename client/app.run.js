@@ -1,4 +1,8 @@
 'use strict';
 
 angular.module('RoomBaby')
-  .run(['TimeService', function(TimeService) {}]);
+  .run(['$rootScope', '$window', function($rootScope, $window) {
+    if ($window.innerWidth <= 900) {
+      $rootScope.isDisabled = true;
+    }
+  }]);

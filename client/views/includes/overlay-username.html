@@ -12,7 +12,7 @@
       <p  class='complete-reg-copy'>please enter a username to complete the registration process
       <form id="username-form" name="authForm" >
         <input id="login-input-username" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
-        <button ng-hide='showLoader' ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-username">
+        <button ng-hide='showLoader || showErr' ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-username">
           <p>Submit</p>
         </button>
         <div ng-show='showLoader' class="loader username"></div>
@@ -25,7 +25,7 @@
       </div>
     </div>
   </form>
-    <p class='complete-reg-copy last'>a password will be emailed to you and you may now login with either facebook or email
+    <p ng-hide='showLoader || showErr' class='complete-reg-copy last'>a password will be emailed to you and you may now login with either facebook or email
     </div>
   </div>
 </div>

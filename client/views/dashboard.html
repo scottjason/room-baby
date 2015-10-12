@@ -1,8 +1,9 @@
 <div class="disabled-container" ng-show='isDisabled'>
-  <div class="disabled-copy-container">
-    <p>DISABLED</p>
+  <div class='disabled-copy-container'>
+    <p class="disabled-copy">please resize your browser</p>
   </div>
 </div>
+
 <div ng-init='dashCtrl.isAuthenticated(); dashCtrl.registerEvents();' class='dashboard-overlay-container'>
 
     <div ng-show="overlay.createRoom" ng-include src="'views/includes/create-room.html'"></div>
