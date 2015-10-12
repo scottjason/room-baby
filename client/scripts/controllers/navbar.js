@@ -168,7 +168,7 @@ function NavBarCtrl($scope, $rootScope, $state, $timeout, $window, StateService,
   };
 
   ctrl.logout = function(user_id) {
-    PubSub.trigger('logout');
+    // PubSub.trigger('logout');
     UserApi.logout(user_id).then(function(response) {
       localStorageService.clearAll();
       $window.location.href = $window.location.protocol + '//' + $window.location.host;

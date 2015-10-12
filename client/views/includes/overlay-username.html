@@ -12,9 +12,10 @@
       <p  class='complete-reg-copy'>please enter a username to complete the registration process
       <form id="username-form" name="authForm" >
         <input id="login-input-username" class="input-small" ng-model="user.username" name="username" type="text" placeholder="username">
-        <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-username">
+        <button ng-hide='showLoader' ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-username">
           <p>Submit</p>
         </button>
+        <div ng-show='showLoader' class="loader username"></div>
     <br>
     <div ng-show='showErr'>
       <div  class='tooltip-container username'>

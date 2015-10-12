@@ -8,7 +8,7 @@
     <div ng-show='showLoader' class="loader"></div>
     <br>
     <div ng-show='showErr'>
-      <div  class='tooltip-container login'>
+      <div class='tooltip-container login'>
         <div class='tooltip-content'>
           <p>{{ errMessage }}</p>
         </div>
@@ -26,12 +26,25 @@
     <p class='forgot-password-copy'>please enter your registered email to recover your password</p>
     <div ng-show='resetMessage'>
       <p class='reset-message'>{{ resetMessage }}</p>
-      <button title="reset-success" class="btn btn-custom-login" ng-click="landingCtrl.reset(null);">OK</button>
+      <button title="reset-success" class="btn btn-custom-login" ng-click="landingCtrl.reset(null);">
+        <p>OK</p>
+      </button>
     </div>
     <form ng-hide='resetMessage' id="forgotPassword" name="authForm" class="form-inline">
       <input id='reset-password-input' class="input-small" ng-model="user.email" name="email" type="text" placeholder="Email">
-      <button title="cancel" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(true);">Cancel</button>
-      <button type="submit" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(null);">Submit</button>
+      <button ng-hide='showErr || showLoader' type="submit" class="btn btn-custom-login" ng-click="landingCtrl.onForgotPassword(null);">
+        <p>Submit</p>
+      </button>
+      <div ng-show='showLoader' class="loader"></div>
+      <br>
+      <div ng-show='showErr'>
+        <div class='tooltip-container login'>
+          <div class='tooltip-content'>
+            <p>{{ errMessage }}</p>
+          </div>
+        </div>
+      </div>
+      <p ng-hide='showErr || showLoader' ng-click="landingCtrl.onForgotPassword(true);" class="cancel-forgot">Cancel</p>
     </form>
   </div>
 </div>

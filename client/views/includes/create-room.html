@@ -3,38 +3,47 @@
     <div ng-click='dashCtrl.onCancel();' class="exit-btn">
       <p>cancel</p>
     </div>
-    <div class="overlay-title">
-      <a href='' ng-click='dashCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text-overlay">room baby</a>
-      <p class="header-copy">create a room now or schedule for later</p>
-      <hr class="landing-line overlay">
-    </div>
-    <div class="complete-registration">
-      <p class="complete-reg-header">room details</p>
-      <p class="complete-reg-copy first">please enter a name for the room</p>
-      <form id="username-form" name="authForm">
-        <input id="room-name" class="input-small" ng-model="room.name" name="roomName" type="text" placeholder="Monday Morning Meeting">
-        <p class='complete-reg-copy guest-email'>please enter the email address of your guest</p>
-        <input id="room-guest-email" class="input-small" ng-model="room.guestEmail" name="guestEmail" type="text" placeholder="Guest Email">
-        <p class='connection-opts'>connect to your room now</p>
-        <div class='connect-opts-container'>
-           <button ng-click="dashCtrl.connectNow();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
-            <p>Connect Now</p>
-          </button>
-        </div>
-        <p class='connection-opts'>or schedule a room for later</p>
-        <div class='connect-opts-container'>
-           <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
-            <p>Connect Later</p>
-          </button>
-        </div>
-          <div ng-show='showErr'>
-            <div class='tooltip-container username'>
-              <div class='tooltip-content'>
-                <p>{{ errMessage }}</p>
-              </div>
-            </div>
+    <div ng-hide='showConnectOpts'>
+      <div class="overlay-title">
+        <a href='' ng-click='dashCtrl.onOptSelected("roomBaby");' id='room-baby' class="text-inverse logo-text-overlay">room baby</a>
+        <p class="header-copy">create a room now or schedule for later</p>
+        <hr class="landing-line overlay">
+      </div>
+      <div class="complete-registration">
+        <p class="complete-reg-header">room details</p>
+        <p class="complete-reg-copy first">please enter a name for the room</p>
+        <form id="username-form" name="authForm">
+          <input id="room-name" class="input-small" ng-model="room.name" name="roomName" type="text" placeholder="Monday Morning Meeting">
+          <p class='complete-reg-copy guest-email'>please enter the email address of your guest</p>
+          <input id="room-guest-email" class="input-small" ng-model="room.guestEmail" name="guestEmail" type="text" placeholder="Guest Email">
+          <div class='connect-opts-container'>
+            <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
+              <p>Next</p>
+            </button>
           </div>
-      </form>
+        </form>
+      </div>
+    </div>
+    <div ng-show='showConnectOpts' class="connection-section">
+      <p class='connection-opts'>connect to your room now</p>
+      <div class='connect-opts-container'>
+        <button ng-click="dashCtrl.connectNow();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
+          <p>Connect Now</p>
+        </button>
+      </div>
+      <p class='connection-opts'>or schedule a room for later</p>
+      <div class='connect-opts-container'>
+        <button ng-click="dashCtrl.collectUserName();" ng-hide='showErr' type="submit" class="btn btn-custom-connect-now">
+          <p>Connect Later</p>
+        </button>
+      </div>
+      <div ng-show='showErr'>
+        <div class='tooltip-container username'>
+          <div class='tooltip-content'>
+            <p>{{ errMessage }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

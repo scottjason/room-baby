@@ -9,10 +9,16 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
   var ctrl = this;
 
+  StateService.data['Facebook'].shareDialog.isOpen = false;
+  StateService.data['Dashboard'].isOnLoad = true;
+
   $scope.room = {};
   $scope.overlay = {};
   $scope.isProcessing = {};
 
+
+  /* PubSub */
+  
   $rootScope.$on('isDisabled', function() {
     $timeout(function() {
       $scope.isEnabled = false;
@@ -25,10 +31,6 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       $scope.isEnabled = true;
     });
   });
-
-
-  StateService.data['Facebook'].shareDialog.isOpen = false;
-  StateService.data['Dashboard'].isOnLoad = true;
 
   $scope.$watch('invalidDateErr', function() {
     if ($scope.invalidDateErr) {
@@ -164,6 +166,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.collectUserName = function() {
+    $scope.showLoader = true;
     if (!$scope.isProcessing.userName)
       $scope.isProcessing.userName = true;
     if ($scope.user && $scope.user.username && $scope.user.username.length >= 3 && $scope.user.username.length <= 8) {
@@ -190,7 +193,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
 
 
     $scope.overlay.createRoom = true;
-    
+
     // $rootScope.$broadcast('hideNavBar');
     $timeout(function() {
       $scope.overlay.slideUpIn = true;
@@ -202,12 +205,12 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
       }, 200);
     }, 20);
 
-  // this.closeOverlay = function() {
-  //   $scope.overlay.expand = false;
-  //   $scope.overlay.slideUpIn = false;
-  //   $scope.showOverlay = false;
-  //   $scope.showBody = false;
-  // };
+    // this.closeOverlay = function() {
+    //   $scope.overlay.expand = false;
+    //   $scope.overlay.slideUpIn = false;
+    //   $scope.showOverlay = false;
+    //   $scope.showBody = false;
+    // };
 
   };
 

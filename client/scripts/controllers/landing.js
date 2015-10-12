@@ -9,6 +9,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   $scope.overlay = {};
 
   $rootScope.$on('isDisabled', function() {
+    console.log('Landing Ctrl, isDisabled');
     $timeout(function() {
       $scope.isEnabled = false;
       $scope.isDisabled = true;
@@ -16,6 +17,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   });
 
   $rootScope.$on('isEnabled', function() {
+    console.log('Landing Ctrl, isEnabled');
     $timeout(function() {
       $scope.isDisabled = false;
       $scope.isEnabled = true;
@@ -23,6 +25,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   });
 
   this.openOverlay = function() {
+    console.log('Landing Ctrl, openOverlay');
     $rootScope.$broadcast('hideNavBar');
     $scope.showOverlay = true;
     $timeout(function() {
@@ -41,6 +44,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
     $scope.overlay.slideUpIn = false;
     $scope.showOverlay = false;
     $scope.showBody = false;
+    $scope.showOverlay = false;
   };
 
   this.isMobile = function() {
@@ -48,12 +52,14 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   this.onReady = function() {
+    console.log('Landing Ctrl, onReady');
     PubSub.trigger('toggleOverflow', null);
     PubSub.on('enterBtn:forgotPassword', this.onForgotPassword);
     StateService.data['Controllers'].Landing.isReady = true;
   };
 
   this.isAuthenticated = function() {
+    console.log('Landing Ctrl, isAuthenticated');
     UserApi.isAuthenticated().then(function(response) {
       if (response.status === 200) {
         var accessOpts = UserApi.generateOpts(response.data.user);
@@ -62,14 +68,18 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
         localStorageService.clearAll();
         ctrl.initialize();
       } else {
-        ctrl.reset(true);
+        localStorageService.clearAll();
+        ctrl.initialize();
       }
     }, function(err) {
-      ctrl.reset(true);
+      localStorageService.clearAll();
+      ctrl.initialize();
     });
   };
 
   this.getState = function() {
+    console.log('Landing Ctrl, getState');
+
     function getState() {
       var isFooterReady = StateService.data['Controllers'].Footer.isReady;
       var isNavReady = StateService.data['Controllers'].Navbar.isReady;
@@ -84,6 +94,9 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   this.onOptSelected = function(optSelected) {
+    $scope.showErr = null;
+    $scope.errMessage = '';
+    console.log('optSelected', optSelected);
     $scope.user = {};
     if (optSelected === 'login') {
       $scope.showRegister = false;
@@ -129,16 +142,15 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
           $scope.showLoader = true;
           ctrl.login(opts);
         } else {
-          $scope.user[badInput] = '';
           $scope.showErr = true;
           $scope.errMessage = errMessage;
           $timeout(function() {
             $scope.showErr = false;
             $scope.errMessage = '';
-            var elem = angular.element(document.getElementById('login-input-email'));
+            var elem = (badInput !== 'password') ? angular.element(document.getElementById('login-input-email')) : angular.element(document.getElementById('login-input-password'));
             elem.focus();
             StateService.data['Auth'].Login.inProgress = false;
-          }, 2000);
+          }, 1200);
         }
       });
     }
@@ -177,8 +189,14 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
             ctrl.renderError(errMessage);
           })
         } else {
+          $scope.showLoader = true;
           UserApi.resetPassword($scope.user).then(function(response) {
-            $scope.resetMessage = response.data;
+            $scope.showLoader = false;
+            if (response.status === 401) {
+              ctrl.renderError(response.data);
+            } else {
+              $scope.resetMessage = response.data;
+            }
           });
         }
       });
@@ -189,6 +207,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.initialize = function() {
+    console.log('init called');
     $scope.showRegister = false;
     $scope.showLogin = false;
     $scope.showLanding = true;
@@ -204,6 +223,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.reset = function(refreshPage) {
+    console.log('reset called', refreshPage);
     StateService.data['Animator']['login'].hasAnimated = false;
     StateService.data['Auth'].Login.inProgress = false;
     StateService.data['Auth'].Registration.inProgress = false;
@@ -218,6 +238,7 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
   };
 
   ctrl.login = function(opts) {
+    console.log('login', opts);
     UserApi.login(opts).then(function(response) {
       if (response.status == 200) {
         localStorageService.set('user', response.data.user);
@@ -227,8 +248,10 @@ function LandingCtrl($scope, $rootScope, $state, $window, $timeout, Validator, S
         $scope.showLoader = false;
         ctrl.grantAccess(accessOpts);
       } else if (response.status === 401) {
+        console.log('status', 401);
         $scope.showLoader = false;
         $scope.user = {};
+        angular.element(document.getElementById('login-input-email'))
         ctrl.renderError(response.data.message)
       } else {
         $scope.showLoader = false;

@@ -1965,7 +1965,7 @@ input#landing-input-username {
 
 .reset-message {
   font-size: 14px;
-  color: orange;
+  color: #1485CC;
 }
 
 p.have-account {
@@ -2328,6 +2328,15 @@ a#email {
   margin: auto;
   color: #efefef;
   font-weight: 300;
+}
+
+.cancel-forgot {
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  font-weight: 300;
+  position: relative;
+  margin-top: 10px;
 }
 
 
