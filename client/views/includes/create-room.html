@@ -1,6 +1,6 @@
 <div ng-class="{ 'slide-up-in' : (overlay.slideUpIn), 'expand' : (overlay.expand) }" class="overlay-container">
   <div ng-class="{ 'fade-in' : (showBody) }" class="overlay-body">
-    <div ng-click='dashCtrl.onCancel();' class="exit-btn">
+    <div ng-click='dashCtrl.closeOverlay();' class="exit-btn">
       <p>cancel</p>
     </div>
     <div ng-hide='showConnectOpts'>

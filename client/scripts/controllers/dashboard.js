@@ -195,11 +195,7 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   };
 
   this.createRoomOpt = function() {
-
-
     $scope.overlay.createRoom = true;
-
-    // $rootScope.$broadcast('hideNavBar');
     $timeout(function() {
       $scope.overlay.slideUpIn = true;
       $timeout(function() {
@@ -209,14 +205,16 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
         }, 250);
       }, 200);
     }, 20);
+  };
 
-    // this.closeOverlay = function() {
-    //   $scope.overlay.expand = false;
-    //   $scope.overlay.slideUpIn = false;
-    //   $scope.showOverlay = false;
-    //   $scope.showBody = false;
-    // };
 
+  this.closeOverlay = function() {
+    $scope.overlay.slideUpIn = false;
+    $timeout(function() {
+      $scope.overlay.expand = false;
+      $scope.showBody = false;
+      $scope.overlay.createRoom = false;
+    }, 350);
   };
 
   this.onCancel = function() {
