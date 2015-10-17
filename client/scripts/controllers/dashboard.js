@@ -16,9 +16,14 @@ function DashCtrl($scope, $rootScope, $state, $stateParams, $timeout, $window, n
   $scope.overlay = {};
   $scope.isProcessing = {};
 
+  $rootScope.$watch('isDisabled', function() {
+    $timeout(function() {
+      $scope.isDisabled = $rootScope.isDisabled ? true : false;
+    });
+  });
 
   /* PubSub */
-  
+
   $rootScope.$on('isDisabled', function() {
     $timeout(function() {
       $scope.isEnabled = false;
