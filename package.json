@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
+    "preinstall": "npm cache clean",
     "start": "node ./server/app.js"
   },
   "dependencies": {
