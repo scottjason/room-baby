@@ -31,14 +31,17 @@ require('./routes/index')(app, passport);
 require('./routes/error')(app);
 
 /* Connect to the database, then start server and worker */
+/* Start server */
+app.listen(app.get('port'), function() {
+  console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
+  /* Start worker */
+  // worker.start();
+  // worker.sendMail();
+});
+
 database.connect(function() {
-  /* Start server */
-  app.listen(app.get('port'), function() {
-    console.log('Server listening on port', this.address().port, 'in', app.get('env'), 'mode.');
-    /* Start worker */
-    worker.start();
-    // worker.sendMail();
-  });
+  console.log('database connected');
+
 });
 
 /* Expose the app */
