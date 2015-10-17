@@ -28,8 +28,6 @@
     "express": "~4.9.0",
     "express-session": "^1.10.1",
     "fb": "^0.7.0",
-    "juice": "^1.3.3",
-    "juice2": "^1.3.1",
     "mailgun-js": "^0.7.1",
     "method-override": "^2.3.1",
     "moment": "^2.9.0",
